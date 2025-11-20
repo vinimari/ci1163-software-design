@@ -6,10 +6,10 @@ services:
   # -----------------------------
   db:
     image: postgres:15-alpine
-    container_name: meucantinho-db
+    container_name: seucantinho-db
     restart: always
     environment:
-      POSTGRES_DB: meucantinho
+      POSTGRES_DB: seucantinho
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
     ports:
@@ -24,13 +24,13 @@ services:
   # -----------------------------
   api:
     build: ./backend
-    container_name: meucantinho-api
+    container_name: seucantinho-api
     restart: on-failure
     depends_on:
       - db
     environment:
       # Note que usamos o nome do serviço 'db' como host
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/meucantinho
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/seucantinho
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update

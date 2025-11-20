@@ -1,0 +1,85 @@
+classDiagram
+    direction TB
+
+    %% --- PACOTE 1: GESTÃO DE IDENTIDADE (Auth & Users) ---
+    namespace Identidade {
+        class Usuario {
+            <<abstract>>
+            +Integer id
+            +String nome
+            +String email
+            +autenticar()
+        }
+
+        class Administrador {
+            +gerenciarRede()
+            +verRelatoriosGlobais()
+        }
+
+        class Cliente {
+            +fazerReserva()
+            +cancelarReserva()
+        }
+
+        class Funcionario {
+            +validarCheckIn()
+            +gerenciarReservasLocais()
+        }
+    }
+
+    %% --- PACOTE 2: ESTRUTURA ORGANIZACIONAL (Catalog) ---
+    namespace Estrutura {
+        class Filial {
+            +Integer id
+            +String nome
+            +String cidade
+        }
+
+        class Espaco {
+            +Integer id
+            +String nome
+            +Double precoBase
+            +Boolean ativo
+            +verificarDisponibilidade()
+        }
+    }
+
+    %% --- PACOTE 3: OPERAÇÃO (Core Domain) ---
+    namespace Operacao {
+        class Reserva {
+            +Integer id
+            +Date dataEvento
+            +Status status
+            +calcularTotal()
+        }
+
+        class Pagamento {
+            +Double valor
+            +Date data
+            +Tipo tipo
+        }
+    }
+
+    %% --- RELACIONAMENTOS ESTRUTURAIS ---
+
+    %% Hierarquia (Herança)
+    Usuario <|-- Administrador
+    Usuario <|-- Funcionario
+    Usuario <|-- Cliente
+
+    %% Vínculo Empregatício (Restrição de Acesso)
+    Filial "1" *-- "0..*" Funcionario : emprega
+
+    %% Estrutura Física
+    Filial "1" *-- "0..*" Espaco : possui
+
+    %% --- FLUXO DE NEGÓCIO ---
+
+    %% O Cliente cria a reserva
+    Cliente "1" --> "0..*" Reserva : solicita
+
+    %% A reserva ocupa um espaço
+    Espaco "1" -- "0..*" Reserva : reservado em
+
+    %% A reserva contém pagamentos
+    Reserva "1" *-- "0..*" Pagamento : contem

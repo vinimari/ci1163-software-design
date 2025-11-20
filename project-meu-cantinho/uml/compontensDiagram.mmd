@@ -1,0 +1,138 @@
+graph TB
+    subgraph External[" "]
+        BROWSER[["🌐 Cliente HTTP/Browser"]]
+        UI[["💻 Interface Web"]]
+    end
+
+    NGINX{{"⚙️ NGINX<br/><infrastructure>"}}
+
+    subgraph Backend["📦 Backend Application<<component>>"]
+        direction TB
+
+        subgraph Presentation["Presentation Layer<<layer>>"]
+            direction TB
+            RESTAPI(("REST API<br/><interface>"))
+
+            subgraph Controllers["<<subsystem>>"]
+                ADMINCTRL["AdministradorController<br/>"]
+                CLIENTECTRL["ClienteController<br/>"]
+                FUNCCTRL["FuncionarioController<br/>"]
+                FILIALCTRL["FilialController<br/>"]
+                ESPACOCTRL["EspacoController<br/>"]
+                RESERVACTRL["ReservaController<br/>"]
+                PAGCTRL["PagamentoController<br/>"]
+            end
+
+            SWAGGER["📄 Swagger/OpenAPI<br/>"]
+            ISERVICE(("IService<br/>"))
+        end
+
+        subgraph Business["Business Layer"]
+            direction TB
+            IBUSINESS(("IBusinessLogic<br/>"))
+
+            subgraph Services["<<subsystem>>"]
+                ADMINSERV["AdministradorService<br/>"]
+                CLIENTESERV["ClienteService<br/>"]
+                FUNCSERV["FuncionarioService<br/>"]
+                FILIALSERV["FilialService<br/>"]
+                ESPACOSERV["EspacoService<br/>"]
+                RESERVASERV["ReservaService<br/>"]
+                PAGSERV["PagamentoService<br/>"]
+            end
+
+            IREPO(("IRepository<br/>"))
+        end
+
+        subgraph Data["Data Access Layer<<layer>>"]
+            direction TB
+            IDATAACCESS(("IDataAccess<br/>"))
+
+            subgraph Repositories["<<subsystem>>"]
+                ADMINREPO["AdministradorRepository<br/>"]
+                CLIENTEREPO["ClienteRepository<br/"]
+                FUNCREPO["FuncionarioRepository<br/"]
+                FILIALREPO["FilialRepository<br/"]
+                ESPACOREPO["EspacoRepository<br/"]
+                RESERVAREPO["ReservaRepository<br/"]
+                PAGREPO["PagamentoRepository<br/"]
+            end
+
+            IENTITY(("IEntity<br/>"))
+        end
+
+        subgraph Domain["Domain Layer"]
+            direction TB
+            JPA(("JPA<br/>"))
+
+            subgraph Entities["Entities"]
+                IDENTIDADE["Usuario, Administrador<br/>Cliente, Funcionario<br/>"]
+                ESTRUTURA["Filial, Espaco<br/>"]
+                OPERACAO["Reserva, Pagamento<br/>"]
+            end
+        end
+    end
+
+    DB[("🗄️ PostgreSQL<br/>")]
+
+    %% Conexões externas
+    BROWSER -->|HTTPS| NGINX
+    UI -->|HTTPS| NGINX
+    NGINX -->|HTTP| RESTAPI
+
+    %% Interface Documentation
+    RESTAPI -.->|provides| SWAGGER
+
+    %% Presentation para Business
+    RESTAPI ==>|delegates| Controllers
+    ADMINCTRL -->|uses| ISERVICE
+    CLIENTECTRL -->|uses| ISERVICE
+    FUNCCTRL -->|uses| ISERVICE
+    FILIALCTRL -->|uses| ISERVICE
+    ESPACOCTRL -->|uses| ISERVICE
+    RESERVACTRL -->|uses| ISERVICE
+    PAGCTRL -->|uses| ISERVICE
+
+    ISERVICE -.->|realizes| IBUSINESS
+    IBUSINESS ==>|delegates| Services
+
+    %% Business para Data
+    ADMINSERV -->|uses| IREPO
+    CLIENTESERV -->|uses| IREPO
+    FUNCSERV -->|uses| IREPO
+    FILIALSERV -->|uses| IREPO
+    ESPACOSERV -->|uses| IREPO
+    RESERVASERV -->|uses| IREPO
+    PAGSERV -->|uses| IREPO
+
+    IREPO -.->|realizes| IDATAACCESS
+    IDATAACCESS ==>|delegates| Repositories
+
+    %% Data para Domain
+    ADMINREPO -->|uses| IENTITY
+    CLIENTEREPO -->|uses| IENTITY
+    FUNCREPO -->|uses| IENTITY
+    FILIALREPO -->|uses| IENTITY
+    ESPACOREPO -->|uses| IENTITY
+    RESERVAREPO -->|uses| IENTITY
+    PAGREPO -->|uses| IENTITY
+
+    IENTITY -.->|realizes| JPA
+    JPA ==>|maps| Entities
+
+    %% Domain para Database
+    IDENTIDADE -->|persists| DB
+    ESTRUTURA -->|persists| DB
+    OPERACAO -->|persists| DB
+
+
+    class BROWSER,UI externalStyle
+    class NGINX infrastructureStyle
+    class RESTAPI,ISERVICE,IBUSINESS,IREPO,IDATAACCESS,IENTITY,JPA interfaceStyle
+    class ADMINCTRL,CLIENTECTRL,FUNCCTRL,FILIALCTRL,ESPACOCTRL,RESERVACTRL,PAGCTRL controllerStyle
+    class ADMINSERV,CLIENTESERV,FUNCSERV,FILIALSERV,ESPACOSERV,RESERVASERV,PAGSERV serviceStyle
+    class ADMINREPO,CLIENTEREPO,FUNCREPO,FILIALREPO,ESPACOREPO,RESERVAREPO,PAGREPO repositoryStyle
+    class IDENTIDADE,ESTRUTURA,OPERACAO entityStyle
+    class DB databaseStyle
+    class Presentation,Business,Data,Domain,Controllers,Services,Repositories,Entities layerStyle
+    class SWAGGER interfaceStyle

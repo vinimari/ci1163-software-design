@@ -44,10 +44,10 @@ services:
   # -----------------------------
   web:
     build: ./frontend
-    container_name: meucantinho-web
+    container_name: seucantinho-web
     restart: on-failure
     ports:
-      - "80:80"
+      - "8081:80"
     depends_on:
       - api
     networks:

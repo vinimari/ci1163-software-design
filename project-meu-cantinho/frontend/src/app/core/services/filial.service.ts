@@ -20,6 +20,10 @@ export class FilialService {
     return this.http.get<FilialResponse>(`${this.apiUrl}/${id}`);
   }
 
+  getAtivas(): Observable<FilialResponse[]> {
+    return this.http.get<FilialResponse[]>(`${this.apiUrl}/ativas`);
+  }
+
   create(filial: FilialRequest): Observable<FilialResponse> {
     return this.http.post<FilialResponse>(this.apiUrl, filial);
   }

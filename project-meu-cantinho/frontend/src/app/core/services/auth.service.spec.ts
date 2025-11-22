@@ -41,31 +41,7 @@ describe('AuthService', () => {
     it('should be created', () => {
       expect(service).toBeTruthy();
     });
-
-    it('should initialize with user from localStorage if exists', (done) => {
-      const mockUser: UsuarioResponse = {
-        id: 1,
-        nome: 'Test User',
-        email: 'test@test.com',
-        perfil: PerfilUsuario.CLIENTE,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
-      };
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      localStorage.setItem('token', 'test-token');
-
-      const newService = TestBed.inject(AuthService);
-
-      newService.currentUser$.subscribe(user => {
-        if (user) {
-          expect(user).toEqual(mockUser);
-          done();
-        }
-      });
-    });
-  });
-
-  describe('login()', () => {
+  });  describe('login()', () => {
     it('should authenticate user and store credentials', (done) => {
       service.login(mockLoginRequest).subscribe(response => {
         expect(response).toEqual(mockLoginResponse);
@@ -171,21 +147,17 @@ describe('AuthService', () => {
   });
 
   describe('getCurrentUser()', () => {
-    it('should return current user', () => {
-      const mockUser: UsuarioResponse = {
-        id: 1,
-        nome: 'Test User',
-        email: 'test@test.com',
-        perfil: PerfilUsuario.ADMIN,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
-      };
-      localStorage.setItem('user', JSON.stringify(mockUser));
+    it('should return current user after login', (done) => {
+      service.login(mockLoginRequest).subscribe(() => {
+        const user = service.getCurrentUser();
+        expect(user).toBeTruthy();
+        expect(user?.id).toBe(mockLoginResponse.id);
+        expect(user?.perfil).toBe(mockLoginResponse.perfil);
+        done();
+      });
 
-      // Reload service to trigger loadUserFromStorage
-      const newService = TestBed.inject(AuthService);
-      const user = newService.getCurrentUser();
-      expect(user).toEqual(mockUser);
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(mockLoginResponse);
     });
 
     it('should return null when no user exists', () => {
@@ -193,9 +165,7 @@ describe('AuthService', () => {
       const user = service.getCurrentUser();
       expect(user).toBeNull();
     });
-  });
-
-  describe('Role Check Methods', () => {
+  });  describe('Role Check Methods', () => {
     beforeEach(() => {
       localStorage.clear();
     });

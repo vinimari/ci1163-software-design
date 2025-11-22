@@ -39,7 +39,6 @@ describe('roleGuard', () => {
       ativo: true,
       dataCadastro: '2025-01-01'
     });
-    authService.hasRole.mockReturnValue(true);
     const guard = roleGuard([PerfilUsuario.ADMIN]);
 
     const result = TestBed.runInInjectionContext(() =>
@@ -47,7 +46,7 @@ describe('roleGuard', () => {
     );
 
     expect(result).toBe(true);
-    expect(authService.hasRole).toHaveBeenCalledWith([PerfilUsuario.ADMIN]);
+    expect(authService.getCurrentUser).toHaveBeenCalled();
   });
 
   it('should redirect to unauthorized when user does not have required role', () => {
@@ -59,7 +58,6 @@ describe('roleGuard', () => {
       ativo: true,
       dataCadastro: '2025-01-01'
     });
-    authService.hasRole.mockReturnValue(false);
     router.navigate.mockReturnValue(Promise.resolve(true));
     const guard = roleGuard([PerfilUsuario.ADMIN]);
 
@@ -68,7 +66,7 @@ describe('roleGuard', () => {
     );
 
     expect(result).toBe(false);
-    expect(authService.hasRole).toHaveBeenCalledWith([PerfilUsuario.ADMIN]);
+    expect(authService.getCurrentUser).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/unauthorized']);
   });
 
@@ -81,7 +79,6 @@ describe('roleGuard', () => {
       ativo: true,
       dataCadastro: '2025-01-01'
     });
-    authService.hasRole.mockReturnValue(true);
     const guard = roleGuard([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO]);
 
     const result = TestBed.runInInjectionContext(() =>
@@ -89,6 +86,20 @@ describe('roleGuard', () => {
     );
 
     expect(result).toBe(true);
-    expect(authService.hasRole).toHaveBeenCalledWith([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO]);
+    expect(authService.getCurrentUser).toHaveBeenCalled();
+  });
+
+  it('should redirect to login when user is not logged in', () => {
+    authService.getCurrentUser.mockReturnValue(null);
+    router.navigate.mockReturnValue(Promise.resolve(true));
+    const guard = roleGuard([PerfilUsuario.ADMIN]);
+
+    const result = TestBed.runInInjectionContext(() =>
+      guard({} as any, {} as any)
+    );
+
+    expect(result).toBe(false);
+    expect(authService.getCurrentUser).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

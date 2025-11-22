@@ -12,7 +12,7 @@ CREATE TABLE tb_filial (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cidade VARCHAR(100) NOT NULL,
-    estado CHAR(2) NOT NULL,
+    estado VARCHAR(2) NOT NULL,
     endereco VARCHAR(255),
     telefone VARCHAR(20),
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP

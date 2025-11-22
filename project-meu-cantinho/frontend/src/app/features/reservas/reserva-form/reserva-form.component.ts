@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService, ReservaService, ClienteService, EspacoService, FilialService } from '../../../core/services';
-import { ReservaRequest, ClienteResponse, EspacoResponse, FilialResponse, PerfilUsuario } from '../../../core/models';
+import { PagamentoService } from '../../../core/services/pagamento.service';
+import { ReservaRequest, ClienteResponse, EspacoResponse, FilialResponse, PerfilUsuario, PagamentoRequest, TipoPagamento } from '../../../core/models';
 
 @Component({
   selector: 'app-reserva-form',
@@ -35,6 +36,12 @@ export class ReservaFormComponent implements OnInit {
   isFuncionario = false;
   isCliente = false;
   userFilialId: number | null = null;
+  
+  // Pagamento
+  tipoPagamento: TipoPagamento = TipoPagamento.SINAL;
+  formaPagamento: string = '';
+  codigoTransacao: string = '';
+  readonly TipoPagamento = TipoPagamento;
 
   constructor(
     private authService: AuthService,
@@ -42,6 +49,7 @@ export class ReservaFormComponent implements OnInit {
     private clienteService: ClienteService,
     private espacoService: EspacoService,
     private filialService: FilialService,
+    private pagamentoService: PagamentoService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -167,14 +175,37 @@ export class ReservaFormComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
+    // Criar reserva primeiro
     this.reservaService.create(this.reserva).subscribe({
       next: (reserva) => {
-        // Redirecionar baseado no perfil
-        if (this.isCliente) {
-          this.router.navigate(['/reservas']);
-        } else {
-          this.router.navigate(['/admin/reservas']);
-        }
+        // Criar pagamento
+        const valorPagamento = this.tipoPagamento === TipoPagamento.TOTAL 
+          ? this.reserva.valorTotal 
+          : this.reserva.valorTotal * 0.5; // 50% para sinal
+
+        const pagamento: PagamentoRequest = {
+          valor: valorPagamento,
+          tipo: this.tipoPagamento,
+          formaPagamento: this.formaPagamento,
+          codigoTransacaoGateway: this.codigoTransacao || undefined,
+          reservaId: reserva.id
+        };
+
+        this.pagamentoService.create(pagamento).subscribe({
+          next: () => {
+            // Redirecionar baseado no perfil
+            if (this.isCliente) {
+              this.router.navigate(['/reservas']);
+            } else {
+              this.router.navigate(['/admin/reservas']);
+            }
+          },
+          error: (err) => {
+            this.error = 'Reserva criada mas erro ao registrar pagamento: ' + (err.error?.message || 'Erro desconhecido');
+            this.loading = false;
+            console.error('Erro ao criar pagamento:', err);
+          }
+        });
       },
       error: (err) => {
         this.error = err.error?.message || 'Erro ao criar reserva';
@@ -214,8 +245,19 @@ export class ReservaFormComponent implements OnInit {
       return false;
     }
 
+    if (!this.formaPagamento) {
+      this.error = 'Selecione a forma de pagamento';
+      return false;
+    }
+
     this.error = null;
     return true;
+  }
+
+  getValorPagamento(): number {
+    return this.tipoPagamento === TipoPagamento.TOTAL 
+      ? this.reserva.valorTotal 
+      : this.reserva.valorTotal * 0.5;
   }
 
   cancel(): void {

@@ -38,7 +38,7 @@ export class LoginComponent {
     this.authService.login({ email, senha }).subscribe({
       next: () => {
         this.loading = false;
-        
+
         // Redirecionar baseado no perfil do usuário
         if (this.authService.isAdmin()) {
           this.router.navigate(['/admin/reservas']);

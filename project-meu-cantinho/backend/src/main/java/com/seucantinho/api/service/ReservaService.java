@@ -75,6 +75,15 @@ public class ReservaService implements IReservaService {
                 null
         );
 
+        // Validar valor total com base no preço da diária do espaço
+        BigDecimal valorEsperado = espaco.getPrecoDiaria();
+        if (requestDTO.getValorTotal().compareTo(valorEsperado) != 0) {
+            throw new IllegalArgumentException(
+                "Valor total incorreto. Esperado: R$ " + valorEsperado + 
+                ", Recebido: R$ " + requestDTO.getValorTotal()
+            );
+        }
+
         Reserva reserva = reservaMapper.toEntity(requestDTO, usuario, espaco);
         Reserva savedReserva = reservaRepository.save(reserva);
         return reservaMapper.toResponseDTO(savedReserva);

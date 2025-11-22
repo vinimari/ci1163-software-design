@@ -111,15 +111,12 @@
         </div>
 
         <div class="form-group">
-          <label for="valorTotal">Valor Total (R$) *</label>
-          <input 
-            type="number" 
-            id="valorTotal" 
-            [(ngModel)]="reserva.valorTotal" 
-            name="valorTotal"
-            min="0"
-            step="0.01"
-            required>
+          <label>Valor Total (R$)</label>
+          <div class="valor-display">
+            <span class="valor-label">R$</span>
+            <span class="valor-value">{{ reserva.valorTotal | number:'1.2-2' }}</span>
+          </div>
+          <small *ngIf="reserva.espacoId">Valor calculado automaticamente com base na diária do espaço</small>
         </div>
       </div>
     </div>
@@ -135,6 +132,76 @@
           name="observacoes"
           rows="4"
           placeholder="Informações adicionais sobre a reserva..."></textarea>
+      </div>
+    </div>
+
+    <!-- Pagamento -->
+    <div class="form-section" *ngIf="reserva.espacoId && reserva.valorTotal > 0">
+      <h2>💳 Pagamento</h2>
+      
+      <div class="form-group">
+        <label>Tipo de Pagamento *</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input 
+              type="radio" 
+              name="tipoPagamento" 
+              [value]="TipoPagamento.SINAL" 
+              [(ngModel)]="tipoPagamento">
+            <span>Sinal (50%)</span>
+            <span class="radio-value">R$ {{ reserva.valorTotal * 0.5 | number:'1.2-2' }}</span>
+          </label>
+          <label class="radio-option">
+            <input 
+              type="radio" 
+              name="tipoPagamento" 
+              [value]="TipoPagamento.TOTAL" 
+              [(ngModel)]="tipoPagamento">
+            <span>Pagamento Total (100%)</span>
+            <span class="radio-value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="formaPagamento">Forma de Pagamento *</label>
+          <select 
+            id="formaPagamento" 
+            [(ngModel)]="formaPagamento" 
+            name="formaPagamento"
+            required>
+            <option value="">Selecione...</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão de Crédito">Cartão de Crédito</option>
+            <option value="Cartão de Débito">Cartão de Débito</option>
+            <option value="PIX">PIX</option>
+            <option value="Transferência">Transferência Bancária</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="codigoTransacao">Código da Transação (opcional)</label>
+          <input 
+            type="text" 
+            id="codigoTransacao" 
+            [(ngModel)]="codigoTransacao" 
+            name="codigoTransacao"
+            placeholder="Ex: código do PIX, autorização do cartão">
+        </div>
+      </div>
+
+      <div class="pagamento-info">
+        <div class="info-item">
+          <span class="icon">💵</span>
+          <span class="label">Valor a pagar agora:</span>
+          <span class="value highlight">R$ {{ getValorPagamento() | number:'1.2-2' }}</span>
+        </div>
+        <div class="info-item" *ngIf="tipoPagamento === TipoPagamento.SINAL">
+          <span class="icon">⚠️</span>
+          <span class="label">Saldo restante:</span>
+          <span class="value">R$ {{ reserva.valorTotal * 0.5 | number:'1.2-2' }}</span>
+        </div>
       </div>
     </div>
 

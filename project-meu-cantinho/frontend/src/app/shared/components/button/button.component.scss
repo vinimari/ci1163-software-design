@@ -41,42 +41,43 @@
 
   &:not(:disabled):hover {
     background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
   }
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-  color: white;
+  background: #f0f0f0;
+  color: #555;
 
   &:not(:disabled):hover {
-    background: linear-gradient(135deg, #5a6268 0%, #383d41 100%);
+    background: #e0e0e0;
   }
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: #3498db;
   color: white;
 
   &:not(:disabled):hover {
-    background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+    background: #2980b9;
   }
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  background: #e74c3c;
   color: white;
 
   &:not(:disabled):hover {
-    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    background: #c0392b;
   }
 }
 
 .btn-warning {
-  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
-  color: #212529;
+  background: #f39c12;
+  color: white;
 
   &:not(:disabled):hover {
-    background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%);
+    background: #e67e22;
   }
 }
 
@@ -93,8 +94,10 @@
 
 // Tamanhos
 .btn-small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  flex: 1;
+  min-width: 80px;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.85rem;
 }
 
 .btn-medium {

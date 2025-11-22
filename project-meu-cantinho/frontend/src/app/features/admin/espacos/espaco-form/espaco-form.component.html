@@ -105,17 +105,17 @@
     </div>
 
     <div class="form-actions">
-      <button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="loading">
+      <app-button type="button" variant="secondary" (clicked)="onCancel()" [disabled]="loading">
         Cancelar
-      </button>
-      <button type="submit" class="btn-submit" [disabled]="loading || espacoForm.invalid">
+      </app-button>
+      <app-button type="submit" variant="primary" [disabled]="loading || espacoForm.invalid">
         @if (loading) {
           <span class="spinner"></span>
           <span>Salvando...</span>
         } @else {
           <span>{{ isEditMode ? 'Atualizar' : 'Criar' }} Espaço</span>
         }
-      </button>
+      </app-button>
     </div>
   </form>
 </div>

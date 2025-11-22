@@ -42,9 +42,9 @@ describe('ButtonComponent', () => {
   it('should emit clicked event when not disabled', () => {
     const event = new Event('click');
     jest.spyOn(component.clicked, 'emit');
-    
+
     component.onClick(event);
-    
+
     expect(component.clicked.emit).toHaveBeenCalledWith(event);
   });
 
@@ -52,16 +52,16 @@ describe('ButtonComponent', () => {
     const event = new Event('click');
     component.disabled = true;
     jest.spyOn(component.clicked, 'emit');
-    
+
     component.onClick(event);
-    
+
     expect(component.clicked.emit).not.toHaveBeenCalled();
   });
 
   it('should accept icon input', () => {
     component.icon = '🏠';
     fixture.detectChanges();
-    
+
     expect(component.icon).toBe('🏠');
   });
 
@@ -70,7 +70,7 @@ describe('ButtonComponent', () => {
     component.size = 'large';
     component.fullWidth = true;
     fixture.detectChanges();
-    
+
     const button = fixture.nativeElement.querySelector('button');
     expect(button.classList.contains('btn')).toBe(true);
     expect(button.classList.contains('btn-success')).toBe(true);
@@ -81,7 +81,7 @@ describe('ButtonComponent', () => {
   it('should render icon when provided', () => {
     component.icon = '✨';
     fixture.detectChanges();
-    
+
     const icon = fixture.nativeElement.querySelector('.btn-icon');
     expect(icon).toBeTruthy();
     expect(icon.textContent).toBe('✨');
@@ -89,7 +89,7 @@ describe('ButtonComponent', () => {
 
   it('should not render icon span when not provided', () => {
     fixture.detectChanges();
-    
+
     const icon = fixture.nativeElement.querySelector('.btn-icon');
     expect(icon).toBeFalsy();
   });
@@ -97,7 +97,7 @@ describe('ButtonComponent', () => {
   it('should disable button when disabled is true', () => {
     component.disabled = true;
     fixture.detectChanges();
-    
+
     const button = fixture.nativeElement.querySelector('button');
     expect(button.disabled).toBe(true);
   });

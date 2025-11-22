@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { EspacoService, AuthService, FilialService } from '../../../../core/services';
 import { EspacoResponse, EspacoRequest } from '../../../../core/models';
 import { EspacoFormComponent } from '../espaco-form/espaco-form.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-espacos-admin',
   standalone: true,
-  imports: [CommonModule, RouterModule, EspacoFormComponent],
+  imports: [CommonModule, RouterModule, EspacoFormComponent, ButtonComponent],
   templateUrl: './espacos-admin.component.html',
   styleUrl: './espacos-admin.component.scss'
 })

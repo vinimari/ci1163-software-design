@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { EspacoRequest, EspacoResponse, FilialResponse } from '../../../../core/models';
 import { FilialService } from '../../../../core/services';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-espaco-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
   templateUrl: './espaco-form.component.html',
   styleUrl: './espaco-form.component.scss'
 })

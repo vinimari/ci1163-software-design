@@ -5,10 +5,9 @@
         <h1>🏛️ Gestão de Espaços</h1>
         <p>Gerencie os espaços disponíveis para aluguel</p>
       </div>
-      <button class="btn-new" (click)="novoEspaco()">
-        <span>➕</span>
-        <span>Novo Espaço</span>
-      </button>
+      <app-button variant="primary" icon="➕" (clicked)="novoEspaco()">
+        Novo Espaço
+      </app-button>
     </div>
 
     <div class="filters">
@@ -44,7 +43,7 @@
           <h3>Nenhum espaço encontrado</h3>
           <p>{{ searchTerm ? 'Tente ajustar os filtros de busca' : 'Comece criando um novo espaço' }}</p>
           @if (!searchTerm) {
-            <button class="btn-primary" (click)="novoEspaco()">Criar Primeiro Espaço</button>
+            <app-button variant="primary" (clicked)="novoEspaco()">Criar Primeiro Espaço</app-button>
           }
         </div>
       } @else {
@@ -94,22 +93,20 @@
                 </div>
 
                 <div class="card-actions">
-                  <button class="btn-edit" (click)="editarEspaco(espaco)" title="Editar">
-                    <span>✏️</span>
-                    <span>Editar</span>
-                  </button>
-                  <button 
-                    class="btn-toggle" 
-                    (click)="toggleAtivo(espaco)" 
-                    [title]="espaco.ativo ? 'Desativar' : 'Ativar'"
+                  <app-button variant="success" size="small" icon="✏️" (clicked)="editarEspaco(espaco)">
+                    Editar
+                  </app-button>
+                  <app-button 
+                    variant="warning" 
+                    size="small" 
+                    [icon]="espaco.ativo ? '🔒' : '🔓'" 
+                    (clicked)="toggleAtivo(espaco)"
                   >
-                    <span>{{ espaco.ativo ? '🔒' : '🔓' }}</span>
-                    <span>{{ espaco.ativo ? 'Desativar' : 'Ativar' }}</span>
-                  </button>
-                  <button class="btn-delete" (click)="excluirEspaco(espaco)" title="Excluir">
-                    <span>🗑️</span>
-                    <span>Excluir</span>
-                  </button>
+                    {{ espaco.ativo ? 'Desativar' : 'Ativar' }}
+                  </app-button>
+                  <app-button variant="danger" size="small" icon="🗑️" (clicked)="excluirEspaco(espaco)">
+                    Excluir
+                  </app-button>
                 </div>
               </div>
             </div>

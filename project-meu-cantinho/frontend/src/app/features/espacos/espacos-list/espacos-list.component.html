@@ -1,0 +1,62 @@
+<div class="espacos-container">
+  <div class="header">
+    <h1>Espaços Disponíveis</h1>
+    <p>Encontre o espaço perfeito para seu evento</p>
+  </div>
+
+  @if (loading) {
+    <app-loading></app-loading>
+  } @else if (error) {
+    <div class="alert alert-error">
+      {{ error }}
+    </div>
+  } @else {
+    <div class="espacos-grid">
+      @for (espaco of espacos; track espaco.id) {
+        <app-card [hover]="true">
+          @if (espaco.urlFotoPrincipal) {
+            <div class="espaco-image">
+              <img [src]="espaco.urlFotoPrincipal" [alt]="espaco.nome">
+            </div>
+          } @else {
+            <div class="espaco-image placeholder">
+              <span>📷</span>
+            </div>
+          }
+          <div class="espaco-content">
+            <h3>{{ espaco.nome }}</h3>
+            <p class="espaco-descricao">{{ espaco.descricao }}</p>
+
+            <div class="espaco-info">
+              <div class="info-item">
+                <span class="icon">👥</span>
+                <span class="value">{{ espaco.capacidade }} pessoas</span>
+              </div>
+              <div class="info-item">
+                <span class="icon">💰</span>
+                <span class="value">R$ {{ espaco.valorDiaria | number:'1.2-2' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="icon">📍</span>
+                <span class="value">{{ espaco.filialNome || 'Filial' }}</span>
+              </div>
+            </div>
+
+            <div class="espaco-actions">
+              <a [routerLink]="['/espacos', espaco.id]" class="btn btn-secondary">
+                Ver Detalhes
+              </a>
+              <a [routerLink]="['/reservas/nova']" [queryParams]="{espacoId: espaco.id}" class="btn btn-primary">
+                Reservar
+              </a>
+            </div>
+          </div>
+        </app-card>
+      } @empty {
+        <div class="empty-state">
+          <p>Nenhum espaço disponível no momento</p>
+        </div>
+      }
+    </div>
+  }
+</div>

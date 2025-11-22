@@ -1,0 +1,74 @@
+<div class="detail-container">
+  <div class="back-button">
+    <a routerLink="/espacos" class="btn btn-secondary">← Voltar</a>
+  </div>
+
+  @if (loading) {
+    <app-loading></app-loading>
+  } @else if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  } @else if (espaco) {
+    <div class="espaco-detail">
+      @if (espaco.urlFotoPrincipal) {
+        <div class="hero-image">
+          <img [src]="espaco.urlFotoPrincipal" [alt]="espaco.nome">
+        </div>
+      } @else {
+        <div class="hero-placeholder">
+          <span>📷</span>
+        </div>
+      }
+
+      <div class="detail-content">
+        <h1>{{ espaco.nome }}</h1>
+        <p class="description">{{ espaco.descricao }}</p>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <span class="icon">👥</span>
+            <div class="info-text">
+              <span class="label">Capacidade</span>
+              <span class="value">{{ espaco.capacidade }} pessoas</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="icon">💰</span>
+            <div class="info-text">
+              <span class="label">Valor da Diária</span>
+              <span class="value">R$ {{ espaco.valorDiaria | number:'1.2-2' }}</span>
+            </div>
+          </div>
+
+          @if (espaco.filialNome) {
+            <div class="info-card">
+              <span class="icon">📍</span>
+              <div class="info-text">
+                <span class="label">Filial</span>
+                <span class="value">{{ espaco.filialNome }}</span>
+              </div>
+            </div>
+          }
+
+          <div class="info-card">
+            <span class="icon">{{ espaco.ativo ? '✅' : '❌' }}</span>
+            <div class="info-text">
+              <span class="label">Status</span>
+              <span class="value" [class.active]="espaco.ativo" [class.inactive]="!espaco.ativo">
+                {{ espaco.ativo ? 'Ativo' : 'Inativo' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        @if (espaco.ativo) {
+          <div class="actions">
+            <a [routerLink]="['/reservas/nova']" [queryParams]="{espacoId: espaco.id}" class="btn btn-primary btn-large">
+              Fazer Reserva
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

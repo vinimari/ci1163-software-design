@@ -52,9 +52,9 @@ export class ReservasListComponent implements OnInit {
     const labels: Record<StatusReserva, string> = {
       [StatusReserva.AGUARDANDO_SINAL]: 'Aguardando Sinal',
       [StatusReserva.CONFIRMADA]: 'Confirmada',
-      [StatusReserva.EM_ANDAMENTO]: 'Em Andamento',
-      [StatusReserva.CONCLUIDA]: 'Concluída',
-      [StatusReserva.CANCELADA]: 'Cancelada'
+      [StatusReserva.QUITADA]: 'Quitada',
+      [StatusReserva.CANCELADA]: 'Cancelada',
+      [StatusReserva.FINALIZADA]: 'Finalizada'
     };
     return labels[status] || status;
   }

@@ -184,9 +184,9 @@ export class ReservaDetailComponent implements OnInit {
     const statusMap: { [key in StatusReserva]: string } = {
       [StatusReserva.AGUARDANDO_SINAL]: 'status-aguardando',
       [StatusReserva.CONFIRMADA]: 'status-confirmada',
-      [StatusReserva.EM_ANDAMENTO]: 'status-andamento',
-      [StatusReserva.CONCLUIDA]: 'status-concluida',
-      [StatusReserva.CANCELADA]: 'status-cancelada'
+      [StatusReserva.QUITADA]: 'status-quitada',
+      [StatusReserva.CANCELADA]: 'status-cancelada',
+      [StatusReserva.FINALIZADA]: 'status-finalizada'
     };
     return statusMap[status] || '';
   }
@@ -195,9 +195,9 @@ export class ReservaDetailComponent implements OnInit {
     const iconMap: { [key in StatusReserva]: string } = {
       [StatusReserva.AGUARDANDO_SINAL]: '⏳',
       [StatusReserva.CONFIRMADA]: '✅',
-      [StatusReserva.EM_ANDAMENTO]: '🔄',
-      [StatusReserva.CONCLUIDA]: '🎉',
-      [StatusReserva.CANCELADA]: '❌'
+      [StatusReserva.QUITADA]: '💰',
+      [StatusReserva.CANCELADA]: '❌',
+      [StatusReserva.FINALIZADA]: '🎉'
     };
     return iconMap[status] || '📋';
   }

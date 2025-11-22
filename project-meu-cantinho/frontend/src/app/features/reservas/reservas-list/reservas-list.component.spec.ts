@@ -224,12 +224,12 @@ describe('ReservasListComponent', () => {
       expect(component.getStatusLabel(StatusReserva.CONFIRMADA)).toBe('Confirmada');
     });
 
-    it('should return "Em Andamento" for EM_ANDAMENTO', () => {
-      expect(component.getStatusLabel(StatusReserva.EM_ANDAMENTO)).toBe('Em Andamento');
+    it('should return "Quitada" for QUITADA', () => {
+      expect(component.getStatusLabel(StatusReserva.QUITADA)).toBe('Quitada');
     });
 
-    it('should return "Concluída" for CONCLUIDA', () => {
-      expect(component.getStatusLabel(StatusReserva.CONCLUIDA)).toBe('Concluída');
+    it('should return "Finalizada" for FINALIZADA', () => {
+      expect(component.getStatusLabel(StatusReserva.FINALIZADA)).toBe('Finalizada');
     });
 
     it('should return "Cancelada" for CANCELADA', () => {

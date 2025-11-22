@@ -59,8 +59,8 @@
         <option value="TODOS">Todos</option>
         <option [value]="StatusReserva.AGUARDANDO_SINAL">Aguardando Sinal</option>
         <option [value]="StatusReserva.CONFIRMADA">Confirmada</option>
-        <option [value]="StatusReserva.EM_ANDAMENTO">Em Andamento</option>
-        <option [value]="StatusReserva.CONCLUIDA">Concluída</option>
+        <option [value]="StatusReserva.QUITADA">Quitada</option>
+        <option [value]="StatusReserva.FINALIZADA">Finalizada</option>
         <option [value]="StatusReserva.CANCELADA">Cancelada</option>
       </select>
     </div>
@@ -169,7 +169,7 @@
           Ver Detalhes
         </app-button>
 
-        <div class="status-actions" *ngIf="reserva.status !== StatusReserva.CANCELADA && reserva.status !== StatusReserva.CONCLUIDA">
+        <div class="status-actions" *ngIf="reserva.status !== StatusReserva.CANCELADA && reserva.status !== StatusReserva.FINALIZADA">
           <app-button
             *ngIf="reserva.status === StatusReserva.AGUARDANDO_SINAL"
             variant="success"
@@ -184,20 +184,20 @@
             *ngIf="reserva.status === StatusReserva.CONFIRMADA"
             variant="primary"
             size="small"
-            icon="🔄"
-            (clicked)="updateStatus(reserva, StatusReserva.EM_ANDAMENTO)"
+            icon="💰"
+            (clicked)="updateStatus(reserva, StatusReserva.QUITADA)"
           >
-            Iniciar
+            Quitar
           </app-button>
 
           <app-button
-            *ngIf="reserva.status === StatusReserva.EM_ANDAMENTO"
+            *ngIf="reserva.status === StatusReserva.QUITADA"
             variant="success"
             size="small"
             icon="🎉"
-            (clicked)="updateStatus(reserva, StatusReserva.CONCLUIDA)"
+            (clicked)="updateStatus(reserva, StatusReserva.FINALIZADA)"
           >
-            Concluir
+            Finalizar
           </app-button>
 
           <app-button

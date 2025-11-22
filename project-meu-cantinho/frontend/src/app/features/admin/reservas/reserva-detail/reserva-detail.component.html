@@ -64,7 +64,7 @@
       </div>
 
       <!-- Ações de Status -->
-      <div class="status-actions" *ngIf="reserva.status !== StatusReserva.CONCLUIDA && reserva.status !== StatusReserva.CANCELADA">
+      <div class="status-actions" *ngIf="reserva.status !== StatusReserva.FINALIZADA && reserva.status !== StatusReserva.CANCELADA">
         <h3>Alterar Status</h3>
         <div class="button-group">
           <app-button
@@ -76,16 +76,16 @@
 
           <app-button
             *ngIf="reserva.status === StatusReserva.CONFIRMADA"
-            label="Iniciar Evento"
+            label="Marcar como Quitada"
             variant="primary"
-            (clickEvent)="updateStatus(StatusReserva.EM_ANDAMENTO)">
+            (clickEvent)="updateStatus(StatusReserva.QUITADA)">
           </app-button>
 
           <app-button
-            *ngIf="reserva.status === StatusReserva.EM_ANDAMENTO"
-            label="Concluir"
+            *ngIf="reserva.status === StatusReserva.QUITADA"
+            label="Finalizar"
             variant="success"
-            (clickEvent)="updateStatus(StatusReserva.CONCLUIDA)">
+            (clickEvent)="updateStatus(StatusReserva.FINALIZADA)">
           </app-button>
 
           <app-button

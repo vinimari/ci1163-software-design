@@ -1,0 +1,19 @@
+export enum PerfilUsuario {
+  ADMIN = 'ADMIN',
+  FUNCIONARIO = 'FUNCIONARIO',
+  CLIENTE = 'CLIENTE'
+}
+
+export enum StatusReserva {
+  AGUARDANDO_SINAL = 'AGUARDANDO_SINAL',
+  CONFIRMADA = 'CONFIRMADA',
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+  CONCLUIDA = 'CONCLUIDA',
+  CANCELADA = 'CANCELADA'
+}
+
+export enum TipoPagamento {
+  SINAL = 'SINAL',
+  QUITACAO = 'QUITACAO',
+  TOTAL = 'TOTAL'
+}

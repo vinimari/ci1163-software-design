@@ -6,7 +6,24 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'filiais',
     canActivate: [roleGuard([PerfilUsuario.ADMIN])],
-    loadComponent: () => import('./filiais/filiais-list/filiais-list.component').then(m => m.FiliaisListComponent)
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./filiais/filiais-list/filiais-list.component').then(m => m.FiliaisListComponent)
+      },
+      {
+        path: 'new',
+        loadComponent: () => import('./filiais/filial-form/filial-form.component').then(m => m.FilialFormComponent)
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./filiais/filial-detail/filial-detail.component').then(m => m.FilialDetailComponent)
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () => import('./filiais/filial-form/filial-form.component').then(m => m.FilialFormComponent)
+      }
+    ]
   },
   {
     path: 'espacos',

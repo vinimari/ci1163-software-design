@@ -1,0 +1,73 @@
+.detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    h1 {
+      color: #333;
+      margin: 0;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .filial-details {
+    padding: 1.5rem 0;
+
+    .detail-row {
+      display: flex;
+      padding: 1rem 0;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: #555;
+        min-width: 150px;
+      }
+
+      .detail-value {
+        color: #333;
+        flex: 1;
+      }
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+}

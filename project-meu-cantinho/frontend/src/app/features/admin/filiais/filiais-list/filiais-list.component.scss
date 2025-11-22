@@ -1,4 +1,71 @@
-.admin-container {
+.filiais-container {
   padding: 2rem;
-  text-align: center;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0;
+      color: #333;
+    }
+  }
+
+  .filiais-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .filial-info {
+    p {
+      margin: 0.5rem 0;
+      color: #666;
+
+      strong {
+        color: #333;
+      }
+    }
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+
+    p {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
 }

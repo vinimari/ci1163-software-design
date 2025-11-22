@@ -1,0 +1,29 @@
+<div class="home-container">
+  <div class="hero">
+    <h1>Bem-vindo ao Meu Cantinho</h1>
+    <p>Reserve espaços para seus eventos de forma simples e rápida</p>
+  </div>
+
+  <div class="features-grid">
+    <app-card title="Espaços Disponíveis" [hover]="true" [hasFooter]="true">
+      <p>Navegue pelos nossos espaços e encontre o local perfeito para seu evento</p>
+      <div footer>
+        <a routerLink="/espacos" class="btn btn-primary">Ver Espaços</a>
+      </div>
+    </app-card>
+
+    <app-card title="Minhas Reservas" [hover]="true" [hasFooter]="true">
+      <p>Gerencie suas reservas e acompanhe o status de cada uma</p>
+      <div footer>
+        <a routerLink="/reservas" class="btn btn-primary">Ver Reservas</a>
+      </div>
+    </app-card>
+
+    <app-card title="Nova Reserva" [hover]="true" [hasFooter]="true">
+      <p>Faça uma nova reserva em poucos cliques</p>
+      <div footer>
+        <a routerLink="/reservas/nova" class="btn btn-primary">Reservar Agora</a>
+      </div>
+    </app-card>
+  </div>
+</div>

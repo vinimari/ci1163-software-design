@@ -74,7 +74,7 @@ export class ClienteDetailComponent implements OnInit {
 
   getStatusClass(status: string): string {
     const statusMap: { [key: string]: string } = {
-      'PENDENTE': 'status-pendente',
+      'AGUARDANDO_SINAL': 'status-pendente',
       'CONFIRMADA': 'status-confirmada',
       'CANCELADA': 'status-cancelada',
       'CONCLUIDA': 'status-concluida'
@@ -84,7 +84,7 @@ export class ClienteDetailComponent implements OnInit {
 
   getStatusIcon(status: string): string {
     const iconMap: { [key: string]: string } = {
-      'PENDENTE': '⏳',
+      'AGUARDANDO_SINAL': '⏳',
       'CONFIRMADA': '✅',
       'CANCELADA': '❌',
       'CONCLUIDA': '🎉'

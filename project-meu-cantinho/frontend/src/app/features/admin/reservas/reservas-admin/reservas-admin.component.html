@@ -151,11 +151,6 @@
             <span class="financial-value saldo-value">R$ {{ reserva.saldo | number:'1.2-2' }}</span>
           </div>
         </div>
-
-        <!-- Status de Pagamento -->
-        <div class="pagamento-badge" [ngClass]="getPagamentoClass(reserva)">
-          {{ getPagamentoStatus(reserva) }}
-        </div>
       </div>
 
       <!-- Ações -->

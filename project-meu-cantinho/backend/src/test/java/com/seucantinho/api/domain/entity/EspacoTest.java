@@ -126,4 +126,30 @@ class EspacoTest {
         espaco.setUrlFotoPrincipal(null);
         assertNull(espaco.getUrlFotoPrincipal());
     }
+
+    @Test
+    void shouldSetAtivoToTrueOnCreateIfNull() throws Exception {
+        Espaco espaco = new Espaco();
+        espaco.setAtivo(null);
+
+        // Invocar o método onCreate via reflexão
+        var method = Espaco.class.getDeclaredMethod("onCreate");
+        method.setAccessible(true);
+        method.invoke(espaco);
+
+        assertTrue(espaco.getAtivo());
+    }
+
+    @Test
+    void shouldNotOverrideAtivoIfAlreadySetOnCreate() throws Exception {
+        Espaco espaco = new Espaco();
+        espaco.setAtivo(false);
+
+        // Invocar o método onCreate via reflexão
+        var method = Espaco.class.getDeclaredMethod("onCreate");
+        method.setAccessible(true);
+        method.invoke(espaco);
+
+        assertFalse(espaco.getAtivo());
+    }
 }

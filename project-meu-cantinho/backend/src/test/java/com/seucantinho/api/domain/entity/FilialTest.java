@@ -120,4 +120,17 @@ class FilialTest {
         assertNotNull(filial.getEspacos());
         assertNotNull(filial.getFuncionarios());
     }
+
+    @Test
+    void shouldSetDataCadastroOnCreate() throws Exception {
+        Filial filial = new Filial();
+        assertNull(filial.getDataCadastro());
+
+        // Invocar o método onCreate via reflexão
+        var method = Filial.class.getDeclaredMethod("onCreate");
+        method.setAccessible(true);
+        method.invoke(filial);
+
+        assertNotNull(filial.getDataCadastro());
+    }
 }

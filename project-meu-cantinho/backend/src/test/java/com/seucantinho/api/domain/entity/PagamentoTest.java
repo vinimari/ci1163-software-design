@@ -142,4 +142,17 @@ class PagamentoTest {
         assertEquals(0, new BigDecimal("100.50").compareTo(pagamento2.getValor()));
         assertEquals(0, new BigDecimal("99.99").compareTo(pagamento3.getValor()));
     }
+
+    @Test
+    void shouldSetDataPagamentoOnCreate() throws Exception {
+        Pagamento pagamento = new Pagamento();
+        assertNull(pagamento.getDataPagamento());
+
+        // Invocar o método onCreate via reflexão
+        var method = Pagamento.class.getDeclaredMethod("onCreate");
+        method.setAccessible(true);
+        method.invoke(pagamento);
+
+        assertNotNull(pagamento.getDataPagamento());
+    }
 }

@@ -139,4 +139,32 @@ class UsuarioTest {
         assertNull(usuario.getId());
         assertNull(usuario.getNome());
     }
+
+    @Test
+    void shouldSetDataCadastroAndAtivoOnCreate() throws Exception {
+        Usuario usuario = new UsuarioConcreto();
+        usuario.setAtivo(null);
+        assertNull(usuario.getDataCadastro());
+
+        // Invocar o método onCreate via reflexão
+        var method = Usuario.class.getDeclaredMethod("onCreate");
+        method.setAccessible(true);
+        method.invoke(usuario);
+
+        assertNotNull(usuario.getDataCadastro());
+        assertTrue(usuario.getAtivo());
+    }
+
+    @Test
+    void shouldNotOverrideAtivoIfAlreadySetOnCreate() throws Exception {
+        Usuario usuario = new UsuarioConcreto();
+        usuario.setAtivo(false);
+
+        // Invocar o método onCreate via reflexão
+        var method = Usuario.class.getDeclaredMethod("onCreate");
+        method.setAccessible(true);
+        method.invoke(usuario);
+
+        assertFalse(usuario.getAtivo());
+    }
 }

@@ -4,6 +4,7 @@ import com.seucantinho.api.domain.entity.Filial;
 import com.seucantinho.api.dto.filial.FilialRequestDTO;
 import com.seucantinho.api.dto.filial.FilialResponseDTO;
 import com.seucantinho.api.exception.ResourceNotFoundException;
+import com.seucantinho.api.mapper.FilialMapper;
 import com.seucantinho.api.repository.FilialRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class FilialServiceTest {
 
     @Mock
     private FilialRepository filialRepository;
+
+    @Mock
+    private FilialMapper filialMapper;
 
     @InjectMocks
     private FilialService filialService;
@@ -57,6 +61,12 @@ class FilialServiceTest {
     void shouldFindAllFiliais() {
         // Given
         when(filialRepository.findAll()).thenReturn(Arrays.asList(filial));
+        when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
+                FilialResponseDTO.builder()
+                        .id(filial.getId())
+                        .nome(filial.getNome())
+                        .build()
+        );
 
         // When
         List<FilialResponseDTO> result = filialService.findAll();
@@ -71,6 +81,12 @@ class FilialServiceTest {
     void shouldFindFilialById() {
         // Given
         when(filialRepository.findById(1)).thenReturn(Optional.of(filial));
+        when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
+                FilialResponseDTO.builder()
+                        .id(filial.getId())
+                        .nome(filial.getNome())
+                        .build()
+        );
 
         // When
         FilialResponseDTO result = filialService.findById(1);
@@ -96,7 +112,14 @@ class FilialServiceTest {
     @Test
     void shouldCreateFilial() {
         // Given
+        when(filialMapper.toEntity(any(FilialRequestDTO.class))).thenReturn(filial);
         when(filialRepository.save(any(Filial.class))).thenReturn(filial);
+        when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
+                FilialResponseDTO.builder()
+                        .id(filial.getId())
+                        .nome(filial.getNome())
+                        .build()
+        );
 
         // When
         FilialResponseDTO result = filialService.create(requestDTO);
@@ -111,7 +134,14 @@ class FilialServiceTest {
     void shouldUpdateFilial() {
         // Given
         when(filialRepository.findById(1)).thenReturn(Optional.of(filial));
+        doNothing().when(filialMapper).updateEntityFromDTO(any(Filial.class), any(FilialRequestDTO.class));
         when(filialRepository.save(any(Filial.class))).thenReturn(filial);
+        when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
+                FilialResponseDTO.builder()
+                        .id(filial.getId())
+                        .nome(filial.getNome())
+                        .build()
+        );
 
         FilialRequestDTO updateDTO = FilialRequestDTO.builder()
                 .nome("Filial Atualizada")

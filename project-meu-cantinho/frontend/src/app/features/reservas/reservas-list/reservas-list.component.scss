@@ -1,0 +1,156 @@
+.reservas-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin: 0;
+  }
+}
+
+.reservas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.reserva-item {
+  padding: 1.5rem;
+}
+
+.reserva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+
+  h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.25rem;
+  }
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+
+  &.status-aguardando_sinal {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  &.status-confirmada {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &.status-em_andamento {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+
+  &.status-concluida {
+    background-color: #e2e3e5;
+    color: #383d41;
+  }
+
+  &.status-cancelada {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+.reserva-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+
+  .label {
+    color: #7f8c8d;
+    font-weight: 500;
+  }
+
+  .value {
+    color: #2c3e50;
+    font-weight: 600;
+
+    &.highlight {
+      color: #e74c3c;
+    }
+  }
+}
+
+.reserva-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+}
+
+.btn-secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+
+  &:hover {
+    background: #667eea;
+    color: white;
+  }
+}
+
+.alert-error {
+  padding: 1rem;
+  background-color: #fee;
+  color: #c00;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+
+  p {
+    color: #7f8c8d;
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+  }
+}

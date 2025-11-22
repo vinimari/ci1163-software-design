@@ -1,0 +1,59 @@
+<div class="reservas-container">
+  <div class="header">
+    <h1>Minhas Reservas</h1>
+    <a routerLink="/reservas/nova" class="btn btn-primary">Nova Reserva</a>
+  </div>
+
+  @if (loading) {
+    <app-loading></app-loading>
+  } @else if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  } @else {
+    <div class="reservas-list">
+      @for (reserva of reservas; track reserva.id) {
+        <app-card [hover]="true">
+          <div class="reserva-item">
+            <div class="reserva-header">
+              <h3>{{ reserva.espacoNome || 'Espaço' }}</h3>
+              <span class="status-badge" [class]="'status-' + reserva.status.toLowerCase()">
+                {{ getStatusLabel(reserva.status) }}
+              </span>
+            </div>
+
+            <div class="reserva-info">
+              <div class="info-row">
+                <span class="label">Data do Evento:</span>
+                <span class="value">{{ reserva.dataEvento | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Valor Total:</span>
+                <span class="value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
+              </div>
+              @if (reserva.totalPago !== undefined) {
+                <div class="info-row">
+                  <span class="label">Pago:</span>
+                  <span class="value">R$ {{ reserva.totalPago | number:'1.2-2' }}</span>
+                </div>
+              }
+              @if (reserva.saldo !== undefined && reserva.saldo > 0) {
+                <div class="info-row">
+                  <span class="label">Saldo:</span>
+                  <span class="value highlight">R$ {{ reserva.saldo | number:'1.2-2' }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="reserva-actions">
+              <a [routerLink]="['/reservas', reserva.id]" class="btn btn-secondary">Ver Detalhes</a>
+            </div>
+          </div>
+        </app-card>
+      } @empty {
+        <div class="empty-state">
+          <p>Você ainda não tem reservas</p>
+          <a routerLink="/espacos" class="btn btn-primary">Explorar Espaços</a>
+        </div>
+      }
+    </div>
+  }
+</div>

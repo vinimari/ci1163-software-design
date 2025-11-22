@@ -31,10 +31,10 @@ describe('roleGuard', () => {
   });
 
   it('should allow access when user has required role', () => {
-    authService.getCurrentUser.mockReturnValue({ 
-      id: 1, 
-      nome: 'Admin', 
-      email: 'admin@test.com', 
+    authService.getCurrentUser.mockReturnValue({
+      id: 1,
+      nome: 'Admin',
+      email: 'admin@test.com',
       perfil: PerfilUsuario.ADMIN,
       ativo: true,
       dataCadastro: '2025-01-01'
@@ -50,10 +50,10 @@ describe('roleGuard', () => {
   });
 
   it('should redirect to unauthorized when user does not have required role', () => {
-    authService.getCurrentUser.mockReturnValue({ 
-      id: 1, 
-      nome: 'Cliente', 
-      email: 'cliente@test.com', 
+    authService.getCurrentUser.mockReturnValue({
+      id: 1,
+      nome: 'Cliente',
+      email: 'cliente@test.com',
       perfil: PerfilUsuario.CLIENTE,
       ativo: true,
       dataCadastro: '2025-01-01'
@@ -71,10 +71,10 @@ describe('roleGuard', () => {
   });
 
   it('should work with multiple roles', () => {
-    authService.getCurrentUser.mockReturnValue({ 
-      id: 1, 
-      nome: 'Funcionario', 
-      email: 'func@test.com', 
+    authService.getCurrentUser.mockReturnValue({
+      id: 1,
+      nome: 'Funcionario',
+      email: 'func@test.com',
       perfil: PerfilUsuario.FUNCIONARIO,
       ativo: true,
       dataCadastro: '2025-01-01'

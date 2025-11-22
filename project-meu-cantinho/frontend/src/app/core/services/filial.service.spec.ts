@@ -16,7 +16,7 @@ describe('FilialService', () => {
     cidade: 'São Paulo',
     estado: 'SP',
     telefone: '(11) 1234-5678',
-    ativo: true
+    dataCadastro: new Date().toISOString(),
   };
 
   const mockFilialRequest: FilialRequest = {
@@ -25,7 +25,6 @@ describe('FilialService', () => {
     cidade: 'São Paulo',
     estado: 'SP',
     telefone: '(11) 1234-5678',
-    ativo: true
   };
 
   beforeEach(() => {
@@ -99,25 +98,6 @@ describe('FilialService', () => {
 
       const req = httpMock.expectOne(`${apiUrl}/${filialId}`);
       req.flush('Not found', { status: 404, statusText: 'Not Found' });
-    });
-  });
-
-  describe('getAtivas()', () => {
-    it('should retrieve only active filiais', (done) => {
-      const activeFiliais = [
-        { ...mockFilialResponse, ativo: true },
-        { ...mockFilialResponse, id: 2, nome: 'Filial Norte', ativo: true }
-      ];
-
-      service.getAtivas().subscribe(filiais => {
-        expect(filiais).toEqual(activeFiliais);
-        expect(filiais.every(f => f.ativo)).toBe(true);
-        done();
-      });
-
-      const req = httpMock.expectOne(`${apiUrl}/ativas`);
-      expect(req.request.method).toBe('GET');
-      req.flush(activeFiliais);
     });
   });
 

@@ -11,10 +11,6 @@
       <div class="navbar-menu">
         <!-- Menu ADMIN -->
         @if (isAdmin) {
-          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
-            <span class="nav-icon">🏠</span>
-            <span>Início</span>
-          </a>
           <a routerLink="/admin/filiais" routerLinkActive="active" class="nav-link">
             <span class="nav-icon">🏬</span>
             <span>Filiais</span>
@@ -31,33 +27,17 @@
             <span class="nav-icon">📅</span>
             <span>Reservas</span>
           </a>
-          <a routerLink="/reservas/nova" routerLinkActive="active" class="nav-link">
-            <span class="nav-icon">➕</span>
-            <span>Nova Reserva</span>
-          </a>
         }
 
         <!-- Menu FUNCIONARIO -->
         @if (isFuncionario) {
-          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
-            <span class="nav-icon">🏠</span>
-            <span>Início</span>
-          </a>
           <a routerLink="/funcionario/espacos" routerLinkActive="active" class="nav-link">
             <span class="nav-icon">🎆</span>
             <span>Espaços</span>
           </a>
-          <a routerLink="/funcionario/clientes" routerLinkActive="active" class="nav-link">
-            <span class="nav-icon">👥</span>
-            <span>Clientes</span>
-          </a>
           <a routerLink="/funcionario/reservas" routerLinkActive="active" class="nav-link">
             <span class="nav-icon">📅</span>
             <span>Reservas</span>
-          </a>
-          <a routerLink="/reservas/nova" routerLinkActive="active" class="nav-link">
-            <span class="nav-icon">➕</span>
-            <span>Nova Reserva</span>
           </a>
         }
 

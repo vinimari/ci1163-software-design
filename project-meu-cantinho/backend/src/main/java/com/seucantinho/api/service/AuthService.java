@@ -20,7 +20,7 @@ public class AuthService {
         Usuario usuario = usuarioRepository.findByEmail(request.email())
             .orElseThrow(() -> new BusinessException("Email ou senha inválidos"));
 
-        if (!passwordEncoder.matches(request.senha(), usuario.getSenha())) {
+        if (!passwordEncoder.matches(request.senha(), usuario.getSenhaHash())) {
             throw new BusinessException("Email ou senha inválidos");
         }
 

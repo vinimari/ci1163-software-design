@@ -62,9 +62,9 @@ export const routes: Routes = [
               .then(m => m.ReservasAdminComponent)
           },
           {
-            path: 'pagamentos',
-            loadComponent: () => import('./features/admin/admin.routes')
-              .then(() => import('./features/auth/login/login.component').then(m => m.LoginComponent)) // Placeholder
+            path: 'reservas/:id',
+            loadComponent: () => import('./features/admin/reservas/reserva-detail/reserva-detail.component')
+              .then(m => m.ReservaDetailComponent)
           }
         ]
       }

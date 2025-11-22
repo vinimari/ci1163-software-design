@@ -1,5 +1,205 @@
 <div class="detail-container">
-  <h1>Detalhes da Reserva</h1>
-  <p>Componente em desenvolvimento...</p>
-  <a routerLink="/reservas" class="btn btn-secondary">Voltar</a>
+  @if (loading) {
+    <app-loading></app-loading>
+  } @else if (error && !reserva) {
+    <div class="alert alert-error">{{ error }}</div>
+    <a routerLink="/reservas" class="btn btn-secondary">Voltar</a>
+  } @else if (reserva) {
+    <div class="header">
+      <h1>Detalhes da Reserva #{{ reserva.id }}</h1>
+      <a routerLink="/reservas" class="btn btn-secondary">Voltar</a>
+    </div>
+
+    @if (successMessage) {
+      <div class="alert alert-success">{{ successMessage }}</div>
+    }
+
+    @if (error) {
+      <div class="alert alert-error">{{ error }}</div>
+    }
+
+    <div class="detail-grid">
+      <!-- Informações da Reserva -->
+      <app-card>
+        <h2>Informações Gerais</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Status:</span>
+            <span class="status-badge" [class]="'status-' + reserva.status.toLowerCase()">
+              {{ getStatusLabel(reserva.status) }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="label">Data do Evento:</span>
+            <span class="value">{{ reserva.dataEvento | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Data de Criação:</span>
+            <span class="value">{{ reserva.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+
+        @if (reserva.observacoes) {
+          <div class="observacoes">
+            <h3>Observações</h3>
+            <p>{{ reserva.observacoes }}</p>
+          </div>
+        }
+      </app-card>
+
+      <!-- Informações do Espaço -->
+      <app-card>
+        <h2>Espaço Reservado</h2>
+        <div class="espaco-info">
+          <h3>{{ reserva.espaco.nome }}</h3>
+          <p>{{ reserva.espaco.descricao }}</p>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Capacidade:</span>
+              <span class="value">{{ reserva.espaco.capacidade }} pessoas</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Filial:</span>
+              <span class="value">{{ reserva.espaco.filial.nome }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Localização:</span>
+              <span class="value">{{ reserva.espaco.filial.cidade }}/{{ reserva.espaco.filial.estado }}</span>
+            </div>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Informações Financeiras -->
+      <app-card>
+        <h2>Valores</h2>
+        <div class="valores-info">
+          <div class="valor-item total">
+            <span class="label">Valor Total:</span>
+            <span class="value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
+          </div>
+          <div class="valor-item pago">
+            <span class="label">Total Pago:</span>
+            <span class="value">R$ {{ reserva.totalPago | number:'1.2-2' }}</span>
+          </div>
+          <div class="valor-item saldo" [class.saldo-zero]="reserva.saldo === 0">
+            <span class="label">Saldo Restante:</span>
+            <span class="value">R$ {{ reserva.saldo | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        @if (canPagar()) {
+          <button
+            class="btn btn-primary btn-full"
+            (click)="togglePagamentoForm()"
+            type="button">
+            {{ showPagamentoForm ? 'Cancelar Pagamento' : 'Registrar Pagamento' }}
+          </button>
+        }
+      </app-card>
+
+      <!-- Formulário de Pagamento -->
+      @if (showPagamentoForm) {
+        <app-card>
+          <h2>Registrar Pagamento</h2>
+          <form [formGroup]="pagamentoForm" (ngSubmit)="onSubmitPagamento()">
+            <div class="form-group">
+              <label for="valor">Valor*</label>
+              <input
+                type="number"
+                id="valor"
+                formControlName="valor"
+                step="0.01"
+                min="0.01"
+                [max]="reserva.saldo"
+                class="form-control">
+              @if (pagamentoForm.get('valor')?.invalid && pagamentoForm.get('valor')?.touched) {
+                <span class="error-message">Informe um valor válido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="tipo">Tipo de Pagamento*</label>
+              <select id="tipo" formControlName="tipo" class="form-control">
+                <option [value]="TipoPagamento.SINAL">Sinal</option>
+                <option [value]="TipoPagamento.QUITACAO">Quitação</option>
+                <option [value]="TipoPagamento.TOTAL">Total</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="formaPagamento">Forma de Pagamento*</label>
+              <select id="formaPagamento" formControlName="formaPagamento" class="form-control">
+                <option value="">Selecione...</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Cartão de Débito">Cartão de Débito</option>
+                <option value="PIX">PIX</option>
+                <option value="Transferência">Transferência Bancária</option>
+              </select>
+              @if (pagamentoForm.get('formaPagamento')?.invalid && pagamentoForm.get('formaPagamento')?.touched) {
+                <span class="error-message">Selecione a forma de pagamento</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="codigoTransacao">Código da Transação (opcional)</label>
+              <input
+                type="text"
+                id="codigoTransacao"
+                formControlName="codigoTransacaoGateway"
+                class="form-control"
+                placeholder="Ex: código do PIX, autorização do cartão">
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" [disabled]="pagamentoForm.invalid || loading">
+                Confirmar Pagamento
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="togglePagamentoForm()">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </app-card>
+      }
+
+      <!-- Histórico de Pagamentos -->
+      <app-card>
+        <h2>Histórico de Pagamentos</h2>
+        @if (pagamentos.length > 0) {
+          <div class="pagamentos-list">
+            @for (pagamento of pagamentos; track pagamento.id) {
+              <div class="pagamento-item">
+                <div class="pagamento-header">
+                  <span class="tipo-badge">{{ getTipoPagamentoLabel(pagamento.tipo) }}</span>
+                  <span class="valor">R$ {{ pagamento.valor | number:'1.2-2' }}</span>
+                </div>
+                <div class="pagamento-info">
+                  <span class="data">{{ pagamento.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</span>
+                  <span class="forma">{{ pagamento.formaPagamento }}</span>
+                </div>
+                @if (pagamento.codigoTransacaoGateway) {
+                  <div class="codigo-transacao">
+                    Código: {{ pagamento.codigoTransacaoGateway }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">Nenhum pagamento registrado ainda.</p>
+        }
+      </app-card>
+    </div>
+
+    <!-- Ações -->
+    @if (canCancelar()) {
+      <div class="actions-footer">
+        <button class="btn btn-danger" (click)="cancelarReserva()" [disabled]="loading">
+          Cancelar Reserva
+        </button>
+      </div>
+    }
+  }
 </div>

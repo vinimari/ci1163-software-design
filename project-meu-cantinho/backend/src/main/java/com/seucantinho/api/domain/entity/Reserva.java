@@ -40,7 +40,7 @@ public class Reserva {
     private String observacoes;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, columnDefinition = "status_reserva_enum")
     @Builder.Default
     private StatusReservaEnum status = StatusReservaEnum.AGUARDANDO_SINAL;
 

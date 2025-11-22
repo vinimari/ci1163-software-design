@@ -27,7 +27,7 @@ public class Pagamento {
     private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, columnDefinition = "tipo_pagamento_enum")
     private TipoPagamentoEnum tipo;
 
     @Column(name = "forma_pagamento", length = 50)

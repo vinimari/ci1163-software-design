@@ -31,8 +31,8 @@ public abstract class Usuario {
     @Column(name = "senha_hash", nullable = false, length = 255)
     private String senhaHash;
 
-    @Column(nullable = false, length = 20, insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "perfil_usuario_enum", insertable = false, updatable = false)
     private PerfilUsuarioEnum perfil;
 
     @Column(length = 14)

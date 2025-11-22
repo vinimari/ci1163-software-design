@@ -155,8 +155,14 @@ export class ReservaFormComponent implements OnInit {
   }
 
   onEspacoChange(): void {
-    const espaco = this.espacos.find(e => e.id === this.reserva.espacoId);
+    // Converter para número caso venha como string do select
+    const espacoId = typeof this.reserva.espacoId === 'string' 
+      ? parseInt(this.reserva.espacoId) 
+      : this.reserva.espacoId;
+    
+    const espaco = this.espacos.find(e => e.id === espacoId);
     if (espaco) {
+      this.reserva.espacoId = espacoId; // Garantir que é número
       this.reserva.valorTotal = espaco.precoDiaria;
       
       // Auto-selecionar filial se ainda não foi selecionada

@@ -1,4 +1,128 @@
 <div class="admin-container">
-  <h1>Gestão de Espaços</h1>
-  <p>Componente administrativo em desenvolvimento...</p>
+  @if (!showForm) {
+    <div class="header">
+      <div class="title-section">
+        <h1>🏛️ Gestão de Espaços</h1>
+        <p>Gerencie os espaços disponíveis para aluguel</p>
+      </div>
+      <button class="btn-new" (click)="novoEspaco()">
+        <span>➕</span>
+        <span>Novo Espaço</span>
+      </button>
+    </div>
+
+    <div class="filters">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Buscar por nome ou filial..."
+          (input)="onSearchChange($any($event.target).value)"
+          [value]="searchTerm"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label>Status:</label>
+        <select (change)="onStatusFilterChange($any($event.target).value)" [value]="filtroStatus">
+          <option value="">Todos</option>
+          <option value="ativo">Ativos</option>
+          <option value="inativo">Inativos</option>
+        </select>
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="loading-container">
+        <div class="spinner-large"></div>
+        <p>Carregando espaços...</p>
+      </div>
+    } @else {
+      @if (espacosFiltrados.length === 0) {
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          <h3>Nenhum espaço encontrado</h3>
+          <p>{{ searchTerm ? 'Tente ajustar os filtros de busca' : 'Comece criando um novo espaço' }}</p>
+          @if (!searchTerm) {
+            <button class="btn-primary" (click)="novoEspaco()">Criar Primeiro Espaço</button>
+          }
+        </div>
+      } @else {
+        <div class="espacos-grid">
+          @for (espaco of espacosFiltrados; track espaco.id) {
+            <div class="espaco-card" [class.inactive]="!espaco.ativo">
+              @if (espaco.urlFotoPrincipal) {
+                <div class="card-image">
+                  <img [src]="espaco.urlFotoPrincipal" [alt]="espaco.nome" />
+                  @if (!espaco.ativo) {
+                    <div class="inactive-badge">Inativo</div>
+                  }
+                </div>
+              } @else {
+                <div class="card-image placeholder">
+                  <span class="placeholder-icon">🏛️</span>
+                  @if (!espaco.ativo) {
+                    <div class="inactive-badge">Inativo</div>
+                  }
+                </div>
+              }
+
+              <div class="card-content">
+                <h3>{{ espaco.nome }}</h3>
+                
+                @if (espaco.descricao) {
+                  <p class="description">{{ espaco.descricao }}</p>
+                }
+
+                <div class="info-grid">
+                  <div class="info-item">
+                    <span class="icon">📍</span>
+                    <span>{{ espaco.filialNome || 'Filial ID: ' + espaco.filialId }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="icon">👥</span>
+                    <span>{{ espaco.capacidade }} pessoas</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="icon">💰</span>
+                    <span>R$ {{ espaco.precoDiaria | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="icon">{{ espaco.ativo ? '✅' : '❌' }}</span>
+                    <span>{{ espaco.ativo ? 'Ativo' : 'Inativo' }}</span>
+                  </div>
+                </div>
+
+                <div class="card-actions">
+                  <button class="btn-edit" (click)="editarEspaco(espaco)" title="Editar">
+                    <span>✏️</span>
+                    <span>Editar</span>
+                  </button>
+                  <button 
+                    class="btn-toggle" 
+                    (click)="toggleAtivo(espaco)" 
+                    [title]="espaco.ativo ? 'Desativar' : 'Ativar'"
+                  >
+                    <span>{{ espaco.ativo ? '🔒' : '🔓' }}</span>
+                    <span>{{ espaco.ativo ? 'Desativar' : 'Ativar' }}</span>
+                  </button>
+                  <button class="btn-delete" (click)="excluirEspaco(espaco)" title="Excluir">
+                    <span>🗑️</span>
+                    <span>Excluir</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  } @else {
+    <app-espaco-form
+      [espaco]="espacoSelecionado"
+      [filialIdFuncionario]="filialIdFuncionario"
+      (submitForm)="onSubmitForm($event)"
+      (cancel)="onCancelForm()"
+    />
+  }
 </div>

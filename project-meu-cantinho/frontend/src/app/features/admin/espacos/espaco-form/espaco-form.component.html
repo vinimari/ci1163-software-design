@@ -1,0 +1,121 @@
+<div class="form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Espaço' : 'Novo Espaço' }}</h2>
+  </div>
+
+  <form [formGroup]="espacoForm" (ngSubmit)="onSubmit()" class="espaco-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nome">Nome do Espaço *</label>
+        <input
+          id="nome"
+          type="text"
+          formControlName="nome"
+          placeholder="Ex: Salão de Festas Premium"
+          [class.error]="isFieldInvalid('nome')"
+        />
+        @if (isFieldInvalid('nome')) {
+          <span class="error-message">{{ getErrorMessage('nome') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="filialId">Filial *</label>
+        <select
+          id="filialId"
+          formControlName="filialId"
+          [class.error]="isFieldInvalid('filialId')"
+        >
+          <option value="">Selecione uma filial</option>
+          @for (filial of filiais; track filial.id) {
+            <option [value]="filial.id">{{ filial.nome }} - {{ filial.cidade }}/{{ filial.estado }}</option>
+          }
+        </select>
+        @if (isFieldInvalid('filialId')) {
+          <span class="error-message">{{ getErrorMessage('filialId') }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="descricao">Descrição</label>
+      <textarea
+        id="descricao"
+        formControlName="descricao"
+        placeholder="Descreva as características do espaço..."
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="capacidade">Capacidade *</label>
+        <input
+          id="capacidade"
+          type="number"
+          formControlName="capacidade"
+          placeholder="Ex: 100"
+          min="1"
+          [class.error]="isFieldInvalid('capacidade')"
+        />
+        <small>Número de pessoas</small>
+        @if (isFieldInvalid('capacidade')) {
+          <span class="error-message">{{ getErrorMessage('capacidade') }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="precoDiaria">Preço da Diária *</label>
+        <input
+          id="precoDiaria"
+          type="number"
+          formControlName="precoDiaria"
+          placeholder="Ex: 1500.00"
+          min="0"
+          step="0.01"
+          [class.error]="isFieldInvalid('precoDiaria')"
+        />
+        <small>Valor em R$</small>
+        @if (isFieldInvalid('precoDiaria')) {
+          <span class="error-message">{{ getErrorMessage('precoDiaria') }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="urlFotoPrincipal">URL da Foto Principal</label>
+      <input
+        id="urlFotoPrincipal"
+        type="url"
+        formControlName="urlFotoPrincipal"
+        placeholder="https://exemplo.com/foto.jpg"
+        [class.error]="isFieldInvalid('urlFotoPrincipal')"
+      />
+      <small>URL da imagem do espaço</small>
+      @if (isFieldInvalid('urlFotoPrincipal')) {
+        <span class="error-message">{{ getErrorMessage('urlFotoPrincipal') }}</span>
+      }
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" formControlName="ativo" />
+        <span>Espaço ativo para reservas</span>
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()" [disabled]="loading">
+        Cancelar
+      </button>
+      <button type="submit" class="btn-submit" [disabled]="loading || espacoForm.invalid">
+        @if (loading) {
+          <span class="spinner"></span>
+          <span>Salvando...</span>
+        } @else {
+          <span>{{ isEditMode ? 'Atualizar' : 'Criar' }} Espaço</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

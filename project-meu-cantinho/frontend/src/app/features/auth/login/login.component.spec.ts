@@ -150,7 +150,7 @@ describe('LoginComponent', () => {
       component.onSubmit();
 
       expect(component.loading).toBe(true);
-      
+
       tick(10); // Complete the observable
       expect(component.loading).toBe(false);
     }));

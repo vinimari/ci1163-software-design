@@ -3,6 +3,8 @@ package com.seucantinho.api.domain.entity;
 import com.seucantinho.api.domain.enums.TipoPagamentoEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +29,7 @@ public class Pagamento {
     private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false, columnDefinition = "tipo_pagamento_enum")
     private TipoPagamentoEnum tipo;
 

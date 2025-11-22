@@ -114,7 +114,7 @@ class PagamentoServiceTest {
                 .id(2)
                 .valor(new BigDecimal("400.00"))
                 .build();
-        
+
         PagamentoResponseDTO responseDTO2 = PagamentoResponseDTO.builder()
                 .id(2)
                 .build();
@@ -269,7 +269,7 @@ class PagamentoServiceTest {
                 .valor(requestDTO.getValor())
                 .tipo(requestDTO.getTipo())
                 .build();
-        
+
         assertThatThrownBy(() -> pagamentoService.create(invalidDTO))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Reserva não encontrada com ID: 999");

@@ -117,7 +117,7 @@ class ReservaServiceTest {
                 .id(2)
                 .dataEvento(LocalDate.now().plusDays(10))
                 .build();
-        
+
         ReservaResponseDTO responseDTO2 = ReservaResponseDTO.builder()
                 .id(2)
                 .build();
@@ -268,7 +268,7 @@ class ReservaServiceTest {
                 .dataEvento(requestDTO.getDataEvento())
                 .valorTotal(requestDTO.getValorTotal())
                 .build();
-        
+
         assertThatThrownBy(() -> reservaService.create(invalidDTO))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Usuário não encontrado com ID: 999");
@@ -291,7 +291,7 @@ class ReservaServiceTest {
                 .dataEvento(requestDTO.getDataEvento())
                 .valorTotal(requestDTO.getValorTotal())
                 .build();
-        
+
         assertThatThrownBy(() -> reservaService.create(invalidDTO))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Espaço não encontrado com ID: 999");

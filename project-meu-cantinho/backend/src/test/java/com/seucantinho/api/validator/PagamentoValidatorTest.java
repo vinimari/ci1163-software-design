@@ -87,7 +87,7 @@ class PagamentoValidatorTest {
                 .id(1)
                 .valor(new BigDecimal("600.00"))
                 .build();
-        
+
         Pagamento pagamento2 = Pagamento.builder()
                 .id(2)
                 .valor(new BigDecimal("300.00"))
@@ -109,21 +109,21 @@ class PagamentoValidatorTest {
         BigDecimal pagamento1 = new BigDecimal("250.00");
         assertThatCode(() -> pagamentoValidator.validateValorPagamento(pagamento1, reserva))
                 .doesNotThrowAnyException();
-        
+
         reserva.getPagamentos().add(Pagamento.builder().valor(pagamento1).build());
 
         // Given - Segundo pagamento
         BigDecimal pagamento2 = new BigDecimal("250.00");
         assertThatCode(() -> pagamentoValidator.validateValorPagamento(pagamento2, reserva))
                 .doesNotThrowAnyException();
-        
+
         reserva.getPagamentos().add(Pagamento.builder().valor(pagamento2).build());
 
         // Given - Terceiro pagamento
         BigDecimal pagamento3 = new BigDecimal("250.00");
         assertThatCode(() -> pagamentoValidator.validateValorPagamento(pagamento3, reserva))
                 .doesNotThrowAnyException();
-        
+
         reserva.getPagamentos().add(Pagamento.builder().valor(pagamento3).build());
 
         // Given - Quarto pagamento (completa o valor)

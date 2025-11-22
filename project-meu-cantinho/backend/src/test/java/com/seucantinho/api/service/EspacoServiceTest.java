@@ -92,7 +92,7 @@ class EspacoServiceTest {
                 .id(2)
                 .nome("Sala de Reunião B")
                 .build();
-        
+
         EspacoResponseDTO responseDTO2 = EspacoResponseDTO.builder()
                 .id(2)
                 .nome("Sala de Reunião B")
@@ -279,7 +279,7 @@ class EspacoServiceTest {
                 .ativo(requestDTO.getAtivo())
                 .filialId(999)
                 .build();
-        
+
         assertThatThrownBy(() -> espacoService.create(invalidDTO))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Filial não encontrada com ID: 999");
@@ -346,7 +346,7 @@ class EspacoServiceTest {
                 .ativo(requestDTO.getAtivo())
                 .filialId(999)
                 .build();
-        
+
         assertThatThrownBy(() -> espacoService.update(1, invalidUpdateDTO))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Filial não encontrada com ID: 999");

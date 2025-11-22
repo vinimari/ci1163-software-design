@@ -86,7 +86,7 @@ class ClienteServiceTest {
                 .nome("Maria Santos")
                 .email("maria@email.com")
                 .build();
-        
+
         ClienteResponseDTO responseDTO2 = ClienteResponseDTO.builder()
                 .id(2)
                 .nome("Maria Santos")
@@ -148,7 +148,7 @@ class ClienteServiceTest {
         assertThatThrownBy(() -> clienteService.findById(999))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Cliente não encontrado com ID: 999");
-        
+
         verify(clienteRepository, times(1)).findById(999);
         verify(clienteMapper, never()).toResponseDTO(any());
     }

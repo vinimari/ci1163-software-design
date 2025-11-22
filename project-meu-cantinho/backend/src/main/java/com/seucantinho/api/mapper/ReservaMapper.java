@@ -1,11 +1,14 @@
 package com.seucantinho.api.mapper;
 
+import com.seucantinho.api.domain.entity.Cliente;
 import com.seucantinho.api.domain.entity.Espaco;
 import com.seucantinho.api.domain.entity.Reserva;
 import com.seucantinho.api.domain.entity.Usuario;
 import com.seucantinho.api.domain.enums.StatusReservaEnum;
 import com.seucantinho.api.dto.reserva.ReservaRequestDTO;
 import com.seucantinho.api.dto.reserva.ReservaResponseDTO;
+import com.seucantinho.api.dto.usuario.UsuarioResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +16,11 @@ import org.springframework.stereotype.Component;
  * Aplica o princípio SRP (Single Responsibility Principle).
  */
 @Component
+@RequiredArgsConstructor
 public class ReservaMapper {
+
+    private final EspacoMapper espacoMapper;
+    private final UsuarioMapper usuarioMapper;
 
     public Reserva toEntity(ReservaRequestDTO dto, Usuario usuario, Espaco espaco) {
         return Reserva.builder()
@@ -36,6 +43,8 @@ public class ReservaMapper {
                 .status(reserva.getStatus())
                 .totalPago(reserva.calcularTotalPago())
                 .saldo(reserva.calcularSaldo())
+                .usuario(usuarioMapper.toResponseDTO(reserva.getUsuario()))
+                .espaco(espacoMapper.toResponseDTO(reserva.getEspaco()))
                 .build();
     }
 }

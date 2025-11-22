@@ -19,13 +19,13 @@ export class ReservasAdminComponent implements OnInit {
   reservasFiltradas: ReservaResponse[] = [];
   loading = false;
   error: string | null = null;
-  
+
   // Filtros
   searchTerm = '';
   statusFilter: StatusReserva | 'TODOS' = 'TODOS';
   dataFilter: 'TODAS' | 'FUTURAS' | 'PASSADAS' = 'FUTURAS';
   pagamentoFilter: 'TODOS' | 'QUITADA' | 'PENDENTE' = 'TODOS';
-  
+
   StatusReserva = StatusReserva;
 
   constructor(
@@ -57,25 +57,25 @@ export class ReservasAdminComponent implements OnInit {
 
   applyFilters(): void {
     let filtered = [...this.reservas];
-    
+
     // Filtro por termo de busca (cliente ou espaço)
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(reserva =>
-        (reserva.usuarioNome?.toLowerCase().includes(term)) ||
-        (reserva.espacoNome?.toLowerCase().includes(term))
+        (reserva.usuario.nome?.toLowerCase().includes(term)) ||
+        (reserva.espaco.nome?.toLowerCase().includes(term))
       );
     }
-    
+
     // Filtro por status
     if (this.statusFilter !== 'TODOS') {
       filtered = filtered.filter(reserva => reserva.status === this.statusFilter);
     }
-    
+
     // Filtro por data
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
-    
+
     if (this.dataFilter === 'FUTURAS') {
       filtered = filtered.filter(reserva => {
         const dataEvento = new Date(reserva.dataEvento);
@@ -87,25 +87,25 @@ export class ReservasAdminComponent implements OnInit {
         return dataEvento < hoje;
       });
     }
-    
+
     // Filtro por status de pagamento
     if (this.pagamentoFilter === 'QUITADA') {
-      filtered = filtered.filter(reserva => 
+      filtered = filtered.filter(reserva =>
         reserva.saldo === 0 || (reserva.totalPago !== undefined && reserva.totalPago >= reserva.valorTotal)
       );
     } else if (this.pagamentoFilter === 'PENDENTE') {
-      filtered = filtered.filter(reserva => 
+      filtered = filtered.filter(reserva =>
         reserva.saldo !== undefined && reserva.saldo > 0
       );
     }
-    
+
     // Ordenar por data do evento (mais próximas primeiro para futuras, mais recentes primeiro para passadas)
     filtered.sort((a, b) => {
       const dataA = new Date(a.dataEvento).getTime();
       const dataB = new Date(b.dataEvento).getTime();
       return this.dataFilter === 'PASSADAS' ? dataB - dataA : dataA - dataB;
     });
-    
+
     this.reservasFiltradas = filtered;
   }
 
@@ -195,7 +195,7 @@ export class ReservasAdminComponent implements OnInit {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
     const data = new Date(dataEvento);
-    
+
     if (data < hoje) {
       return 'data-passada';
     } else if (data.toDateString() === hoje.toDateString()) {

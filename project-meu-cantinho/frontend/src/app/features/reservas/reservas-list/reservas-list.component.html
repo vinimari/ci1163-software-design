@@ -14,7 +14,7 @@
         <app-card [hover]="true">
           <div class="reserva-item">
             <div class="reserva-header">
-              <h3>{{ reserva.espacoNome || 'Espaço' }}</h3>
+              <h3>{{ reserva.espaco.nome || 'Espaço' }}</h3>
               <span class="status-badge" [class]="'status-' + reserva.status.toLowerCase()">
                 {{ getStatusLabel(reserva.status) }}
               </span>

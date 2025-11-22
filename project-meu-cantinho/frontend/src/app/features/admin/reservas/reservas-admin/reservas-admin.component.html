@@ -40,8 +40,8 @@
   <div class="filters-section">
     <div class="filter-group">
       <label>🔍 Buscar</label>
-      <input 
-        type="text" 
+      <input
+        type="text"
         class="search-input"
         placeholder="Buscar por cliente ou espaço..."
         [(ngModel)]="searchTerm"
@@ -51,7 +51,7 @@
 
     <div class="filter-group">
       <label>📊 Status</label>
-      <select 
+      <select
         class="filter-select"
         [(ngModel)]="statusFilter"
         (change)="onStatusFilterChange(statusFilter)"
@@ -67,7 +67,7 @@
 
     <div class="filter-group">
       <label>📅 Período</label>
-      <select 
+      <select
         class="filter-select"
         [(ngModel)]="dataFilter"
         (change)="onDataFilterChange(dataFilter)"
@@ -80,7 +80,7 @@
 
     <div class="filter-group">
       <label>💳 Pagamento</label>
-      <select 
+      <select
         class="filter-select"
         [(ngModel)]="pagamentoFilter"
         (change)="onPagamentoFilterChange(pagamentoFilter)"
@@ -119,13 +119,13 @@
         <!-- Informações do Cliente -->
         <div class="info-section">
           <div class="section-title">👤 Cliente</div>
-          <div class="info-value">{{ reserva.usuarioNome || 'N/A' }}</div>
+          <div class="info-value">{{ reserva.usuario.nome || 'N/A' }}</div>
         </div>
 
         <!-- Informações do Espaço -->
         <div class="info-section">
           <div class="section-title">🏛️ Espaço</div>
-          <div class="info-value">{{ reserva.espacoNome || 'N/A' }}</div>
+          <div class="info-value">{{ reserva.espaco.nome || 'N/A' }}</div>
         </div>
 
         <!-- Data do Evento -->
@@ -160,50 +160,50 @@
 
       <!-- Ações -->
       <div class="reserva-actions">
-        <app-button 
-          variant="primary" 
-          size="small" 
-          icon="👁️" 
+        <app-button
+          variant="primary"
+          size="small"
+          icon="👁️"
           (clicked)="viewReserva(reserva.id)"
         >
           Ver Detalhes
         </app-button>
 
         <div class="status-actions" *ngIf="reserva.status !== StatusReserva.CANCELADA && reserva.status !== StatusReserva.CONCLUIDA">
-          <app-button 
+          <app-button
             *ngIf="reserva.status === StatusReserva.AGUARDANDO_SINAL"
-            variant="success" 
-            size="small" 
-            icon="✅" 
+            variant="success"
+            size="small"
+            icon="✅"
             (clicked)="updateStatus(reserva, StatusReserva.CONFIRMADA)"
           >
             Confirmar
           </app-button>
 
-          <app-button 
+          <app-button
             *ngIf="reserva.status === StatusReserva.CONFIRMADA"
-            variant="primary" 
-            size="small" 
-            icon="🔄" 
+            variant="primary"
+            size="small"
+            icon="🔄"
             (clicked)="updateStatus(reserva, StatusReserva.EM_ANDAMENTO)"
           >
             Iniciar
           </app-button>
 
-          <app-button 
+          <app-button
             *ngIf="reserva.status === StatusReserva.EM_ANDAMENTO"
-            variant="success" 
-            size="small" 
-            icon="🎉" 
+            variant="success"
+            size="small"
+            icon="🎉"
             (clicked)="updateStatus(reserva, StatusReserva.CONCLUIDA)"
           >
             Concluir
           </app-button>
 
-          <app-button 
-            variant="danger" 
-            size="small" 
-            icon="❌" 
+          <app-button
+            variant="danger"
+            size="small"
+            icon="❌"
             (clicked)="updateStatus(reserva, StatusReserva.CANCELADA)"
           >
             Cancelar

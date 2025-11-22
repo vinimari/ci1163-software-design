@@ -3,6 +3,7 @@ package com.seucantinho.api.mapper;
 import com.seucantinho.api.domain.entity.Espaco;
 import com.seucantinho.api.domain.entity.Reserva;
 import com.seucantinho.api.domain.entity.Usuario;
+import com.seucantinho.api.domain.enums.StatusReservaEnum;
 import com.seucantinho.api.dto.reserva.ReservaRequestDTO;
 import com.seucantinho.api.dto.reserva.ReservaResponseDTO;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class ReservaMapper {
                 .dataEvento(dto.getDataEvento())
                 .valorTotal(dto.getValorTotal())
                 .observacoes(dto.getObservacoes())
-                .status(dto.getStatus())
+                .status(dto.getStatus() != null ? dto.getStatus() : StatusReservaEnum.AGUARDANDO_SINAL)
                 .usuario(usuario)
                 .espaco(espaco)
                 .build();

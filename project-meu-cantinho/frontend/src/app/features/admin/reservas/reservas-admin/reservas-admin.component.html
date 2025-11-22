@@ -1,4 +1,215 @@
-<div class="admin-container">
-  <h1>Todas as Reservas</h1>
-  <p>Componente administrativo em desenvolvimento...</p>
+<div class="reservas-container">
+  <div class="reservas-header">
+    <h1>📅 Gerenciamento de Reservas</h1>
+    <p>Controle completo de reservas e pagamentos de todas as filiais</p>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📋</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalReservas() }}</div>
+        <div class="stat-label">Total de Reservas</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <div class="stat-value">R$ {{ getValorTotalReservas() | number:'1.2-2' }}</div>
+        <div class="stat-label">Valor Total</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💳</div>
+      <div class="stat-content">
+        <div class="stat-value">R$ {{ getValorTotalPago() | number:'1.2-2' }}</div>
+        <div class="stat-label">Total Pago</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚠️</div>
+      <div class="stat-content">
+        <div class="stat-value">R$ {{ getSaldoPendente() | number:'1.2-2' }}</div>
+        <div class="stat-label">Saldo Pendente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>🔍 Buscar</label>
+      <input 
+        type="text" 
+        class="search-input"
+        placeholder="Buscar por cliente ou espaço..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange(searchTerm)"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>📊 Status</label>
+      <select 
+        class="filter-select"
+        [(ngModel)]="statusFilter"
+        (change)="onStatusFilterChange(statusFilter)"
+      >
+        <option value="TODOS">Todos</option>
+        <option [value]="StatusReserva.AGUARDANDO_SINAL">Aguardando Sinal</option>
+        <option [value]="StatusReserva.CONFIRMADA">Confirmada</option>
+        <option [value]="StatusReserva.EM_ANDAMENTO">Em Andamento</option>
+        <option [value]="StatusReserva.CONCLUIDA">Concluída</option>
+        <option [value]="StatusReserva.CANCELADA">Cancelada</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>📅 Período</label>
+      <select 
+        class="filter-select"
+        [(ngModel)]="dataFilter"
+        (change)="onDataFilterChange(dataFilter)"
+      >
+        <option value="FUTURAS">Futuras</option>
+        <option value="PASSADAS">Passadas</option>
+        <option value="TODAS">Todas</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>💳 Pagamento</label>
+      <select 
+        class="filter-select"
+        [(ngModel)]="pagamentoFilter"
+        (change)="onPagamentoFilterChange(pagamentoFilter)"
+      >
+        <option value="TODOS">Todos</option>
+        <option value="QUITADA">Quitadas</option>
+        <option value="PENDENTE">Pendentes</option>
+      </select>
+    </div>
+  </div>
+
+  <app-loading *ngIf="loading"></app-loading>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Lista de Reservas -->
+  <div *ngIf="!loading && reservasFiltradas.length === 0" class="empty-state">
+    <span class="empty-icon">📭</span>
+    <h3>Nenhuma reserva encontrada</h3>
+    <p>Não há reservas que correspondam aos filtros aplicados</p>
+  </div>
+
+  <div *ngIf="!loading && reservasFiltradas.length > 0" class="reservas-grid">
+    <div *ngFor="let reserva of reservasFiltradas" class="reserva-card" [ngClass]="getStatusClass(reserva.status)">
+      <div class="reserva-header">
+        <div class="reserva-title">
+          <span class="status-icon">{{ getStatusIcon(reserva.status) }}</span>
+          <span class="status-text">{{ reserva.status }}</span>
+        </div>
+        <span class="reserva-id">#{{ reserva.id }}</span>
+      </div>
+
+      <div class="reserva-body">
+        <!-- Informações do Cliente -->
+        <div class="info-section">
+          <div class="section-title">👤 Cliente</div>
+          <div class="info-value">{{ reserva.usuarioNome || 'N/A' }}</div>
+        </div>
+
+        <!-- Informações do Espaço -->
+        <div class="info-section">
+          <div class="section-title">🏛️ Espaço</div>
+          <div class="info-value">{{ reserva.espacoNome || 'N/A' }}</div>
+        </div>
+
+        <!-- Data do Evento -->
+        <div class="info-section">
+          <div class="section-title">📅 Data do Evento</div>
+          <div class="info-value" [ngClass]="getDataClass(reserva.dataEvento)">
+            {{ reserva.dataEvento | date: 'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <!-- Informações Financeiras -->
+        <div class="financial-section">
+          <div class="financial-row">
+            <span class="financial-label">💰 Valor Total:</span>
+            <span class="financial-value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
+          </div>
+          <div class="financial-row" *ngIf="reserva.totalPago !== undefined">
+            <span class="financial-label">💳 Valor Pago:</span>
+            <span class="financial-value">R$ {{ reserva.totalPago | number:'1.2-2' }}</span>
+          </div>
+          <div class="financial-row" *ngIf="reserva.saldo !== undefined && reserva.saldo > 0">
+            <span class="financial-label saldo-label">⚠️ Saldo:</span>
+            <span class="financial-value saldo-value">R$ {{ reserva.saldo | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Status de Pagamento -->
+        <div class="pagamento-badge" [ngClass]="getPagamentoClass(reserva)">
+          {{ getPagamentoStatus(reserva) }}
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div class="reserva-actions">
+        <app-button 
+          variant="primary" 
+          size="small" 
+          icon="👁️" 
+          (clicked)="viewReserva(reserva.id)"
+        >
+          Ver Detalhes
+        </app-button>
+
+        <div class="status-actions" *ngIf="reserva.status !== StatusReserva.CANCELADA && reserva.status !== StatusReserva.CONCLUIDA">
+          <app-button 
+            *ngIf="reserva.status === StatusReserva.AGUARDANDO_SINAL"
+            variant="success" 
+            size="small" 
+            icon="✅" 
+            (clicked)="updateStatus(reserva, StatusReserva.CONFIRMADA)"
+          >
+            Confirmar
+          </app-button>
+
+          <app-button 
+            *ngIf="reserva.status === StatusReserva.CONFIRMADA"
+            variant="primary" 
+            size="small" 
+            icon="🔄" 
+            (clicked)="updateStatus(reserva, StatusReserva.EM_ANDAMENTO)"
+          >
+            Iniciar
+          </app-button>
+
+          <app-button 
+            *ngIf="reserva.status === StatusReserva.EM_ANDAMENTO"
+            variant="success" 
+            size="small" 
+            icon="🎉" 
+            (clicked)="updateStatus(reserva, StatusReserva.CONCLUIDA)"
+          >
+            Concluir
+          </app-button>
+
+          <app-button 
+            variant="danger" 
+            size="small" 
+            icon="❌" 
+            (clicked)="updateStatus(reserva, StatusReserva.CANCELADA)"
+          >
+            Cancelar
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

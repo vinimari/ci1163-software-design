@@ -68,7 +68,7 @@
 
               <div class="card-content">
                 <h3>{{ espaco.nome }}</h3>
-                
+
                 @if (espaco.descricao) {
                   <p class="description">{{ espaco.descricao }}</p>
                 }
@@ -96,10 +96,10 @@
                   <app-button variant="success" size="small" icon="✏️" (clicked)="editarEspaco(espaco)">
                     Editar
                   </app-button>
-                  <app-button 
-                    variant="warning" 
-                    size="small" 
-                    [icon]="espaco.ativo ? '🔒' : '🔓'" 
+                  <app-button
+                    variant="warning"
+                    size="small"
+                    [icon]="espaco.ativo ? '🔒' : '🔓'"
                     (clicked)="toggleAtivo(espaco)"
                   >
                     {{ espaco.ativo ? 'Desativar' : 'Ativar' }}

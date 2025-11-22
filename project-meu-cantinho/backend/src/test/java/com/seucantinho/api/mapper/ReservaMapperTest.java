@@ -101,7 +101,7 @@ class ReservaMapperTest {
         Reserva result = reservaMapper.toEntity(requestDTO, cliente, espaco);
 
         // Then
-        assertNull(result.getStatus());
+        assertEquals(StatusReservaEnum.AGUARDANDO_SINAL, result.getStatus());
     }
 
     @Test

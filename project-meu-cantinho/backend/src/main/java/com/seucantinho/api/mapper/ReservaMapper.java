@@ -1,0 +1,40 @@
+package com.seucantinho.api.mapper;
+
+import com.seucantinho.api.domain.entity.Espaco;
+import com.seucantinho.api.domain.entity.Reserva;
+import com.seucantinho.api.domain.entity.Usuario;
+import com.seucantinho.api.dto.reserva.ReservaRequestDTO;
+import com.seucantinho.api.dto.reserva.ReservaResponseDTO;
+import org.springframework.stereotype.Component;
+
+/**
+ * Mapper responsável pela conversão entre Reserva (Entity) e seus DTOs.
+ * Aplica o princípio SRP (Single Responsibility Principle).
+ */
+@Component
+public class ReservaMapper {
+
+    public Reserva toEntity(ReservaRequestDTO dto, Usuario usuario, Espaco espaco) {
+        return Reserva.builder()
+                .dataEvento(dto.getDataEvento())
+                .valorTotal(dto.getValorTotal())
+                .observacoes(dto.getObservacoes())
+                .status(dto.getStatus())
+                .usuario(usuario)
+                .espaco(espaco)
+                .build();
+    }
+
+    public ReservaResponseDTO toResponseDTO(Reserva reserva) {
+        return ReservaResponseDTO.builder()
+                .id(reserva.getId())
+                .dataCriacao(reserva.getDataCriacao())
+                .dataEvento(reserva.getDataEvento())
+                .valorTotal(reserva.getValorTotal())
+                .observacoes(reserva.getObservacoes())
+                .status(reserva.getStatus())
+                .totalPago(reserva.calcularTotalPago())
+                .saldo(reserva.calcularSaldo())
+                .build();
+    }
+}

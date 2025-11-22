@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { PerfilUsuario } from '../../../core/models';
+import { UsuarioResponse } from '../../../core/models';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -11,15 +12,32 @@ import { PerfilUsuario } from '../../../core/models';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
+  currentUser: UsuarioResponse | null = null;
   isAdmin = false;
+  isFuncionario = false;
+  isCliente = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
-  ) {
-    const user = this.authService.getCurrentUser();
-    this.isAdmin = user?.perfil === PerfilUsuario.ADMIN || user?.perfil === PerfilUsuario.FUNCIONARIO;
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.currentUser = user;
+        this.isAdmin = this.authService.isAdmin();
+        this.isFuncionario = this.authService.isFuncionario();
+        this.isCliente = this.authService.isCliente();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   logout(): void {

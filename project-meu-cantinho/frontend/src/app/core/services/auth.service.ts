@@ -42,10 +42,35 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  isAdmin(): boolean {
+    return this.currentUserSubject.value?.perfil === 'ADMIN';
+  }
+
+  isFuncionario(): boolean {
+    return this.currentUserSubject.value?.perfil === 'FUNCIONARIO';
+  }
+
+  isCliente(): boolean {
+    return this.currentUserSubject.value?.perfil === 'CLIENTE';
+  }
+
+  hasRole(roles: string[]): boolean {
+    const userPerfil = this.currentUserSubject.value?.perfil;
+    return userPerfil ? roles.includes(userPerfil) : false;
+  }
+
   private setSession(response: LoginResponse): void {
     localStorage.setItem('token', response.token);
-    localStorage.setItem('user', JSON.stringify(response.usuario));
-    this.currentUserSubject.next(response.usuario);
+    const user: UsuarioResponse = {
+      id: response.id,
+      nome: response.nome,
+      email: response.email,
+      perfil: response.perfil,
+      ativo: true,
+      dataCadastro: new Date().toISOString()
+    };
+    localStorage.setItem('user', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
   private loadUserFromStorage(): void {

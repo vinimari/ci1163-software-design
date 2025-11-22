@@ -44,6 +44,9 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  id: number;
+  nome: string;
+  email: string;
+  perfil: PerfilUsuario;
   token: string;
-  usuario: UsuarioResponse;
 }

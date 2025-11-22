@@ -1,15 +1,93 @@
 <nav class="navbar">
-  <div class="navbar-brand">
-    <h1>Meu Cantinho</h1>
-  </div>
-  <div class="navbar-menu">
-    <a routerLink="/espacos" routerLinkActive="active">Espaços</a>
-    <a routerLink="/reservas" routerLinkActive="active">Minhas Reservas</a>
-    @if (isAdmin) {
-      <a routerLink="/admin/filiais" routerLinkActive="active">Filiais</a>
-      <a routerLink="/admin/espacos" routerLinkActive="active">Gestão de Espaços</a>
-      <a routerLink="/admin/reservas" routerLinkActive="active">Todas Reservas</a>
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a routerLink="/" class="brand-link">
+        <span class="brand-icon">🏠</span>
+        <h1 class="brand-title">Seu Cantinho</h1>
+      </a>
+    </div>
+
+    @if (authService.isAuthenticated()) {
+      <div class="navbar-menu">
+        <!-- Menu ADMIN -->
+        @if (isAdmin) {
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Início</span>
+          </a>
+          <a routerLink="/admin/filiais" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">🏬</span>
+            <span>Filiais</span>
+          </a>
+          <a routerLink="/admin/espacos" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">🎆</span>
+            <span>Espaços</span>
+          </a>
+          <a routerLink="/admin/clientes" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Clientes</span>
+          </a>
+          <a routerLink="/admin/reservas" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">📅</span>
+            <span>Reservas</span>
+          </a>
+          <a routerLink="/admin/pagamentos" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">💳</span>
+            <span>Pagamentos</span>
+          </a>
+        }
+
+        <!-- Menu FUNCIONARIO -->
+        @if (isFuncionario) {
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Início</span>
+          </a>
+          <a routerLink="/funcionario/espacos" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">🎆</span>
+            <span>Espaços</span>
+          </a>
+          <a routerLink="/funcionario/clientes" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Clientes</span>
+          </a>
+          <a routerLink="/funcionario/reservas" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">📅</span>
+            <span>Reservas</span>
+          </a>
+          <a routerLink="/funcionario/pagamentos" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">💳</span>
+            <span>Pagamentos</span>
+          </a>
+        }
+
+        <!-- Menu CLIENTE -->
+        @if (isCliente) {
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Início</span>
+          </a>
+          <a routerLink="/espacos" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">🎆</span>
+            <span>Espaços Disponíveis</span>
+          </a>
+          <a routerLink="/reservas" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon">📅</span>
+            <span>Minhas Reservas</span>
+          </a>
+        }
+
+        <div class="navbar-user">
+          <div class="user-info">
+            <span class="user-icon">👤</span>
+            <span class="user-name">{{ currentUser?.nome }}</span>
+          </div>
+          <button class="btn-logout" (click)="logout()" title="Sair">
+            <span>🚪</span>
+            <span>Sair</span>
+          </button>
+        </div>
+      </div>
     }
-    <button class="btn-logout" (click)="logout()">Sair</button>
   </div>
 </nav>

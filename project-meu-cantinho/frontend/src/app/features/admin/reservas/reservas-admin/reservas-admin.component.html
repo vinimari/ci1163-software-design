@@ -160,15 +160,6 @@
 
       <!-- Ações -->
       <div class="reserva-actions">
-        <app-button
-          variant="primary"
-          size="small"
-          icon="👁️"
-          (clicked)="viewReserva(reserva.id)"
-        >
-          Ver Detalhes
-        </app-button>
-
         <div class="status-actions" *ngIf="reserva.status !== StatusReserva.CANCELADA && reserva.status !== StatusReserva.FINALIZADA">
           <app-button
             *ngIf="reserva.status === StatusReserva.AGUARDANDO_SINAL"

@@ -73,9 +73,9 @@ describe('FiliaisListComponent', () => {
   it('should handle error when loading filiais fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     filialService.getAll.mockReturnValue(throwError(() => new Error('Error')));
-    
+
     component.loadFiliais();
-    
+
     expect(component.error).toBe('Erro ao carregar filiais');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
@@ -99,9 +99,9 @@ describe('FiliaisListComponent', () => {
   it('should delete filial when confirmed', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     filialService.delete.mockReturnValue(of(undefined));
-    
+
     component.deleteFilial(1);
-    
+
     expect(confirmSpy).toHaveBeenCalledWith('Tem certeza que deseja excluir esta filial?');
     expect(filialService.delete).toHaveBeenCalledWith(1);
     expect(filialService.getAll).toHaveBeenCalled();
@@ -110,9 +110,9 @@ describe('FiliaisListComponent', () => {
 
   it('should not delete filial when not confirmed', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
-    
+
     component.deleteFilial(1);
-    
+
     expect(filialService.delete).not.toHaveBeenCalled();
     confirmSpy.mockRestore();
   });
@@ -121,9 +121,9 @@ describe('FiliaisListComponent', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     filialService.delete.mockReturnValue(throwError(() => new Error('Error')));
-    
+
     component.deleteFilial(1);
-    
+
     expect(component.error).toBe('Erro ao excluir filial');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
@@ -134,7 +134,7 @@ describe('FiliaisListComponent', () => {
     filialService.getAll.mockReturnValue(throwError(() => new Error('Test error')));
     component.loadFiliais();
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.textContent).toContain('Erro ao carregar filiais');
   });
@@ -143,7 +143,7 @@ describe('FiliaisListComponent', () => {
     filialService.getAll.mockReturnValue(of([]));
     component.loadFiliais();
     fixture.detectChanges();
-    
+
     const emptyState = fixture.nativeElement.querySelector('.empty-state');
     expect(emptyState).toBeTruthy();
   });
@@ -152,7 +152,7 @@ describe('FiliaisListComponent', () => {
     component.filiais = mockFiliais;
     component.loading = false;
     fixture.detectChanges();
-    
+
     const cards = fixture.nativeElement.querySelectorAll('.filial-card');
     expect(cards.length).toBe(2);
   });

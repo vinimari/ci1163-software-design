@@ -324,4 +324,54 @@ class ClienteServiceTest {
         verify(clienteRepository, times(1)).existsById(999);
         verify(clienteRepository, never()).deleteById(any());
     }
+
+    @Test
+    void shouldToggleAtivoToFalse() {
+        // Given
+        cliente.setAtivo(true);
+        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(cliente)).thenReturn(cliente);
+        when(clienteMapper.toResponseDTO(cliente)).thenReturn(responseDTO);
+
+        // When
+        ClienteResponseDTO result = clienteService.toggleAtivo(1, false);
+
+        // Then
+        assertThat(result).isNotNull();
+        verify(clienteRepository, times(1)).findById(1);
+        verify(clienteRepository, times(1)).save(cliente);
+        verify(clienteMapper, times(1)).toResponseDTO(cliente);
+    }
+
+    @Test
+    void shouldToggleAtivoToTrue() {
+        // Given
+        cliente.setAtivo(false);
+        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
+        when(clienteRepository.save(cliente)).thenReturn(cliente);
+        when(clienteMapper.toResponseDTO(cliente)).thenReturn(responseDTO);
+
+        // When
+        ClienteResponseDTO result = clienteService.toggleAtivo(1, true);
+
+        // Then
+        assertThat(result).isNotNull();
+        verify(clienteRepository, times(1)).findById(1);
+        verify(clienteRepository, times(1)).save(cliente);
+        verify(clienteMapper, times(1)).toResponseDTO(cliente);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenToggleAtivoForNonExistentCliente() {
+        // Given
+        when(clienteRepository.findById(999)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> clienteService.toggleAtivo(999, true))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessageContaining("Cliente não encontrado com ID: 999");
+
+        verify(clienteRepository, times(1)).findById(999);
+        verify(clienteRepository, never()).save(any());
+    }
 }

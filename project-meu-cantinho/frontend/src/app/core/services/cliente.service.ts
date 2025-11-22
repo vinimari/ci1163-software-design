@@ -31,4 +31,8 @@ export class ClienteService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  toggleAtivo(id: number, ativo: boolean): Observable<ClienteResponse> {
+    return this.http.patch<ClienteResponse>(`${this.apiUrl}/${id}/ativo`, { ativo });
+  }
 }

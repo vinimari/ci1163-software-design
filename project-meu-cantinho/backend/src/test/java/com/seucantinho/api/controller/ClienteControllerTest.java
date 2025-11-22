@@ -249,4 +249,80 @@ class ClienteControllerTest {
 
         verify(clienteService, times(1)).delete(999);
     }
+
+    @Test
+    void shouldToggleAtivoToFalse() throws Exception {
+        // Given
+        ClienteResponseDTO inactiveResponse = ClienteResponseDTO.builder()
+                .id(1)
+                .nome("João Silva")
+                .email("joao@example.com")
+                .cpf("12345678901")
+                .ativo(false)
+                .build();
+
+        when(clienteService.toggleAtivo(1, false)).thenReturn(inactiveResponse);
+
+        // When & Then
+        mockMvc.perform(patch("/api/clientes/1/ativo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"ativo\": false}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.ativo", is(false)));
+
+        verify(clienteService, times(1)).toggleAtivo(1, false);
+    }
+
+    @Test
+    void shouldToggleAtivoToTrue() throws Exception {
+        // Given
+        ClienteResponseDTO activeResponse = ClienteResponseDTO.builder()
+                .id(1)
+                .nome("João Silva")
+                .email("joao@example.com")
+                .cpf("12345678901")
+                .ativo(true)
+                .build();
+
+        when(clienteService.toggleAtivo(1, true)).thenReturn(activeResponse);
+
+        // When & Then
+        mockMvc.perform(patch("/api/clientes/1/ativo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"ativo\": true}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.ativo", is(true)));
+
+        verify(clienteService, times(1)).toggleAtivo(1, true);
+    }
+
+    @Test
+    void shouldReturn400_WhenToggleAtivoWithoutAtivoField() throws Exception {
+        // When & Then
+        mockMvc.perform(patch("/api/clientes/1/ativo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest());
+
+        verify(clienteService, never()).toggleAtivo(any(), any());
+    }
+
+    @Test
+    void shouldReturn404_WhenToggleAtivoForNonExistentCliente() throws Exception {
+        // Given
+        when(clienteService.toggleAtivo(999, true))
+                .thenThrow(new ResourceNotFoundException("Cliente não encontrado"));
+
+        // When & Then
+        mockMvc.perform(patch("/api/clientes/999/ativo")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"ativo\": true}"))
+                .andExpect(status().isNotFound());
+
+        verify(clienteService, times(1)).toggleAtivo(999, true);
+    }
 }

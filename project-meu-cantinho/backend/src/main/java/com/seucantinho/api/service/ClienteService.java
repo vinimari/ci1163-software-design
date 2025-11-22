@@ -69,6 +69,15 @@ public class ClienteService implements IClienteService {
         clienteRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public ClienteResponseDTO toggleAtivo(Integer id, Boolean ativo) {
+        Cliente cliente = findClienteById(id);
+        cliente.setAtivo(ativo);
+        Cliente updatedCliente = clienteRepository.save(cliente);
+        return clienteMapper.toResponseDTO(updatedCliente);
+    }
+
     private Cliente findClienteById(Integer id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + id));

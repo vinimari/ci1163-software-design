@@ -1,0 +1,135 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <app-button variant="outline" icon="←" (clicked)="goBack()">
+      Voltar
+    </app-button>
+    <h1>👤 Detalhes do Cliente</h1>
+  </div>
+
+  <app-loading *ngIf="loading"></app-loading>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="cliente && !loading" class="content-grid">
+    <!-- Card de Informações do Cliente -->
+    <div class="cliente-card">
+      <div class="card-header">
+        <h2>{{ cliente.nome }}</h2>
+        <span class="status-badge" [class.ativo]="cliente.ativo" [class.inativo]="!cliente.ativo">
+          {{ cliente.ativo ? '✅ Ativo' : '❌ Inativo' }}
+        </span>
+      </div>
+
+      <div class="cliente-details">
+        <div class="detail-row">
+          <span class="icon">📧</span>
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">{{ cliente.email }}</span>
+        </div>
+
+        <div class="detail-row" *ngIf="cliente.cpf">
+          <span class="icon">🆔</span>
+          <span class="detail-label">CPF:</span>
+          <span class="detail-value">{{ cliente.cpf }}</span>
+        </div>
+
+        <div class="detail-row" *ngIf="cliente.telefone">
+          <span class="icon">📞</span>
+          <span class="detail-label">Telefone:</span>
+          <span class="detail-value">{{ cliente.telefone }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="icon">📅</span>
+          <span class="detail-label">Data de Cadastro:</span>
+          <span class="detail-value">{{ cliente.dataCadastro | date: 'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de Estatísticas -->
+    <div class="stats-card">
+      <h3>📊 Estatísticas</h3>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">📋</div>
+          <div class="stat-content">
+            <div class="stat-value">{{ getTotalReservas() }}</div>
+            <div class="stat-label">Total de Reservas</div>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <div class="stat-value">R$ {{ getValorTotalReservas() | number:'1.2-2' }}</div>
+            <div class="stat-label">Valor Total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de Reservas -->
+  <div *ngIf="!loading && cliente" class="reservas-section">
+    <div class="section-header">
+      <h2>📅 Reservas do Cliente</h2>
+    </div>
+
+    <app-loading *ngIf="loadingReservas"></app-loading>
+
+    <div *ngIf="!loadingReservas && reservas.length === 0" class="empty-state">
+      <span class="empty-icon">📭</span>
+      <h3>Nenhuma reserva encontrada</h3>
+      <p>Este cliente ainda não possui reservas</p>
+    </div>
+
+    <div *ngIf="!loadingReservas && reservas.length > 0" class="reservas-grid">
+      <div *ngFor="let reserva of reservas" class="reserva-card" [ngClass]="getStatusClass(reserva.status)">
+        <div class="reserva-header">
+          <span class="status-icon">{{ getStatusIcon(reserva.status) }}</span>
+          <span class="status-text">{{ reserva.status }}</span>
+        </div>
+
+        <div class="reserva-info">
+          <div class="info-item">
+            <span class="icon">🏛️</span>
+            <span class="label">Espaço:</span>
+            <span class="value">{{ reserva.espacoNome || 'N/A' }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="icon">📅</span>
+            <span class="label">Data do Evento:</span>
+            <span class="value">{{ reserva.dataEvento | date: 'dd/MM/yyyy' }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="icon">💰</span>
+            <span class="label">Valor:</span>
+            <span class="value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="reserva.totalPago !== undefined">
+            <span class="icon">💳</span>
+            <span class="label">Pago:</span>
+            <span class="value">R$ {{ reserva.totalPago | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="reserva.saldo !== undefined && reserva.saldo > 0">
+            <span class="icon">⚠️</span>
+            <span class="label">Saldo:</span>
+            <span class="value saldo">R$ {{ reserva.saldo | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="reserva-actions">
+          <app-button variant="success" size="small" icon="👁️" (clicked)="viewReserva(reserva.id)">
+            Ver Detalhes
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

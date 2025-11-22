@@ -1,0 +1,90 @@
+<div class="clientes-container">
+  <div class="header">
+    <div class="title-section">
+      <h1>👥 Gerenciar Clientes</h1>
+      <p>Visualize todos os clientes e suas reservas</p>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar por nome, email ou CPF..."
+        (input)="onSearchChange($any($event.target).value)"
+        [value]="searchTerm"
+      />
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <app-loading></app-loading>
+    <p>Carregando clientes...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="clientes-grid" *ngIf="!loading && !error && clientesFiltrados.length > 0">
+    <div *ngFor="let cliente of clientesFiltrados" class="cliente-card" [class.inactive]="!cliente.ativo">
+      <div class="card-header">
+        <div class="cliente-info">
+          <h3>{{ cliente.nome }}</h3>
+          <span class="status-badge" [class.ativo]="cliente.ativo" [class.inativo]="!cliente.ativo">
+            {{ cliente.ativo ? '✅ Ativo' : '❌ Inativo' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="icon">📧</span>
+            <span class="label">Email:</span>
+            <span class="value">{{ cliente.email }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="cliente.cpf">
+            <span class="icon">🆔</span>
+            <span class="label">CPF:</span>
+            <span class="value">{{ cliente.cpf }}</span>
+          </div>
+
+          <div class="info-item" *ngIf="cliente.telefone">
+            <span class="icon">📞</span>
+            <span class="label">Telefone:</span>
+            <span class="value">{{ cliente.telefone }}</span>
+          </div>
+
+          <div class="info-item">
+            <span class="icon">📅</span>
+            <span class="label">Cadastro:</span>
+            <span class="value">{{ cliente.dataCadastro | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <app-button variant="success" size="small" icon="📋" (clicked)="viewCliente(cliente.id)">
+            Ver Reservas
+          </app-button>
+          <app-button
+            [variant]="cliente.ativo ? 'warning' : 'success'"
+            size="small"
+            [icon]="cliente.ativo ? '🔒' : '🔓'"
+            (clicked)="toggleAtivo(cliente)"
+          >
+            {{ cliente.ativo ? 'Desativar' : 'Ativar' }}
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && clientesFiltrados.length === 0" class="empty-state">
+    <span class="empty-icon">👥</span>
+    <h3>{{ searchTerm ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado' }}</h3>
+    <p>{{ searchTerm ? 'Tente ajustar os filtros de busca' : 'Os clientes se cadastram através do sistema' }}</p>
+  </div>
+</div>

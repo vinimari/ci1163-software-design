@@ -73,9 +73,9 @@ describe('FilialDetailComponent', () => {
   it('should handle error when loading filial fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     filialService.getById.mockReturnValue(throwError(() => new Error('Error')));
-    
+
     component.loadFilial(1);
-    
+
     expect(component.error).toBe('Erro ao carregar filial');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
@@ -101,9 +101,9 @@ describe('FilialDetailComponent', () => {
   it('should delete filial when confirmed', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     component.filial = mockFilial;
-    
+
     component.deleteFilial();
-    
+
     expect(confirmSpy).toHaveBeenCalledWith('Tem certeza que deseja excluir esta filial?');
     expect(filialService.delete).toHaveBeenCalledWith(1);
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais']);
@@ -113,9 +113,9 @@ describe('FilialDetailComponent', () => {
   it('should not delete filial when not confirmed', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
     component.filial = mockFilial;
-    
+
     component.deleteFilial();
-    
+
     expect(filialService.delete).not.toHaveBeenCalled();
     confirmSpy.mockRestore();
   });
@@ -123,9 +123,9 @@ describe('FilialDetailComponent', () => {
   it('should not delete when filial is null', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     component.filial = null;
-    
+
     component.deleteFilial();
-    
+
     expect(filialService.delete).not.toHaveBeenCalled();
     confirmSpy.mockRestore();
   });
@@ -135,9 +135,9 @@ describe('FilialDetailComponent', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     component.filial = mockFilial;
     filialService.delete.mockReturnValue(throwError(() => new Error('Error')));
-    
+
     component.deleteFilial();
-    
+
     expect(component.error).toBe('Erro ao excluir filial');
     expect(component.loading).toBe(false);
     expect(router.navigate).not.toHaveBeenCalled();
@@ -148,7 +148,7 @@ describe('FilialDetailComponent', () => {
   it('should display error message when error is set', () => {
     component.error = 'Test error';
     fixture.detectChanges();
-    
+
     const errorElement = fixture.nativeElement.querySelector('.alert-danger');
     expect(errorElement).toBeTruthy();
     expect(errorElement.textContent).toContain('Test error');
@@ -158,7 +158,7 @@ describe('FilialDetailComponent', () => {
     component.filial = mockFilial;
     component.loading = false;
     fixture.detectChanges();
-    
+
     const card = fixture.nativeElement.querySelector('.filial-card');
     expect(card).toBeTruthy();
     expect(card.textContent).toContain('Filial Centro');
@@ -168,7 +168,7 @@ describe('FilialDetailComponent', () => {
     activatedRoute.snapshot.paramMap.get.mockReturnValue(null);
     const newFixture = TestBed.createComponent(FilialDetailComponent);
     newFixture.detectChanges();
-    
+
     expect(filialService.getById).not.toHaveBeenCalled();
   });
 });

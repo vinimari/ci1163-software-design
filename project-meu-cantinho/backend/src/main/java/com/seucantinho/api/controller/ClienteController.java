@@ -57,4 +57,17 @@ public class ClienteController {
         clienteService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/ativo")
+    @Operation(summary = "Ativar ou desativar cliente")
+    public ResponseEntity<ClienteResponseDTO> toggleAtivo(
+            @PathVariable Integer id,
+            @RequestBody java.util.Map<String, Boolean> body) {
+        Boolean ativo = body.get("ativo");
+        if (ativo == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        ClienteResponseDTO cliente = clienteService.toggleAtivo(id, ativo);
+        return ResponseEntity.ok(cliente);
+    }
 }

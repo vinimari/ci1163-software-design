@@ -16,4 +16,6 @@ public interface IClienteService {
     ClienteResponseDTO update(Integer id, ClienteRequestDTO requestDTO);
 
     void delete(Integer id);
+
+    ClienteResponseDTO toggleAtivo(Integer id, Boolean ativo);
 }

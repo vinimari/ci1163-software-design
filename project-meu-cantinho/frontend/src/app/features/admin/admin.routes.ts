@@ -26,6 +26,20 @@ export const ADMIN_ROUTES: Routes = [
     ]
   },
   {
+    path: 'clientes',
+    canActivate: [roleGuard([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO])],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./clientes/clientes-list/clientes-list.component').then(m => m.ClientesListComponent)
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./clientes/cliente-detail/cliente-detail.component').then(m => m.ClienteDetailComponent)
+      }
+    ]
+  },
+  {
     path: 'espacos',
     canActivate: [roleGuard([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO])],
     loadComponent: () => import('./espacos/espacos-admin/espacos-admin.component').then(m => m.EspacosAdminComponent)

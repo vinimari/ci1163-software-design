@@ -56,7 +56,7 @@ describe('EspacoFormComponent', () => {
 
     it('should initialize in create mode when no espaco is provided', () => {
       filialService.getAll.mockReturnValue(of(mockFiliais));
-      
+
       fixture.detectChanges();
 
       expect(component.isEditMode).toBe(false);
@@ -66,7 +66,7 @@ describe('EspacoFormComponent', () => {
     it('should initialize in edit mode when espaco is provided', () => {
       component.espaco = mockEspaco;
       filialService.getAll.mockReturnValue(of(mockFiliais));
-      
+
       fixture.detectChanges();
 
       expect(component.isEditMode).toBe(true);
@@ -74,7 +74,7 @@ describe('EspacoFormComponent', () => {
 
     it('should load all filiais for admin (no filialIdFuncionario)', () => {
       filialService.getAll.mockReturnValue(of(mockFiliais));
-      
+
       fixture.detectChanges();
 
       expect(filialService.getAll).toHaveBeenCalled();
@@ -84,7 +84,7 @@ describe('EspacoFormComponent', () => {
     it('should load only funcionario filial when filialIdFuncionario is provided', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
-      
+
       fixture.detectChanges();
 
       expect(filialService.getById).toHaveBeenCalledWith(1);
@@ -95,7 +95,7 @@ describe('EspacoFormComponent', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
       filialService.getAll.mockReturnValue(throwError(() => error));
-      
+
       fixture.detectChanges();
 
       expect(consoleError).toHaveBeenCalledWith('Erro ao carregar filiais:', error);
@@ -107,7 +107,7 @@ describe('EspacoFormComponent', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
       filialService.getById.mockReturnValue(throwError(() => error));
-      
+
       fixture.detectChanges();
 
       expect(consoleError).toHaveBeenCalledWith('Erro ao carregar filial:', error);
@@ -134,7 +134,7 @@ describe('EspacoFormComponent', () => {
 
     it('should initialize form with espaco values in edit mode', () => {
       component.espaco = mockEspaco;
-      
+
       fixture.detectChanges();
 
       expect(component.espacoForm.get('nome')?.value).toBe(mockEspaco.nome);
@@ -150,7 +150,7 @@ describe('EspacoFormComponent', () => {
     it('should disable filialId field when filialIdFuncionario is provided', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
-      
+
       fixture.detectChanges();
 
       expect(component.espacoForm.get('filialId')?.disabled).toBe(true);
@@ -165,7 +165,7 @@ describe('EspacoFormComponent', () => {
     it('should set filialId to filialIdFuncionario when provided', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
-      
+
       fixture.detectChanges();
 
       expect(component.espacoForm.get('filialId')?.value).toBe(1);
@@ -290,7 +290,7 @@ describe('EspacoFormComponent', () => {
 
     it('should emit submitForm when form is valid', () => {
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
-      
+
       component.espacoForm.patchValue({
         nome: 'Sala de Reunião',
         descricao: 'Sala ampla',
@@ -329,7 +329,7 @@ describe('EspacoFormComponent', () => {
 
     it('should not emit submitForm when form is invalid', () => {
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
-      
+
       component.espacoForm.patchValue({
         nome: '', // Invalid - required
         capacidade: 10,
@@ -354,12 +354,12 @@ describe('EspacoFormComponent', () => {
     it('should include disabled fields in submission using getRawValue', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
-      
+
       // Precisa chamar ngOnInit manualmente após definir filialIdFuncionario
       component.ngOnInit();
 
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
-      
+
       // Preencher todos os campos obrigatórios
       component.espacoForm.patchValue({
         nome: 'Sala de Reunião',
@@ -390,7 +390,7 @@ describe('EspacoFormComponent', () => {
 
     it('should emit cancel event', () => {
       const cancelSpy = jest.spyOn(component.cancel, 'emit');
-      
+
       component.onCancel();
 
       expect(cancelSpy).toHaveBeenCalled();
@@ -410,14 +410,14 @@ describe('EspacoFormComponent', () => {
     it('should return true for touched invalid field', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.markAsTouched();
-      
+
       expect(component.isFieldInvalid('nome')).toBe(true);
     });
 
     it('should return true for dirty invalid field', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.markAsDirty();
-      
+
       expect(component.isFieldInvalid('nome')).toBe(true);
     });
 
@@ -425,7 +425,7 @@ describe('EspacoFormComponent', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('Sala de Reunião');
       nomeControl?.markAsTouched();
-      
+
       expect(component.isFieldInvalid('nome')).toBe(false);
     });
 
@@ -443,7 +443,7 @@ describe('EspacoFormComponent', () => {
     it('should return required error message', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.markAsTouched();
-      
+
       expect(component.getErrorMessage('nome')).toBe('Campo obrigatório');
     });
 
@@ -451,7 +451,7 @@ describe('EspacoFormComponent', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(0);
       capacidadeControl?.markAsTouched();
-      
+
       expect(component.getErrorMessage('capacidade')).toBe('Valor mínimo: 1');
     });
 
@@ -459,7 +459,7 @@ describe('EspacoFormComponent', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('a'.repeat(151));
       nomeControl?.markAsTouched();
-      
+
       // O erro do Angular é 'maxlength' (lowercase), mas o componente verifica 'maxLength'
       // Como o componente não encontra, retorna 'Campo inválido'
       expect(component.getErrorMessage('nome')).toBe('Campo inválido');
@@ -469,7 +469,7 @@ describe('EspacoFormComponent', () => {
       const urlControl = component.espacoForm.get('urlFotoPrincipal');
       urlControl?.setValue('invalid-url');
       urlControl?.markAsTouched();
-      
+
       expect(component.getErrorMessage('urlFotoPrincipal')).toBe('URL inválida');
     });
 
@@ -477,7 +477,7 @@ describe('EspacoFormComponent', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('Sala de Reunião');
       nomeControl?.markAsTouched();
-      
+
       expect(component.getErrorMessage('nome')).toBe('');
     });
 
@@ -507,13 +507,13 @@ describe('EspacoFormComponent', () => {
       const inactiveEspaco = { ...mockEspaco, ativo: false };
       component.espaco = inactiveEspaco;
       component.ngOnInit();
-      
+
       expect(component.espacoForm.get('ativo')?.value).toBe(false);
     });
 
     it('should submit updated values', () => {
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
-      
+
       component.espacoForm.patchValue({
         nome: 'Sala Atualizada',
         capacidade: 20
@@ -541,7 +541,7 @@ describe('EspacoFormComponent', () => {
       const espacoWithoutUrl = { ...mockEspaco, urlFotoPrincipal: '' };
       component.espaco = espacoWithoutUrl;
       component.ngOnInit();
-      
+
       expect(component.espacoForm.get('urlFotoPrincipal')?.value).toBe('');
     });
 
@@ -549,7 +549,7 @@ describe('EspacoFormComponent', () => {
       const espacoWithoutDesc = { ...mockEspaco, descricao: '' };
       component.espaco = espacoWithoutDesc;
       component.ngOnInit();
-      
+
       expect(component.espacoForm.get('descricao')?.value).toBe('');
     });
 
@@ -570,21 +570,21 @@ describe('EspacoFormComponent', () => {
     it('should handle large capacity values', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(1000);
-      
+
       expect(capacidadeControl?.valid).toBe(true);
     });
 
     it('should handle large price values', () => {
       const precoControl = component.espacoForm.get('precoDiaria');
       precoControl?.setValue(99999.99);
-      
+
       expect(precoControl?.valid).toBe(true);
     });
 
     it('should handle decimal capacity values', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(10.5);
-      
+
       expect(capacidadeControl?.valid).toBe(true);
     });
   });

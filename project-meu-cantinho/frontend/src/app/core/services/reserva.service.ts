@@ -37,7 +37,7 @@ export class ReservaService {
   }
 
   updateStatus(id: number, status: StatusReserva): Observable<ReservaResponse> {
-    return this.http.patch<ReservaResponse>(`${this.apiUrl}/${id}/status`, { status });
+    return this.http.patch<ReservaResponse>(`${this.apiUrl}/${id}/status?status=${status}`, null);
   }
 
   delete(id: number): Observable<void> {

@@ -1,5 +1,180 @@
-<div class="form-container">
-  <h1>Nova Reserva</h1>
-  <p>Componente em desenvolvimento...</p>
-  <a routerLink="/espacos" class="btn btn-secondary">Voltar para Espaços</a>
+<div class="reserva-form-container">
+  <app-loading *ngIf="loading"></app-loading>
+
+  <div class="header">
+    <h1>{{ isCliente ? 'Nova Reserva' : 'Criar Reserva' }}</h1>
+    <p *ngIf="isCliente">Reserve um espaço para seu evento</p>
+    <p *ngIf="!isCliente">Crie uma reserva para um cliente</p>
+  </div>
+
+  <div class="error-message" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <form class="reserva-form" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <!-- Seleção de Cliente (apenas para Admin e Funcionário) -->
+    <div class="form-section" *ngIf="!isCliente">
+      <h2>👤 Cliente</h2>
+      <div class="form-group">
+        <label for="cliente">Cliente *</label>
+        <select 
+          id="cliente" 
+          [(ngModel)]="reserva.usuarioId" 
+          name="cliente"
+          required>
+          <option value="0">Selecione um cliente</option>
+          <option *ngFor="let cliente of clientes" [value]="cliente.id">
+            {{ cliente.nome }} - {{ cliente.email }}
+          </option>
+        </select>
+        <small *ngIf="reserva.usuarioId">
+          Cliente selecionado: {{ getClienteNome(reserva.usuarioId) }}
+        </small>
+      </div>
+    </div>
+
+    <!-- Seleção de Filial e Espaço -->
+    <div class="form-section">
+      <h2>🏛️ Espaço</h2>
+      
+      <!-- Filtro de Filial (não aparece para funcionário) -->
+      <div class="form-group" *ngIf="!isFuncionario">
+        <label for="filial">Filial</label>
+        <select 
+          id="filial" 
+          [(ngModel)]="selectedFilialId" 
+          name="filial"
+          (change)="onFilialChange()">
+          <option [value]="null">Todas as filiais</option>
+          <option *ngFor="let filial of filiais" [value]="filial.id">
+            {{ filial.nome }} - {{ filial.cidade }}, {{ filial.estado }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="espaco">Espaço *</label>
+        <select 
+          id="espaco" 
+          [(ngModel)]="reserva.espacoId" 
+          name="espaco"
+          (change)="onEspacoChange()"
+          required>
+          <option value="0">Selecione um espaço</option>
+          <option *ngFor="let espaco of espacosFiltrados" [value]="espaco.id">
+            {{ espaco.nome }} - {{ espaco.filial.nome }} (Cap: {{ espaco.capacidade }} pessoas)
+          </option>
+        </select>
+        
+        <!-- Info do Espaço Selecionado -->
+        <div class="espaco-info" *ngIf="reserva.espacoId && getEspacoInfo(reserva.espacoId) as info">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="icon">🏛️</span>
+              <span class="label">Espaço:</span>
+              <span class="value">{{ info.nome }}</span>
+            </div>
+            <div class="info-item">
+              <span class="icon">📍</span>
+              <span class="label">Filial:</span>
+              <span class="value">{{ info.filial }}</span>
+            </div>
+            <div class="info-item">
+              <span class="icon">👥</span>
+              <span class="label">Capacidade:</span>
+              <span class="value">{{ info.capacidade }} pessoas</span>
+            </div>
+            <div class="info-item">
+              <span class="icon">💰</span>
+              <span class="label">Valor Diária:</span>
+              <span class="value">R$ {{ info.preco | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data e Valor -->
+    <div class="form-section">
+      <h2>📅 Data e Valor</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dataEvento">Data do Evento *</label>
+          <input 
+            type="date" 
+            id="dataEvento" 
+            [(ngModel)]="reserva.dataEvento" 
+            name="dataEvento"
+            [min]="getMinDate()"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="valorTotal">Valor Total (R$) *</label>
+          <input 
+            type="number" 
+            id="valorTotal" 
+            [(ngModel)]="reserva.valorTotal" 
+            name="valorTotal"
+            min="0"
+            step="0.01"
+            required>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observações -->
+    <div class="form-section">
+      <h2>📝 Observações</h2>
+      <div class="form-group">
+        <label for="observacoes">Observações Adicionais</label>
+        <textarea 
+          id="observacoes" 
+          [(ngModel)]="reserva.observacoes" 
+          name="observacoes"
+          rows="4"
+          placeholder="Informações adicionais sobre a reserva..."></textarea>
+      </div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="form-section resumo-section" *ngIf="reserva.espacoId && reserva.dataEvento">
+      <h2>📋 Resumo da Reserva</h2>
+      <div class="resumo-content">
+        <div class="resumo-item">
+          <span class="label">Cliente:</span>
+          <span class="value">{{ isCliente ? 'Você' : getClienteNome(reserva.usuarioId) }}</span>
+        </div>
+        <div class="resumo-item" *ngIf="getEspacoInfo(reserva.espacoId) as info">
+          <span class="label">Espaço:</span>
+          <span class="value">{{ info.nome }} ({{ info.filial }})</span>
+        </div>
+        <div class="resumo-item">
+          <span class="label">Data do Evento:</span>
+          <span class="value">{{ reserva.dataEvento | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="resumo-item total">
+          <span class="label">Valor Total:</span>
+          <span class="value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações -->
+    <div class="form-actions">
+      <app-button
+        label="Cancelar"
+        variant="secondary"
+        type="button"
+        (clickEvent)="cancel()">
+      </app-button>
+      <app-button
+        label="Criar Reserva"
+        variant="primary"
+        type="submit"
+        [disabled]="loading">
+      </app-button>
+    </div>
+  </form>
 </div>

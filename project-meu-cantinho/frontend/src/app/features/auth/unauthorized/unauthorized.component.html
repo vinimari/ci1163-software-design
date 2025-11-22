@@ -1,0 +1,20 @@
+<div class="unauthorized-container">
+  <div class="unauthorized-card">
+    <div class="icon">🚫</div>
+    <h1>Acesso Negado</h1>
+    <p class="message">
+      Você não tem permissão para acessar esta página.
+    </p>
+    <p class="sub-message">
+      Entre em contato com o administrador caso acredite que isso seja um erro.
+    </p>
+    <div class="actions">
+      <button class="btn-primary" (click)="goBack()">
+        Voltar ao Início
+      </button>
+      <a routerLink="/login" class="btn-secondary">
+        Ir para Login
+      </a>
+    </div>
+  </div>
+</div>

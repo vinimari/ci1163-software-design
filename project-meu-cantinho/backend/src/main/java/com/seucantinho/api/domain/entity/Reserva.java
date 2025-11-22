@@ -3,6 +3,8 @@ package com.seucantinho.api.domain.entity;
 import com.seucantinho.api.domain.enums.StatusReservaEnum;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,15 +42,16 @@ public class Reserva {
     private String observacoes;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false, columnDefinition = "status_reserva_enum")
     @Builder.Default
     private StatusReservaEnum status = StatusReservaEnum.AGUARDANDO_SINAL;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "espaco_id", nullable = false)
     private Espaco espaco;
 

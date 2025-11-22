@@ -3,15 +3,17 @@
   margin: 0 auto;
   padding: 2rem;
 
-  .header {
+  .detail-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 2rem;
 
     h1 {
+      color: #2c3e50;
+      font-size: 1.75rem;
+      font-weight: 700;
       margin: 0;
-      color: #333;
     }
   }
 

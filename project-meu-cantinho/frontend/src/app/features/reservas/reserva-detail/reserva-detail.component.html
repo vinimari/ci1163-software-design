@@ -1,14 +1,16 @@
 <div class="detail-container">
+  <div class="detail-header">
+    <app-button variant="outline" icon="←" (clicked)="goBack()">
+      Voltar
+    </app-button>
+    <h1>Detalhes da Reserva #{{ reserva?.id }}</h1>
+  </div>
+
   @if (loading) {
     <app-loading></app-loading>
   } @else if (error && !reserva) {
     <div class="alert alert-error">{{ error }}</div>
-    <a routerLink="/reservas" class="btn btn-secondary">Voltar</a>
   } @else if (reserva) {
-    <div class="header">
-      <h1>Detalhes da Reserva #{{ reserva.id }}</h1>
-      <a routerLink="/reservas" class="btn btn-secondary">Voltar</a>
-    </div>
 
     @if (successMessage) {
       <div class="alert alert-success">{{ successMessage }}</div>

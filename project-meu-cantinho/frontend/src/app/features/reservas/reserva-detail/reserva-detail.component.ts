@@ -7,11 +7,12 @@ import { PagamentoService } from '../../../core/services/pagamento.service';
 import { ReservaResponse, PagamentoRequest, PagamentoResponse, StatusReserva, TipoPagamento } from '../../../core/models';
 import { CardComponent } from '../../../shared/components/card/card.component';
 import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-reserva-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, CardComponent, LoadingComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, CardComponent, LoadingComponent, ButtonComponent],
   templateUrl: './reserva-detail.component.html',
   styleUrl: './reserva-detail.component.scss'
 })
@@ -175,5 +176,9 @@ export class ReservaDetailComponent implements OnInit {
     return this.reserva.saldo > 0 &&
            this.reserva.status !== StatusReserva.CANCELADA &&
            this.reserva.status !== StatusReserva.FINALIZADA;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/reservas']);
   }
 }

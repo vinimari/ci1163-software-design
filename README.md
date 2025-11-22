@@ -46,6 +46,7 @@ Interfaces Spring Data JPA para acesso ao banco de dados:
 
 ### 3. **Business Layer** (`service`)
 Contém a lógica de negócio da aplicação:
+- `AuthService`
 - `ClienteService`
 - `FilialService`
 - `EspacoService`
@@ -60,6 +61,7 @@ Contém a lógica de negócio da aplicação:
 
 ### 4. **Presentation Layer** (`controller`)
 Controllers REST que expõem os endpoints da API:
+- `AuthController`
 - `ClienteController`
 - `FilialController`
 - `EspacoController`
@@ -70,9 +72,10 @@ Controllers REST que expõem os endpoints da API:
 
 ```
 com.seucantinho.api/
-├── config/              # Configurações (Security, OpenAPI)
+├── config/              # Configurações (Security, OpenAPI, CORS)
 ├── controller/          # Controllers REST
 ├── dto/                 # Data Transfer Objects
+│   ├── auth/
 │   ├── espaco/
 │   ├── filial/
 │   ├── pagamento/
@@ -101,6 +104,9 @@ Client → Controller → Service → Repository → Database
 5. **Controller** retorna o DTO ao cliente
 
 ## 🚀 Endpoints Principais
+
+### Autenticação
+- `POST /api/auth/login` - Realizar login
 
 ### Filiais
 - `GET /api/filiais` - Listar todas as filiais
@@ -181,6 +187,8 @@ As migrações são executadas automaticamente na inicialização:
 
 - Senhas são criptografadas com **BCrypt**
 - Senha padrão dos usuários iniciais: `password123`
+- **CORS** configurado para permitir requisições de `http://localhost:4200` (frontend Angular)
+- Endpoints `/api/auth/login` abertos para autenticação
 - Endpoints da API estão abertos para desenvolvimento (configurar autenticação JWT em produção)
 
 ## 🧪 Validações Implementadas

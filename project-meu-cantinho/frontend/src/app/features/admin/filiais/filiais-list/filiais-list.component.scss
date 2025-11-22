@@ -1,4 +1,6 @@
 .filiais-container {
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 2rem;
 
   .header {
@@ -6,66 +8,240 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-    h1 {
-      margin: 0;
-      color: #333;
+    .title-section {
+      h1 {
+        font-size: 2rem;
+        color: #2c3e50;
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
+      }
+
+      p {
+        color: #7f8c8d;
+        margin: 0;
+      }
     }
-  }
 
-  .filiais-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  }
+    .btn-new {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.75rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
 
-  .filial-info {
-    p {
-      margin: 0.5rem 0;
-      color: #666;
-
-      strong {
-        color: #333;
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
       }
     }
   }
 
-  .card-actions {
+  .loading-container {
     display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-    margin-top: 1rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1rem;
 
-    button {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
+    p {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+    }
+  }
+
+  .alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .alert-danger {
+    background-color: #ffe5e5;
+    border: 1px solid #ffcccc;
+    color: #d32f2f;
+  }
+
+  .filiais-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+
+    .filial-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      padding: 1.5rem;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        color: #2c3e50;
+        margin: 0 0 1rem 0;
+        font-weight: 700;
+      }
+
+      .filial-info {
+        margin-bottom: 1.5rem;
+
+        .info-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+          font-size: 0.95rem;
+
+          .icon {
+            font-size: 1.1rem;
+            color: #667eea;
+            min-width: 20px;
+          }
+
+          .label {
+            font-weight: 600;
+            color: #555;
+            min-width: 80px;
+          }
+
+          .value {
+            color: #2c3e50;
+            flex: 1;
+          }
+        }
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        border-top: 1px solid #f0f0f0;
+        padding-top: 1rem;
+
+        button {
+          flex: 1;
+          min-width: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.25rem;
+          padding: 0.625rem 0.75rem;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.85rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          span:first-child {
+            font-size: 1rem;
+          }
+        }
+
+        .btn-view {
+          background: #3498db;
+          color: white;
+
+          &:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+          }
+        }
+
+        .btn-edit {
+          background: #f39c12;
+          color: white;
+
+          &:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+          }
+        }
+
+        .btn-delete {
+          background: #e74c3c;
+          color: white;
+
+          &:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+          }
+        }
+      }
     }
   }
 
   .empty-state {
     text-align: center;
-    padding: 3rem;
-    background: #f8f9fa;
-    border-radius: 8px;
+    padding: 4rem 2rem;
+
+    .empty-icon {
+      font-size: 5rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin: 0 0 0.5rem 0;
+    }
 
     p {
-      font-size: 1.1rem;
-      color: #666;
-      margin-bottom: 1.5rem;
+      color: #7f8c8d;
+      margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+      padding: 0.875rem 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
     }
   }
+}
 
-  .alert {
+@media (max-width: 768px) {
+  .filiais-container {
     padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-  }
 
-  .alert-danger {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
+    .header {
+      flex-direction: column;
+      align-items: stretch;
+
+      .btn-new {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .filiais-grid {
+      grid-template-columns: 1fr;
+    }
   }
 }

@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FilialService } from '../../../../core/services';
 import { FilialResponse } from '../../../../core/models';
-import { CardComponent } from '../../../../shared/components/card/card.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 
 @Component({
   selector: 'app-filiais-list',
   standalone: true,
-  imports: [CommonModule, CardComponent, LoadingComponent],
+  imports: [CommonModule, LoadingComponent],
   templateUrl: './filiais-list.component.html',
   styleUrl: './filiais-list.component.scss'
 })

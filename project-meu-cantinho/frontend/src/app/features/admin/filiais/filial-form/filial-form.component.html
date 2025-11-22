@@ -1,6 +1,6 @@
 <div class="form-container">
   <div class="form-header">
-    <h1>{{ isEditMode ? 'Editar Filial' : 'Nova Filial' }}</h1>
+    <h2>{{ isEditMode ? '✏️ Editar Filial' : '➕ Nova Filial' }}</h2>
   </div>
 
   <app-loading *ngIf="loading"></app-loading>
@@ -11,13 +11,13 @@
 
   <form [formGroup]="filialForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
     <div class="form-group">
-      <label for="nome">Nome da Filial *</label>
+      <label for="nome">🏢 Nome da Filial *</label>
       <input
         type="text"
         id="nome"
         formControlName="nome"
-        class="form-control"
         [class.is-invalid]="nome?.invalid && nome?.touched"
+        placeholder="Ex: Filial Centro"
       />
       <div class="invalid-feedback" *ngIf="nome?.invalid && nome?.touched">
         <span *ngIf="nome?.errors?.['required']">Nome é obrigatório</span>
@@ -27,13 +27,13 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label for="cidade">Cidade *</label>
+        <label for="cidade">📍 Cidade *</label>
         <input
           type="text"
           id="cidade"
           formControlName="cidade"
-          class="form-control"
           [class.is-invalid]="cidade?.invalid && cidade?.touched"
+          placeholder="Ex: São Paulo"
         />
         <div class="invalid-feedback" *ngIf="cidade?.invalid && cidade?.touched">
           <span *ngIf="cidade?.errors?.['required']">Cidade é obrigatória</span>
@@ -42,15 +42,15 @@
       </div>
 
       <div class="form-group">
-        <label for="estado">Estado (UF) *</label>
+        <label for="estado">🗺️ Estado (UF) *</label>
         <input
           type="text"
           id="estado"
           formControlName="estado"
-          class="form-control"
           maxlength="2"
           [class.is-invalid]="estado?.invalid && estado?.touched"
           placeholder="Ex: SP"
+          style="text-transform: uppercase;"
         />
         <div class="invalid-feedback" *ngIf="estado?.invalid && estado?.touched">
           <span *ngIf="estado?.errors?.['required']">Estado é obrigatório</span>
@@ -62,23 +62,21 @@
     </div>
 
     <div class="form-group">
-      <label for="endereco">Endereço</label>
+      <label for="endereco">🏠 Endereço</label>
       <input
         type="text"
         id="endereco"
         formControlName="endereco"
-        class="form-control"
         placeholder="Rua, número, complemento"
       />
     </div>
 
     <div class="form-group">
-      <label for="telefone">Telefone</label>
+      <label for="telefone">📞 Telefone</label>
       <input
         type="text"
         id="telefone"
         formControlName="telefone"
-        class="form-control"
         [class.is-invalid]="telefone?.invalid && telefone?.touched"
         placeholder="(99) 99999-9999"
       />
@@ -90,11 +88,11 @@
     </div>
 
     <div class="form-actions">
-      <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading">
+      <button type="button" class="btn-cancel" (click)="cancel()" [disabled]="loading">
         Cancelar
       </button>
-      <button type="submit" class="btn btn-primary" [disabled]="loading || filialForm.invalid">
-        {{ isEditMode ? 'Atualizar' : 'Criar' }}
+      <button type="submit" class="btn-submit" [disabled]="loading || filialForm.invalid">
+        {{ isEditMode ? '💾 Atualizar' : '➕ Criar' }}
       </button>
     </div>
   </form>

@@ -81,8 +81,8 @@ export class FilialFormComponent implements OnInit {
           this.router.navigate(['/admin/filiais']);
         },
         error: (err) => {
-          this.error = this.isEditMode 
-            ? 'Erro ao atualizar filial' 
+          this.error = this.isEditMode
+            ? 'Erro ao atualizar filial'
             : 'Erro ao criar filial';
           this.loading = false;
           console.error('Erro ao salvar filial:', err);

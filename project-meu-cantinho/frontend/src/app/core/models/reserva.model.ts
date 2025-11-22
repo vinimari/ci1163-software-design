@@ -16,10 +16,24 @@ export interface ReservaResponse {
   valorTotal: number;
   observacoes?: string;
   status: StatusReserva;
-  usuarioId: number;
-  usuarioNome?: string;
-  espacoId: number;
-  espacoNome?: string;
+  usuario: {
+    id: number;
+    nome: string;
+    email?: string;
+    cpf?: string;
+    telefone?: string;
+  };
+  espaco: {
+    id: number;
+    nome: string;
+    capacidade?: number;
+    filial: {
+      id: number;
+      nome: string;
+      cidade?: string;
+      estado?: string;
+    };
+  };
   totalPago?: number;
   saldo?: number;
 }

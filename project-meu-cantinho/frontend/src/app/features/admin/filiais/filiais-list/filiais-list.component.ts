@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { FilialService } from '../../../../core/services';
 import { FilialResponse } from '../../../../core/models';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-filiais-list',
   standalone: true,
-  imports: [CommonModule, LoadingComponent],
+  imports: [CommonModule, LoadingComponent, ButtonComponent],
   templateUrl: './filiais-list.component.html',
-  styleUrl: './filiais-list.component.scss'
+  styleUrls: ['./filiais-list.component.scss']
 })
 export class FiliaisListComponent implements OnInit {
   filiais: FilialResponse[] = [];

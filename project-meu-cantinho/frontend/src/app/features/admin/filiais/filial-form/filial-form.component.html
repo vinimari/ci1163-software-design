@@ -88,12 +88,12 @@
     </div>
 
     <div class="form-actions">
-      <button type="button" class="btn-cancel" (click)="cancel()" [disabled]="loading">
+      <app-button type="button" variant="secondary" (clicked)="cancel()" [disabled]="loading">
         Cancelar
-      </button>
-      <button type="submit" class="btn-submit" [disabled]="loading || filialForm.invalid">
-        {{ isEditMode ? '💾 Atualizar' : '➕ Criar' }}
-      </button>
+      </app-button>
+      <app-button type="submit" variant="primary" [disabled]="loading || filialForm.invalid" [icon]="isEditMode ? '💾' : '➕'">
+        {{ isEditMode ? 'Atualizar' : 'Criar' }}
+      </app-button>
     </div>
   </form>
 </div>

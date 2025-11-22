@@ -4,13 +4,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FilialService } from '../../../../core/services';
 import { FilialResponse } from '../../../../core/models';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-filial-detail',
   standalone: true,
-  imports: [CommonModule, LoadingComponent],
+  imports: [CommonModule, LoadingComponent, ButtonComponent],
   templateUrl: './filial-detail.component.html',
-  styleUrl: './filial-detail.component.scss'
+  styleUrls: ['./filial-detail.component.scss']
 })
 export class FilialDetailComponent implements OnInit {
   filial: FilialResponse | null = null;

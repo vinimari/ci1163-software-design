@@ -1,0 +1,113 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: inherit;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(0);
+  }
+
+  .btn-icon {
+    font-size: 1.2em;
+    line-height: 1;
+  }
+}
+
+// Variantes
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  &:not(:disabled):hover {
+    background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+  }
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+
+  &:not(:disabled):hover {
+    background: linear-gradient(135deg, #5a6268 0%, #383d41 100%);
+  }
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+
+  &:not(:disabled):hover {
+    background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+  }
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+
+  &:not(:disabled):hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+  }
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+  color: #212529;
+
+  &:not(:disabled):hover {
+    background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%);
+  }
+}
+
+.btn-outline {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+
+  &:not(:disabled):hover {
+    background: #667eea;
+    color: white;
+  }
+}
+
+// Tamanhos
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.btn-medium {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.btn-large {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+// Full width
+.btn-full-width {
+  width: 100%;
+}

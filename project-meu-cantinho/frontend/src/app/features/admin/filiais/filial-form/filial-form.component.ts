@@ -5,13 +5,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FilialService } from '../../../../core/services';
 import { FilialRequest } from '../../../../core/models';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-filial-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingComponent],
+  imports: [CommonModule, ReactiveFormsModule, LoadingComponent, ButtonComponent],
   templateUrl: './filial-form.component.html',
-  styleUrl: './filial-form.component.scss'
+  styleUrls: ['./filial-form.component.scss']
 })
 export class FilialFormComponent implements OnInit {
   filialForm: FormGroup;

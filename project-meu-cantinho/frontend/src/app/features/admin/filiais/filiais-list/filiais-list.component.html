@@ -4,9 +4,9 @@
       <h1>Gerenciar Filiais</h1>
       <p>Gerencie todas as filiais da sua empresa</p>
     </div>
-    <button class="btn-new" (click)="createFilial()">
-      <span>➕</span> Nova Filial
-    </button>
+    <app-button variant="primary" icon="➕" (clicked)="createFilial()">
+      Nova Filial
+    </app-button>
   </div>
 
   <div *ngIf="loading" class="loading-container">
@@ -21,26 +21,26 @@
   <div class="filiais-grid" *ngIf="!loading && !error">
     <div *ngFor="let filial of filiais" class="filial-card">
       <h3>{{ filial.nome }}</h3>
-      
+
       <div class="filial-info">
         <div class="info-item">
           <span class="icon">📍</span>
           <span class="label">Cidade:</span>
           <span class="value">{{ filial.cidade }}</span>
         </div>
-        
+
         <div class="info-item">
           <span class="icon">🗺️</span>
           <span class="label">Estado:</span>
           <span class="value">{{ filial.estado }}</span>
         </div>
-        
+
         <div class="info-item" *ngIf="filial.endereco">
           <span class="icon">🏢</span>
           <span class="label">Endereço:</span>
           <span class="value">{{ filial.endereco }}</span>
         </div>
-        
+
         <div class="info-item" *ngIf="filial.telefone">
           <span class="icon">📞</span>
           <span class="label">Telefone:</span>
@@ -49,15 +49,15 @@
       </div>
 
       <div class="card-actions">
-        <button class="btn-view" (click)="viewFilial(filial.id)">
-          <span>👁️</span> Ver
-        </button>
-        <button class="btn-edit" (click)="editFilial(filial.id)">
-          <span>✏️</span> Editar
-        </button>
-        <button class="btn-delete" (click)="deleteFilial(filial.id)">
-          <span>🗑️</span> Excluir
-        </button>
+        <app-button variant="outline" size="small" icon="👁️" (clicked)="viewFilial(filial.id)">
+          Ver
+        </app-button>
+        <app-button variant="primary" size="small" icon="✏️" (clicked)="editFilial(filial.id)">
+          Editar
+        </app-button>
+        <app-button variant="danger" size="small" icon="🗑️" (clicked)="deleteFilial(filial.id)">
+          Excluir
+        </app-button>
       </div>
     </div>
   </div>
@@ -66,8 +66,8 @@
     <span class="empty-icon">🏢</span>
     <h3>Nenhuma filial cadastrada</h3>
     <p>Comece cadastrando sua primeira filial</p>
-    <button class="btn-primary" (click)="createFilial()">
-      <span>➕</span> Cadastrar primeira filial
-    </button>
+    <app-button variant="primary" icon="➕" (clicked)="createFilial()">
+      Cadastrar primeira filial
+    </app-button>
   </div>
 </div>

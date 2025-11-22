@@ -1,8 +1,8 @@
 <div class="detail-container">
   <div class="detail-header">
-    <button class="btn-back" (click)="goBack()">
-      <span>←</span> Voltar
-    </button>
+    <app-button variant="outline" icon="←" (clicked)="goBack()">
+      Voltar
+    </app-button>
     <h1>🏢 Detalhes da Filial</h1>
   </div>
 
@@ -48,12 +48,12 @@
     </div>
 
     <div class="card-actions">
-      <button class="btn-edit" (click)="editFilial()">
-        <span>✏️</span> Editar
-      </button>
-      <button class="btn-delete" (click)="deleteFilial()">
-        <span>🗑️</span> Excluir
-      </button>
+      <app-button variant="primary" icon="✏️" (clicked)="editFilial()">
+        Editar
+      </app-button>
+      <app-button variant="danger" icon="🗑️" (clicked)="deleteFilial()">
+        Excluir
+      </app-button>
     </div>
   </div>
 </div>

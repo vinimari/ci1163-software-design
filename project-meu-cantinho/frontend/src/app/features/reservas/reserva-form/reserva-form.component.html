@@ -1,5 +1,5 @@
 <div class="reserva-form-container">
-  <app-loading *ngIf="loading"></app-loading>
+  <div class="loading" *ngIf="loading">Carregando...</div>
 
   <div class="header">
     <h1>{{ isCliente ? 'Nova Reserva' : 'Criar Reserva' }}</h1>
@@ -163,18 +163,12 @@
 
     <!-- Ações -->
     <div class="form-actions">
-      <app-button
-        label="Cancelar"
-        variant="secondary"
-        type="button"
-        (clickEvent)="cancel()">
-      </app-button>
-      <app-button
-        label="Criar Reserva"
-        variant="primary"
-        type="submit"
-        [disabled]="loading">
-      </app-button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        Criar Reserva
+      </button>
     </div>
   </form>
 </div>

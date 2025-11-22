@@ -4,13 +4,11 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService, ReservaService, ClienteService, EspacoService, FilialService } from '../../../core/services';
 import { ReservaRequest, ClienteResponse, EspacoResponse, FilialResponse, PerfilUsuario } from '../../../core/models';
-import { LoadingComponent } from '../../../shared/components/loading/loading.component';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-reserva-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, LoadingComponent, ButtonComponent],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './reserva-form.component.html',
   styleUrl: './reserva-form.component.scss'
 })
@@ -86,7 +84,7 @@ export class ReservaFormComponent implements OnInit {
     // Carregar filiais primeiro
     this.filialService.getAll().subscribe({
       next: (filiais) => {
-        this.filiais = filiais.filter(f => f.ativo);
+        this.filiais = filiais;
         
         // Se funcionário, pré-selecionar sua filial
         if (this.isFuncionario && this.userFilialId) {

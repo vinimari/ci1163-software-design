@@ -79,7 +79,7 @@ export class EspacosAdminComponent implements OnInit {
     this.espacosFiltrados = this.espacos.filter(espaco => {
       const matchSearch = !this.searchTerm ||
         espaco.nome.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        espaco.filialNome?.toLowerCase().includes(this.searchTerm.toLowerCase());
+        espaco.filial.nome?.toLowerCase().includes(this.searchTerm.toLowerCase());
 
       const matchStatus = !this.filtroStatus ||
         (this.filtroStatus === 'ativo' && espaco.ativo) ||
@@ -153,7 +153,7 @@ export class EspacosAdminComponent implements OnInit {
       precoDiaria: espaco.precoDiaria,
       ativo: novoStatus,
       urlFotoPrincipal: espaco.urlFotoPrincipal,
-      filialId: espaco.filialId
+      filialId: espaco.filial.id
     };
 
     this.espacoService.update(espaco.id, espacoAtualizado).subscribe({

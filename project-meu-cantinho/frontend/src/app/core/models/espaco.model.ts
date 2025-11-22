@@ -16,6 +16,10 @@ export interface EspacoResponse {
   precoDiaria: number;
   ativo: boolean;
   urlFotoPrincipal?: string;
-  filialId: number;
-  filialNome?: string;
+  filial: {
+    id: number;
+    nome: string;
+    cidade?: string;
+    estado?: string;
+  };
 }

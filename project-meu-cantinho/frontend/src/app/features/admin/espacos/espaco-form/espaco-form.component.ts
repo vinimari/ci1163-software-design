@@ -42,7 +42,7 @@ export class EspacoFormComponent implements OnInit {
       ativo: [this.espaco?.ativo !== undefined ? this.espaco.ativo : true],
       urlFotoPrincipal: [this.espaco?.urlFotoPrincipal || '', [Validators.pattern('https?://.+')]],
       filialId: [
-        { value: this.espaco?.filialId || this.filialIdFuncionario || '', disabled: !!this.filialIdFuncionario },
+        { value: this.espaco?.filial || this.filialIdFuncionario || '', disabled: !!this.filialIdFuncionario },
         [Validators.required]
       ]
     });

@@ -26,6 +26,7 @@ export interface ReservaResponse {
   espaco: {
     id: number;
     nome: string;
+    descricao?: string;
     capacidade?: number;
     filial: {
       id: number;
@@ -34,6 +35,6 @@ export interface ReservaResponse {
       estado?: string;
     };
   };
-  totalPago?: number;
-  saldo?: number;
+  totalPago: number;
+  saldo: number;
 }

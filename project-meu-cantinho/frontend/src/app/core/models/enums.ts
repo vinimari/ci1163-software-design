@@ -7,9 +7,9 @@ export enum PerfilUsuario {
 export enum StatusReserva {
   AGUARDANDO_SINAL = 'AGUARDANDO_SINAL',
   CONFIRMADA = 'CONFIRMADA',
-  EM_ANDAMENTO = 'EM_ANDAMENTO',
-  CONCLUIDA = 'CONCLUIDA',
-  CANCELADA = 'CANCELADA'
+  QUITADA = 'QUITADA',
+  CANCELADA = 'CANCELADA',
+  FINALIZADA = 'FINALIZADA'
 }
 
 export enum TipoPagamento {

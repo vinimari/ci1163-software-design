@@ -45,16 +45,16 @@ export class EspacosAdminComponent implements OnInit {
 
   loadEspacos(): void {
     this.loading = true;
-    
+
     if (this.filialIdFuncionario) {
       // Funcionário: busca apenas da sua filial
-      this.espacoService.getByFilial(this.filialIdFuncionario).subscribe({
-        next: (espacos) => {
+      this.espacoService.getByFilialId(this.filialIdFuncionario).subscribe({
+        next: (espacos: EspacoResponse[]) => {
           this.espacos = espacos;
           this.aplicarFiltros();
           this.loading = false;
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Erro ao carregar espaços:', error);
           this.loading = false;
         }
@@ -62,12 +62,12 @@ export class EspacosAdminComponent implements OnInit {
     } else {
       // Admin: busca todos
       this.espacoService.getAll().subscribe({
-        next: (espacos) => {
+        next: (espacos: EspacoResponse[]) => {
           this.espacos = espacos;
           this.aplicarFiltros();
           this.loading = false;
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Erro ao carregar espaços:', error);
           this.loading = false;
         }
@@ -77,11 +77,11 @@ export class EspacosAdminComponent implements OnInit {
 
   aplicarFiltros(): void {
     this.espacosFiltrados = this.espacos.filter(espaco => {
-      const matchSearch = !this.searchTerm || 
+      const matchSearch = !this.searchTerm ||
         espaco.nome.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         espaco.filialNome?.toLowerCase().includes(this.searchTerm.toLowerCase());
-      
-      const matchStatus = !this.filtroStatus || 
+
+      const matchStatus = !this.filtroStatus ||
         (this.filtroStatus === 'ativo' && espaco.ativo) ||
         (this.filtroStatus === 'inativo' && !espaco.ativo);
 
@@ -118,7 +118,7 @@ export class EspacosAdminComponent implements OnInit {
           this.loadEspacos();
           alert('Espaço atualizado com sucesso!');
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Erro ao atualizar espaço:', error);
           alert('Erro ao atualizar espaço. Tente novamente.');
         }
@@ -131,7 +131,7 @@ export class EspacosAdminComponent implements OnInit {
           this.loadEspacos();
           alert('Espaço criado com sucesso!');
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Erro ao criar espaço:', error);
           alert('Erro ao criar espaço. Tente novamente.');
         }
@@ -161,7 +161,7 @@ export class EspacosAdminComponent implements OnInit {
         this.loadEspacos();
         alert(`Espaço ${novoStatus ? 'ativado' : 'desativado'} com sucesso!`);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Erro ao alterar status:', error);
         alert('Erro ao alterar status do espaço.');
       }
@@ -175,7 +175,7 @@ export class EspacosAdminComponent implements OnInit {
           this.loadEspacos();
           alert('Espaço excluído com sucesso!');
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Erro ao excluir espaço:', error);
           alert('Erro ao excluir espaço. Verifique se não há reservas associadas.');
         }

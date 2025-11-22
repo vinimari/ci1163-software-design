@@ -13,6 +13,7 @@ describe('authGuard', () => {
     };
 
     const routerMock = {
+      navigate: jest.fn(),
       createUrlTree: jest.fn()
     };
 
@@ -40,15 +41,14 @@ describe('authGuard', () => {
 
   it('should redirect to login when user is not authenticated', () => {
     authService.isAuthenticated.mockReturnValue(false);
-    const urlTree = {} as any;
-    router.createUrlTree.mockReturnValue(urlTree);
+    router.navigate.mockReturnValue(Promise.resolve(true));
 
     const result = TestBed.runInInjectionContext(() =>
       authGuard({} as any, {} as any)
     );
 
-    expect(result).toBe(urlTree);
+    expect(result).toBe(false);
     expect(authService.isAuthenticated).toHaveBeenCalled();
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/login']);
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

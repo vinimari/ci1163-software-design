@@ -55,7 +55,7 @@ describe('AuthService', () => {
       localStorage.setItem('token', 'test-token');
 
       const newService = TestBed.inject(AuthService);
-      
+
       newService.currentUser$.subscribe(user => {
         if (user) {
           expect(user).toEqual(mockUser);
@@ -70,13 +70,13 @@ describe('AuthService', () => {
       service.login(mockLoginRequest).subscribe(response => {
         expect(response).toEqual(mockLoginResponse);
         expect(localStorage.getItem('token')).toBe(mockLoginResponse.token);
-        
+
         const storedUser = JSON.parse(localStorage.getItem('user')!);
         expect(storedUser.id).toBe(mockLoginResponse.id);
         expect(storedUser.nome).toBe(mockLoginResponse.nome);
         expect(storedUser.email).toBe(mockLoginResponse.email);
         expect(storedUser.perfil).toBe(mockLoginResponse.perfil);
-        
+
         done();
       });
 
@@ -181,7 +181,7 @@ describe('AuthService', () => {
         dataCadastro: '2025-01-01T00:00:00Z'
       };
       localStorage.setItem('user', JSON.stringify(mockUser));
-      
+
       // Reload service to trigger loadUserFromStorage
       const newService = TestBed.inject(AuthService);
       const user = newService.getCurrentUser();
@@ -196,90 +196,118 @@ describe('AuthService', () => {
   });
 
   describe('Role Check Methods', () => {
-    it('isAdmin() should return true for ADMIN user', () => {
-      const adminUser: UsuarioResponse = {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    it('isAdmin() should return true for ADMIN user', (done) => {
+      const adminResponse: LoginResponse = {
         id: 1,
         nome: 'Admin',
         email: 'admin@test.com',
         perfil: PerfilUsuario.ADMIN,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
+        token: 'token123'
       };
-      localStorage.setItem('user', JSON.stringify(adminUser));
-      const newService = TestBed.inject(AuthService);
-      expect(newService.isAdmin()).toBe(true);
+
+      service.login(mockLoginRequest).subscribe(() => {
+        expect(service.isAdmin()).toBe(true);
+        done();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(adminResponse);
     });
 
-    it('isAdmin() should return false for non-ADMIN user', () => {
-      const clienteUser: UsuarioResponse = {
+    it('isAdmin() should return false for non-ADMIN user', (done) => {
+      const clienteResponse: LoginResponse = {
         id: 1,
         nome: 'Cliente',
         email: 'cliente@test.com',
         perfil: PerfilUsuario.CLIENTE,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
+        token: 'token123'
       };
-      localStorage.setItem('user', JSON.stringify(clienteUser));
-      const newService = TestBed.inject(AuthService);
-      expect(newService.isAdmin()).toBe(false);
+
+      service.login(mockLoginRequest).subscribe(() => {
+        expect(service.isAdmin()).toBe(false);
+        done();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(clienteResponse);
     });
 
-    it('isFuncionario() should return true for FUNCIONARIO user', () => {
-      const funcUser: UsuarioResponse = {
+    it('isFuncionario() should return true for FUNCIONARIO user', (done) => {
+      const funcResponse: LoginResponse = {
         id: 1,
         nome: 'Funcionario',
         email: 'func@test.com',
         perfil: PerfilUsuario.FUNCIONARIO,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
+        token: 'token123'
       };
-      localStorage.setItem('user', JSON.stringify(funcUser));
-      const newService = TestBed.inject(AuthService);
-      expect(newService.isFuncionario()).toBe(true);
+
+      service.login(mockLoginRequest).subscribe(() => {
+        expect(service.isFuncionario()).toBe(true);
+        done();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(funcResponse);
     });
 
-    it('isCliente() should return true for CLIENTE user', () => {
-      const clienteUser: UsuarioResponse = {
+    it('isCliente() should return true for CLIENTE user', (done) => {
+      const clienteResponse: LoginResponse = {
         id: 1,
         nome: 'Cliente',
         email: 'cliente@test.com',
         perfil: PerfilUsuario.CLIENTE,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
+        token: 'token123'
       };
-      localStorage.setItem('user', JSON.stringify(clienteUser));
-      const newService = TestBed.inject(AuthService);
-      expect(newService.isCliente()).toBe(true);
+
+      service.login(mockLoginRequest).subscribe(() => {
+        expect(service.isCliente()).toBe(true);
+        done();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(clienteResponse);
     });
 
-    it('hasRole() should return true for matching role', () => {
-      const adminUser: UsuarioResponse = {
+    it('hasRole() should return true for matching role', (done) => {
+      const adminResponse: LoginResponse = {
         id: 1,
         nome: 'Admin',
         email: 'admin@test.com',
         perfil: PerfilUsuario.ADMIN,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
+        token: 'token123'
       };
-      localStorage.setItem('user', JSON.stringify(adminUser));
-      const newService = TestBed.inject(AuthService);
-      expect(newService.hasRole([PerfilUsuario.ADMIN])).toBe(true);
-      expect(newService.hasRole([PerfilUsuario.CLIENTE])).toBe(false);
+
+      service.login(mockLoginRequest).subscribe(() => {
+        expect(service.hasRole(['ADMIN'])).toBe(true);
+        expect(service.hasRole(['CLIENTE'])).toBe(false);
+        done();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(adminResponse);
     });
 
-    it('hasRole() should handle array of roles', () => {
-      const funcUser: UsuarioResponse = {
+    it('hasRole() should handle array of roles', (done) => {
+      const funcResponse: LoginResponse = {
         id: 1,
         nome: 'Funcionario',
         email: 'func@test.com',
         perfil: PerfilUsuario.FUNCIONARIO,
-        ativo: true,
-        dataCadastro: '2025-01-01T00:00:00Z'
+        token: 'token123'
       };
-      localStorage.setItem('user', JSON.stringify(funcUser));
-      const newService = TestBed.inject(AuthService);
-      expect(newService.hasRole([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO])).toBe(true);
-      expect(newService.hasRole([PerfilUsuario.ADMIN, PerfilUsuario.CLIENTE])).toBe(false);
+
+      service.login(mockLoginRequest).subscribe(() => {
+        expect(service.hasRole(['ADMIN', 'FUNCIONARIO'])).toBe(true);
+        expect(service.hasRole(['ADMIN', 'CLIENTE'])).toBe(false);
+        done();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
+      req.flush(funcResponse);
     });
   });
 });

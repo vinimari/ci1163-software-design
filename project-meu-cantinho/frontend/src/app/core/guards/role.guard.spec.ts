@@ -10,10 +10,12 @@ describe('roleGuard', () => {
 
   beforeEach(() => {
     const authServiceMock = {
-      hasRole: jest.fn()
+      hasRole: jest.fn(),
+      getCurrentUser: jest.fn()
     };
 
     const routerMock = {
+      navigate: jest.fn(),
       createUrlTree: jest.fn()
     };
 
@@ -29,6 +31,14 @@ describe('roleGuard', () => {
   });
 
   it('should allow access when user has required role', () => {
+    authService.getCurrentUser.mockReturnValue({ 
+      id: 1, 
+      nome: 'Admin', 
+      email: 'admin@test.com', 
+      perfil: PerfilUsuario.ADMIN,
+      ativo: true,
+      dataCadastro: '2025-01-01'
+    });
     authService.hasRole.mockReturnValue(true);
     const guard = roleGuard([PerfilUsuario.ADMIN]);
 
@@ -41,21 +51,36 @@ describe('roleGuard', () => {
   });
 
   it('should redirect to unauthorized when user does not have required role', () => {
+    authService.getCurrentUser.mockReturnValue({ 
+      id: 1, 
+      nome: 'Cliente', 
+      email: 'cliente@test.com', 
+      perfil: PerfilUsuario.CLIENTE,
+      ativo: true,
+      dataCadastro: '2025-01-01'
+    });
     authService.hasRole.mockReturnValue(false);
-    const urlTree = {} as any;
-    router.createUrlTree.mockReturnValue(urlTree);
+    router.navigate.mockReturnValue(Promise.resolve(true));
     const guard = roleGuard([PerfilUsuario.ADMIN]);
 
     const result = TestBed.runInInjectionContext(() =>
       guard({} as any, {} as any)
     );
 
-    expect(result).toBe(urlTree);
+    expect(result).toBe(false);
     expect(authService.hasRole).toHaveBeenCalledWith([PerfilUsuario.ADMIN]);
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/unauthorized']);
+    expect(router.navigate).toHaveBeenCalledWith(['/unauthorized']);
   });
 
   it('should work with multiple roles', () => {
+    authService.getCurrentUser.mockReturnValue({ 
+      id: 1, 
+      nome: 'Funcionario', 
+      email: 'func@test.com', 
+      perfil: PerfilUsuario.FUNCIONARIO,
+      ativo: true,
+      dataCadastro: '2025-01-01'
+    });
     authService.hasRole.mockReturnValue(true);
     const guard = roleGuard([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO]);
 

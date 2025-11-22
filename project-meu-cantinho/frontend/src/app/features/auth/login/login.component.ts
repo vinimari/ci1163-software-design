@@ -38,7 +38,15 @@ export class LoginComponent {
     this.authService.login({ email, senha }).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/home']);
+        
+        // Redirecionar baseado no perfil do usuário
+        if (this.authService.isAdmin()) {
+          this.router.navigate(['/admin/reservas']);
+        } else if (this.authService.isFuncionario()) {
+          this.router.navigate(['/funcionario/reservas']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: (err) => {
         this.loading = false;

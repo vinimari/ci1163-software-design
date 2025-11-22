@@ -435,8 +435,8 @@ describe('errorInterceptor', () => {
       });
 
       const req = httpMock.expectOne(testUrl);
-      req.flush(errorMessage, { 
-        status: 401, 
+      req.flush(errorMessage, {
+        status: 401,
         statusText: 'Unauthorized',
         headers: errorHeaders
       });

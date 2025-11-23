@@ -62,15 +62,6 @@ public class PagamentoService implements IPagamentoService {
         return pagamentoMapper.toResponseDTO(savedPagamento);
     }
 
-    @Override
-    @Transactional
-    public void delete(Integer id) {
-        if (!pagamentoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Pagamento não encontrado com ID: " + id);
-        }
-        pagamentoRepository.deleteById(id);
-    }
-
     private Pagamento findPagamentoById(Integer id) {
         return pagamentoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pagamento não encontrado com ID: " + id));

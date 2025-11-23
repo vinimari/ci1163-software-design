@@ -48,11 +48,4 @@ public class PagamentoController {
         PagamentoResponseDTO pagamento = pagamentoService.create(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(pagamento);
     }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir pagamento")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        pagamentoService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 }

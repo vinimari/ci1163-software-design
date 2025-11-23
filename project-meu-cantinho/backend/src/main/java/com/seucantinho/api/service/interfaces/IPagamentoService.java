@@ -14,6 +14,4 @@ public interface IPagamentoService {
     List<PagamentoResponseDTO> findByReservaId(Integer reservaId);
 
     PagamentoResponseDTO create(PagamentoRequestDTO requestDTO);
-
-    void delete(Integer id);
 }

@@ -169,28 +169,4 @@ class PagamentoControllerTest {
 
         verify(pagamentoService, never()).create(any(PagamentoRequestDTO.class));
     }
-
-    @Test
-    void shouldDeletePagamento() throws Exception {
-        // Given
-        doNothing().when(pagamentoService).delete(1);
-
-        // When & Then
-        mockMvc.perform(delete("/api/pagamentos/1"))
-                .andExpect(status().isNoContent());
-
-        verify(pagamentoService).delete(1);
-    }
-
-    @Test
-    void shouldReturn404_WhenDeleteNonExistentPagamento() throws Exception {
-        // Given
-        doThrow(new ResourceNotFoundException("Pagamento não encontrado")).when(pagamentoService).delete(999);
-
-        // When & Then
-        mockMvc.perform(delete("/api/pagamentos/999"))
-                .andExpect(status().isNotFound());
-
-        verify(pagamentoService).delete(999);
-    }
 }

@@ -382,34 +382,6 @@ class PagamentoServiceTest {
     }
 
     @Test
-    void shouldDeletePagamento() {
-        // Given
-        when(pagamentoRepository.existsById(1)).thenReturn(true);
-        doNothing().when(pagamentoRepository).deleteById(1);
-
-        // When
-        pagamentoService.delete(1);
-
-        // Then
-        verify(pagamentoRepository, times(1)).existsById(1);
-        verify(pagamentoRepository, times(1)).deleteById(1);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenDeletingNonExistentPagamento() {
-        // Given
-        when(pagamentoRepository.existsById(999)).thenReturn(false);
-
-        // When & Then
-        assertThatThrownBy(() -> pagamentoService.delete(999))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Pagamento não encontrado com ID: 999");
-
-        verify(pagamentoRepository, times(1)).existsById(999);
-        verify(pagamentoRepository, never()).deleteById(any());
-    }
-
-    @Test
     void shouldHandleZeroValue() {
         // Given
         PagamentoRequestDTO zeroDTO = PagamentoRequestDTO.builder()

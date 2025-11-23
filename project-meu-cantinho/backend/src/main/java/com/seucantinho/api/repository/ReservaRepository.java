@@ -37,7 +37,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
            "FROM Reserva r " +
            "WHERE r.espaco.id = :espacoId " +
            "AND r.dataEvento = :dataEvento " +
-           "AND r.status <> 'CANCELADA' " +
+           "AND r.status NOT IN ('CANCELADA', 'FINALIZADA') " +
            "AND (:reservaId IS NULL OR r.id <> :reservaId)")
     boolean existsReservaAtivaByEspacoAndData(
         @Param("espacoId") Integer espacoId,

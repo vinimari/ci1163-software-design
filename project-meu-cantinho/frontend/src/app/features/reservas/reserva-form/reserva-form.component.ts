@@ -86,6 +86,13 @@ export class ReservaFormComponent implements OnInit {
     this.espacoService.getAll().subscribe({
       next: (espacos) => {
         this.espacos = espacos.filter(e => e.ativo);
+        // Se já existe um espacoId pré-selecionado, definir valorTotal
+        if (this.reserva.espacoId) {
+          const espaco = this.espacos.find(e => e.id === this.reserva.espacoId);
+          if (espaco) {
+            this.reserva.valorTotal = espaco.precoDiaria;
+          }
+        }
         this.loading = false;
       },
       error: (err) => {

@@ -100,8 +100,14 @@ public class ReservaService implements IReservaService {
         reserva.setDataEvento(requestDTO.getDataEvento());
         reserva.setValorTotal(requestDTO.getValorTotal());
         reserva.setObservacoes(requestDTO.getObservacoes());
+
+        // Se estiver cancelando, usar o método específico que também remove os pagamentos
         if (requestDTO.getStatus() != null) {
-            reserva.setStatus(requestDTO.getStatus());
+            if (requestDTO.getStatus() == StatusReservaEnum.CANCELADA) {
+                reserva.cancelar();
+            } else {
+                reserva.setStatus(requestDTO.getStatus());
+            }
         }
 
         Reserva updatedReserva = reservaRepository.save(reserva);
@@ -112,7 +118,14 @@ public class ReservaService implements IReservaService {
     @Transactional
     public ReservaResponseDTO updateStatus(Integer id, StatusReservaEnum novoStatus) {
         Reserva reserva = findReservaById(id);
-        reserva.setStatus(novoStatus);
+
+        // Se estiver cancelando, usar o método específico que também remove os pagamentos
+        if (novoStatus == StatusReservaEnum.CANCELADA) {
+            reserva.cancelar();
+        } else {
+            reserva.setStatus(novoStatus);
+        }
+
         Reserva updatedReserva = reservaRepository.save(reserva);
         return reservaMapper.toResponseDTO(updatedReserva);
     }

@@ -86,4 +86,9 @@ public class Reserva {
             );
         }
     }
+
+    public void cancelar() {
+        this.status = StatusReservaEnum.CANCELADA;
+        this.pagamentos.clear(); // Remove todos os pagamentos (orphanRemoval = true fará a exclusão no banco)
+    }
 }

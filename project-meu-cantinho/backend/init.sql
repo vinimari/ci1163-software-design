@@ -70,7 +70,7 @@ CREATE TABLE tb_pagamento (
 );
 
 -- Constraints e Indices Especiais
-CREATE UNIQUE INDEX idx_reserva_unica_ativa ON tb_reserva (espaco_id, data_evento) WHERE status <> 'CANCELADA';
+CREATE UNIQUE INDEX idx_reserva_unica_ativa ON tb_reserva (espaco_id, data_evento) WHERE status NOT IN ('CANCELADA', 'FINALIZADA');
 CREATE INDEX idx_reserva_data ON tb_reserva(data_evento);
 
 -- ==============================================================

@@ -13,11 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_reserva",
-       uniqueConstraints = @UniqueConstraint(
-           name = "idx_reserva_unica_ativa",
-           columnNames = {"espaco_id", "data_evento"}
-       ))
+@Table(name = "tb_reserva")
 @Getter
 @Setter
 @NoArgsConstructor

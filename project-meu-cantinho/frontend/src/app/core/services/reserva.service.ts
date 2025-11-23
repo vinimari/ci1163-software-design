@@ -24,6 +24,10 @@ export class ReservaService {
     return this.http.get<ReservaResponse[]>(`${this.apiUrl}/usuario/${usuarioId}`);
   }
 
+  getByAcesso(usuarioEmail: string): Observable<ReservaResponse[]> {
+    return this.http.get<ReservaResponse[]>(`${this.apiUrl}/acesso/${usuarioEmail}`);
+  }
+
   getByEspacoId(espacoId: number): Observable<ReservaResponse[]> {
     return this.http.get<ReservaResponse[]>(`${this.apiUrl}/espaco/${espacoId}`);
   }

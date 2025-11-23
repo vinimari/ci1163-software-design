@@ -23,4 +23,6 @@ public interface IReservaService {
     ReservaResponseDTO updateStatus(Integer id, StatusReservaEnum novoStatus);
 
     void delete(Integer id);
+
+    List<ReservaResponseDTO> findByAcessoPorEmail(String email);
 }

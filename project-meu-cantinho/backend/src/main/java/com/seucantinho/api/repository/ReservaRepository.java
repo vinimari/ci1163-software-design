@@ -53,4 +53,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
         @Param("dataInicio") LocalDate dataInicio,
         @Param("dataFim") LocalDate dataFim
     );
+
+    @Query("SELECT r FROM Reserva r WHERE r.espaco.filial.id = :filialId")
+    List<Reserva> findByEspacoFilialId(@Param("filialId") Integer filialId);
 }

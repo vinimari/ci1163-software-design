@@ -3,6 +3,7 @@ package com.seucantinho.api.service;
 import com.seucantinho.api.domain.entity.Espaco;
 import com.seucantinho.api.domain.entity.Reserva;
 import com.seucantinho.api.domain.entity.Usuario;
+import com.seucantinho.api.domain.entity.Funcionario;
 import com.seucantinho.api.domain.enums.StatusReservaEnum;
 import com.seucantinho.api.dto.reserva.ReservaRequestDTO;
 import com.seucantinho.api.dto.reserva.ReservaResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -137,6 +139,33 @@ public class ReservaService implements IReservaService {
             throw new ResourceNotFoundException("Reserva não encontrada com ID: " + id);
         }
         reservaRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReservaResponseDTO> findByAcessoPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com email: " + email));
+
+        if (usuario.getPerfil() != null && usuario.getPerfil().name().equalsIgnoreCase("ADMIN")) {
+            return findAll();
+        }
+
+        if (usuario instanceof Funcionario) {
+            Funcionario funcionario = (Funcionario) usuario;
+            if (funcionario.getFilial() == null) {
+                return Collections.emptyList();
+            }
+            Integer filialId = funcionario.getFilial().getId();
+            return reservaRepository.findByEspacoFilialId(filialId).stream()
+                    .map(reservaMapper::toResponseDTO)
+                    .collect(Collectors.toList());
+        }
+
+        // Por padrão, retorna apenas as reservas do próprio usuário
+        return reservaRepository.findByUsuarioId(usuario.getId()).stream()
+                .map(reservaMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
     private Reserva findReservaById(Integer id) {

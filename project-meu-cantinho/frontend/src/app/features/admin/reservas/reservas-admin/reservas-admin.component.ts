@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ReservaService } from '../../../../core/services';
+import { AuthService } from '../../../../core/services/auth.service';
+import { UsuarioResponse } from '../../../../core/models/usuario.model';
 import { ReservaResponse, StatusReserva } from '../../../../core/models';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
@@ -30,6 +32,7 @@ export class ReservasAdminComponent implements OnInit {
 
   constructor(
     private reservaService: ReservaService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -41,7 +44,14 @@ export class ReservasAdminComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.reservaService.getAll().subscribe({
+    const user = this.authService.getCurrentUser();
+    if (!user) {
+      this.error = 'Usuário não autenticado';
+      this.loading = false;
+      return;
+    }
+    const usuarioEmail = user.email;
+    this.reservaService.getByAcesso(usuarioEmail).subscribe({
       next: (reservas) => {
         this.reservas = reservas;
         this.applyFilters();

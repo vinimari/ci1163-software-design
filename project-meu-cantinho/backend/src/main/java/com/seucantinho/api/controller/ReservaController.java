@@ -6,10 +6,13 @@ import com.seucantinho.api.dto.reserva.ReservaResponseDTO;
 import com.seucantinho.api.service.interfaces.IReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +32,13 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
+    @GetMapping("/acesso/{usuarioEmail}")
+    @Operation(summary = "Listar reservas respeitando permissão do usuário autenticado")
+    public ResponseEntity<List<ReservaResponseDTO>> findByAcesso(@PathVariable String usuarioEmail) {
+        List<ReservaResponseDTO> reservas = reservaService.findByAcessoPorEmail(usuarioEmail);
+        return ResponseEntity.ok(reservas);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar reserva por ID")
     public ResponseEntity<ReservaResponseDTO> findById(@PathVariable Integer id) {
@@ -42,6 +52,8 @@ public class ReservaController {
         List<ReservaResponseDTO> reservas = reservaService.findByUsuarioId(usuarioId);
         return ResponseEntity.ok(reservas);
     }
+
+
 
     @GetMapping("/espaco/{espacoId}")
     @Operation(summary = "Listar reservas por espaço")

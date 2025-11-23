@@ -166,25 +166,7 @@
             Confirmar
           </app-button>
 
-          <app-button
-            *ngIf="reserva.status === StatusReserva.CONFIRMADA"
-            variant="primary"
-            size="small"
-            icon="💰"
-            (clicked)="updateStatus(reserva, StatusReserva.QUITADA)"
-          >
-            Quitar
-          </app-button>
-
-          <app-button
-            *ngIf="reserva.status === StatusReserva.QUITADA"
-            variant="success"
-            size="small"
-            icon="🎉"
-            (clicked)="updateStatus(reserva, StatusReserva.FINALIZADA)"
-          >
-            Finalizar
-          </app-button>
+          <!-- Botões de Quitar e Finalizar removidos para admin -->
 
           <app-button
             variant="danger"

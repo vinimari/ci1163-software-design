@@ -91,7 +91,7 @@ INSERT INTO tb_usuario (nome, email, senha_hash, perfil, ativo, filial_id) VALUE
 
 INSERT INTO tb_usuario (nome, email, senha_hash, perfil, cpf, telefone, ativo) VALUES
 ('Cliente 1', 'cliente1@gmail.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'CLIENTE', '12345678900', '11900000000', true),
-('Cliente 2', 'cliente2@gmail.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'CLIENTE', '12345678900', '11900000000', true);
+('Cliente 2', 'cliente2@gmail.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'CLIENTE', '12345678901', '11900000001', true);
 
 INSERT INTO tb_espaco (nome, descricao, capacidade, preco_diaria, filial_id, ativo, url_foto_principal) VALUES
 ('Salao Cristal', 'Salao de luxo.', 200, 1500.00, 1, true, 'http://img.com/1'),

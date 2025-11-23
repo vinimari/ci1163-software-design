@@ -91,4 +91,18 @@ public class Reserva {
         this.status = StatusReservaEnum.CANCELADA;
         this.pagamentos.clear(); // Remove todos os pagamentos (orphanRemoval = true fará a exclusão no banco)
     }
+
+    public void atualizarStatusAposPagamento(Pagamento pagamento) {
+        switch (pagamento.getTipo()) {
+            case TOTAL:
+                this.status = StatusReservaEnum.QUITADA;
+                break;
+            case SINAL:
+                this.status = StatusReservaEnum.CONFIRMADA;
+                break;
+            case QUITACAO:
+                this.status = StatusReservaEnum.QUITADA;
+                break;
+        }
+    }
 }

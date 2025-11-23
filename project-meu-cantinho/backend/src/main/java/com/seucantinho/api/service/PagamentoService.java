@@ -55,10 +55,15 @@ public class PagamentoService implements IPagamentoService {
         Reserva reserva = reservaRepository.findByIdWithPagamentos(requestDTO.getReservaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva não encontrada com ID: " + requestDTO.getReservaId()));
 
-        pagamentoValidator.validateValorPagamento(requestDTO.getValor(), reserva);
+        pagamentoValidator.validatePagamento(requestDTO, reserva);
 
         Pagamento pagamento = pagamentoMapper.toEntity(requestDTO, reserva);
         Pagamento savedPagamento = pagamentoRepository.save(pagamento);
+
+        // Atualizar status da reserva com base no tipo de pagamento
+        reserva.atualizarStatusAposPagamento(savedPagamento);
+        reservaRepository.save(reserva);
+
         return pagamentoMapper.toResponseDTO(savedPagamento);
     }
 

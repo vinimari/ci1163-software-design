@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,16 +76,8 @@ public class ReservaService implements IReservaService {
                 null
         );
 
-        // Validar valor total com base no preço da diária do espaço
-        BigDecimal valorEsperado = espaco.getPrecoDiaria();
-        if (requestDTO.getValorTotal().compareTo(valorEsperado) != 0) {
-            throw new IllegalArgumentException(
-                "Valor total incorreto. Esperado: R$ " + valorEsperado + 
-                ", Recebido: R$ " + requestDTO.getValorTotal()
-            );
-        }
-
         Reserva reserva = reservaMapper.toEntity(requestDTO, usuario, espaco);
+        reserva.validarValorTotal();
         Reserva savedReserva = reservaRepository.save(reserva);
         return reservaMapper.toResponseDTO(savedReserva);
     }

@@ -76,4 +76,18 @@ public class Reserva {
     public BigDecimal calcularSaldo() {
         return valorTotal.subtract(calcularTotalPago());
     }
+
+    public void validarValorTotal() {
+        if (espaco == null) {
+            throw new IllegalArgumentException("Espaço não pode ser nulo");
+        }
+
+        BigDecimal valorEsperado = espaco.getPrecoDiaria();
+        if (valorTotal.compareTo(valorEsperado) != 0) {
+            throw new IllegalArgumentException(
+                "Valor total incorreto. Esperado: R$ " + valorEsperado +
+                ", Recebido: R$ " + valorTotal
+            );
+        }
+    }
 }

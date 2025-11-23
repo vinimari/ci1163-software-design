@@ -195,27 +195,44 @@
       </div>
 
       <div class="modal-body">
-        <div class="form-group">
-          <label for="valor">Valor *</label>
-          <input
-            type="number"
-            id="valor"
-            [(ngModel)]="novoPagamento.valor"
-            min="0"
-            step="0.01"
-            [max]="getSaldoPendente()"
-            placeholder="0.00"
-            required>
-          <small>Saldo disponível: R$ {{ getSaldoPendente().toFixed(2) }}</small>
+        <div class="info-box">
+          <p>
+            @if (pagamentos.length === 0) {
+              <strong>Primeiro pagamento:</strong> Escolha entre pagar 50% agora (SINAL) ou o valor total (100%).
+            } @else {
+              <strong>Quitação:</strong> Complete o pagamento com os 50% restantes.
+            }
+          </p>
         </div>
 
         <div class="form-group">
           <label for="tipo">Tipo de Pagamento *</label>
-          <select id="tipo" [(ngModel)]="novoPagamento.tipo" required>
-            <option [value]="TipoPagamento.SINAL">💰 Sinal</option>
-            <option [value]="TipoPagamento.QUITACAO">💳 Quitação</option>
-            <option [value]="TipoPagamento.TOTAL">✅ Total</option>
-          </select>
+          <div class="tipo-pagamento-display">
+            <input
+              type="text"
+              [value]="novoPagamento.tipo === TipoPagamento.SINAL ? '💰 Sinal (50%)' : novoPagamento.tipo === TipoPagamento.TOTAL ? '✅ Total (100%)' : '💳 Quitação (50%)'"
+              readonly
+              class="readonly-input">
+            @if (permitirTrocarTipoPagamento()) {
+              <button
+                type="button"
+                class="btn-toggle-tipo"
+                (click)="alternarTipoPagamento()">
+                Alternar para {{ novoPagamento.tipo === TipoPagamento.SINAL ? 'Total (100%)' : 'Sinal (50%)' }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="valor">Valor *</label>
+          <input
+            type="text"
+            id="valor"
+            [value]="'R$ ' + novoPagamento.valor.toFixed(2)"
+            readonly
+            class="readonly-input">
+          <small>Valor calculado automaticamente conforme o tipo de pagamento.</small>
         </div>
 
         <div class="form-group">

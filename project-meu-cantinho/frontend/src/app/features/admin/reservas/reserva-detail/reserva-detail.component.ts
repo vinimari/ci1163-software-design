@@ -89,14 +89,55 @@ export class ReservaDetailComponent implements OnInit {
   }
 
   openPagamentoModal(): void {
+    const { tipo, valor } = this.calcularProximoPagamento();
     this.novoPagamento = {
-      valor: this.getSaldoPendente(),
-      tipo: TipoPagamento.QUITACAO,
+      valor: valor,
+      tipo: tipo,
       formaPagamento: '',
       codigoTransacaoGateway: '',
       reservaId: this.reserva!.id
     };
     this.showPagamentoModal = true;
+  }
+
+  calcularProximoPagamento(): { tipo: TipoPagamento, valor: number } {
+    if (!this.reserva) {
+      return { tipo: TipoPagamento.SINAL, valor: 0 };
+    }
+
+    const metadeValor = this.reserva.valorTotal / 2;
+    const possuiPagamentos = this.pagamentos.length > 0;
+
+    if (!possuiPagamentos) {
+      // Primeiro pagamento: pode ser SINAL (50%) ou TOTAL (100%)
+      // Por padrão, sugerimos SINAL
+      return { tipo: TipoPagamento.SINAL, valor: metadeValor };
+    } else {
+      // Segundo pagamento: deve ser QUITACAO (50% restantes)
+      const primeiroPagamento = this.pagamentos[0];
+      if (primeiroPagamento.tipo === TipoPagamento.SINAL) {
+        return { tipo: TipoPagamento.QUITACAO, valor: metadeValor };
+      }
+      // Se o primeiro foi TOTAL, não deve permitir mais pagamentos
+      return { tipo: TipoPagamento.QUITACAO, valor: 0 };
+    }
+  }
+
+  permitirTrocarTipoPagamento(): boolean {
+    // Só permite trocar entre SINAL e TOTAL no primeiro pagamento
+    return this.pagamentos.length === 0;
+  }
+
+  alternarTipoPagamento(): void {
+    if (!this.permitirTrocarTipoPagamento() || !this.reserva) return;
+
+    if (this.novoPagamento.tipo === TipoPagamento.SINAL) {
+      this.novoPagamento.tipo = TipoPagamento.TOTAL;
+      this.novoPagamento.valor = this.reserva.valorTotal;
+    } else {
+      this.novoPagamento.tipo = TipoPagamento.SINAL;
+      this.novoPagamento.valor = this.reserva.valorTotal / 2;
+    }
   }
 
   closePagamentoModal(): void {
@@ -127,12 +168,6 @@ export class ReservaDetailComponent implements OnInit {
   validarPagamento(): boolean {
     if (this.novoPagamento.valor <= 0) {
       this.error = 'Valor deve ser maior que zero';
-      return false;
-    }
-
-    const saldo = this.getSaldoPendente();
-    if (this.novoPagamento.valor > saldo) {
-      this.error = `Valor não pode exceder o saldo pendente (R$ ${saldo.toFixed(2)})`;
       return false;
     }
 

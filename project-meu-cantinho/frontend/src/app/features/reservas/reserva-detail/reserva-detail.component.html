@@ -104,29 +104,50 @@
       @if (showPagamentoForm) {
         <app-card>
           <h2>Registrar Pagamento</h2>
+
+          <div class="pagamento-info-box">
+            <p>{{ getTipoPagamentoInfo() }}</p>
+          </div>
+
           <form [formGroup]="pagamentoForm" (ngSubmit)="onSubmitPagamento()">
             <div class="form-group">
-              <label for="valor">Valor*</label>
-              <input
-                type="number"
-                id="valor"
-                formControlName="valor"
-                step="0.01"
-                min="0.01"
-                [max]="reserva.saldo"
-                class="form-control">
-              @if (pagamentoForm.get('valor')?.invalid && pagamentoForm.get('valor')?.touched) {
-                <span class="error-message">Informe um valor válido</span>
-              }
+              <label for="tipo">Tipo de Pagamento*</label>
+              <div class="tipo-pagamento-container">
+                <input
+                  type="text"
+                  id="tipo"
+                  [value]="getTipoPagamentoLabel(pagamentoForm.get('tipo')?.value)"
+                  class="form-control"
+                  readonly>
+                @if (permitirTrocarTipoPagamento()) {
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-small"
+                    (click)="pagamentoForm.patchValue({ tipo: pagamentoForm.get('tipo')?.value === TipoPagamento.SINAL ? TipoPagamento.TOTAL : TipoPagamento.SINAL, valor: pagamentoForm.get('tipo')?.value === TipoPagamento.SINAL ? reserva!.valorTotal : reserva!.valorTotal / 2 })">
+                    Alternar para {{ pagamentoForm.get('tipo')?.value === TipoPagamento.SINAL ? 'Pagamento Total' : 'Sinal (50%)' }}
+                  </button>
+                }
+              </div>
+              <small class="hint">
+                @if (pagamentoForm.get('tipo')?.value === TipoPagamento.SINAL) {
+                  Você pagará 50% agora e poderá quitar os outros 50% depois.
+                } @else if (pagamentoForm.get('tipo')?.value === TipoPagamento.TOTAL) {
+                  Você pagará o valor total (100%) agora.
+                } @else {
+                  Você quitará os 50% restantes da reserva.
+                }
+              </small>
             </div>
 
             <div class="form-group">
-              <label for="tipo">Tipo de Pagamento*</label>
-              <select id="tipo" formControlName="tipo" class="form-control">
-                <option [value]="TipoPagamento.SINAL">Sinal</option>
-                <option [value]="TipoPagamento.QUITACAO">Quitação</option>
-                <option [value]="TipoPagamento.TOTAL">Total</option>
-              </select>
+              <label for="valor">Valor*</label>
+              <input
+                type="text"
+                id="valor"
+                [value]="'R$ ' + (pagamentoForm.get('valor')?.value | number:'1.2-2')"
+                class="form-control"
+                readonly>
+              <small class="hint">Valor calculado automaticamente conforme o tipo de pagamento.</small>
             </div>
 
             <div class="form-group">
@@ -155,7 +176,7 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn btn-primary" [disabled]="pagamentoForm.invalid || loading">
+              <button type="submit" class="btn btn-primary" [disabled]="loading">
                 Confirmar Pagamento
               </button>
               <button type="button" class="btn btn-secondary" (click)="togglePagamentoForm()">

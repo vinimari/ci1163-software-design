@@ -102,22 +102,87 @@ export class ReservaDetailComponent implements OnInit {
   togglePagamentoForm(): void {
     this.showPagamentoForm = !this.showPagamentoForm;
     if (this.showPagamentoForm && this.reserva) {
-      // Preenche o valor com o saldo restante
+      const { tipo, valor } = this.calcularProximoPagamento();
       this.pagamentoForm.patchValue({
-        valor: this.reserva.saldo
+        valor: valor,
+        tipo: tipo
       });
+      // Desabilita os campos tipo e valor para que não possam ser alterados
+      this.pagamentoForm.get('tipo')?.disable();
+      this.pagamentoForm.get('valor')?.disable();
+    } else {
+      // Reabilita os campos quando fechar
+      this.pagamentoForm.get('tipo')?.enable();
+      this.pagamentoForm.get('valor')?.enable();
     }
   }
 
+  calcularProximoPagamento(): { tipo: TipoPagamento, valor: number } {
+    if (!this.reserva) {
+      return { tipo: TipoPagamento.SINAL, valor: 0 };
+    }
+
+    const metadeValor = this.reserva.valorTotal / 2;
+    const possuiPagamentos = this.pagamentos.length > 0;
+
+    if (!possuiPagamentos) {
+      // Primeiro pagamento: pode ser SINAL (50%) ou TOTAL (100%)
+      // Por padrão, sugerimos SINAL
+      return { tipo: TipoPagamento.SINAL, valor: metadeValor };
+    } else {
+      // Segundo pagamento: deve ser QUITACAO (50% restantes)
+      const primeiroPagamento = this.pagamentos[0];
+      if (primeiroPagamento.tipo === TipoPagamento.SINAL) {
+        return { tipo: TipoPagamento.QUITACAO, valor: metadeValor };
+      }
+      // Se o primeiro foi TOTAL, não deve permitir mais pagamentos
+      return { tipo: TipoPagamento.QUITACAO, valor: 0 };
+    }
+  }
+
+  getTipoPagamentoInfo(): string {
+    if (!this.reserva) return '';
+
+    const possuiPagamentos = this.pagamentos.length > 0;
+
+    if (!possuiPagamentos) {
+      return 'Você pode escolher entre pagar 50% agora (SINAL) ou o valor total (100%).';
+    } else {
+      const primeiroPagamento = this.pagamentos[0];
+      if (primeiroPagamento.tipo === TipoPagamento.SINAL) {
+        return 'Complete o pagamento quitando os 50% restantes.';
+      }
+      return 'Esta reserva já foi totalmente paga.';
+    }
+  }
+
+  permitirTrocarTipoPagamento(): boolean {
+    // Só permite trocar entre SINAL e TOTAL no primeiro pagamento
+    return this.pagamentos.length === 0;
+  }
+
   onSubmitPagamento(): void {
-    if (this.pagamentoForm.invalid || !this.reserva) return;
+    if (!this.reserva) return;
+
+    // Valida apenas os campos habilitados
+    const formaPagamento = this.pagamentoForm.get('formaPagamento')?.value;
+    if (!formaPagamento) {
+      this.error = 'Forma de pagamento é obrigatória';
+      return;
+    }
 
     this.loading = true;
     this.error = '';
     this.successMessage = '';
 
+    // Pega os valores diretamente dos campos, mesmo que estejam desabilitados
+    const { tipo, valor } = this.calcularProximoPagamento();
+
     const pagamento: PagamentoRequest = {
-      ...this.pagamentoForm.value,
+      valor: valor,
+      tipo: tipo,
+      formaPagamento: formaPagamento,
+      codigoTransacaoGateway: this.pagamentoForm.get('codigoTransacaoGateway')?.value || '',
       reservaId: this.reserva.id
     };
 
@@ -134,7 +199,7 @@ export class ReservaDetailComponent implements OnInit {
         this.loadPagamentos(this.reserva!.id);
       },
       error: (err) => {
-        this.error = 'Erro ao registrar pagamento';
+        this.error = err.error?.message || 'Erro ao registrar pagamento';
         this.loading = false;
         console.error(err);
       }

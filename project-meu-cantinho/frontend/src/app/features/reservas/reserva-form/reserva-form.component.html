@@ -17,9 +17,9 @@
       <h2>👤 Cliente</h2>
       <div class="form-group">
         <label for="cliente">Cliente *</label>
-        <select 
-          id="cliente" 
-          [(ngModel)]="reserva.usuarioId" 
+        <select
+          id="cliente"
+          [(ngModel)]="reserva.usuarioId"
           name="cliente"
           required>
           <option value="0">Selecione um cliente</option>
@@ -36,36 +36,23 @@
     <!-- Seleção de Filial e Espaço -->
     <div class="form-section">
       <h2>🏛️ Espaço</h2>
-      
-      <!-- Filtro de Filial (não aparece para funcionário) -->
-      <div class="form-group" *ngIf="!isFuncionario">
-        <label for="filial">Filial</label>
-        <select 
-          id="filial" 
-          [(ngModel)]="selectedFilialId" 
-          name="filial"
-          (change)="onFilialChange()">
-          <option [value]="null">Todas as filiais</option>
-          <option *ngFor="let filial of filiais" [value]="filial.id">
-            {{ filial.nome }} - {{ filial.cidade }}, {{ filial.estado }}
-          </option>
-        </select>
-      </div>
+
+      <!-- Filtro de filial removido: todos os espaços são exibidos abaixo -->
 
       <div class="form-group">
         <label for="espaco">Espaço *</label>
-        <select 
-          id="espaco" 
-          [(ngModel)]="reserva.espacoId" 
+        <select
+          id="espaco"
+          [(ngModel)]="reserva.espacoId"
           name="espaco"
           (change)="onEspacoChange()"
           required>
           <option value="0">Selecione um espaço</option>
-          <option *ngFor="let espaco of espacosFiltrados" [value]="espaco.id">
+          <option *ngFor="let espaco of espacos" [value]="espaco.id">
             {{ espaco.nome }} - {{ espaco.filial.nome }} (Cap: {{ espaco.capacidade }} pessoas)
           </option>
         </select>
-        
+
         <!-- Info do Espaço Selecionado -->
         <div class="espaco-info" *ngIf="reserva.espacoId && getEspacoInfo(reserva.espacoId) as info">
           <div class="info-grid">
@@ -97,14 +84,14 @@
     <!-- Data e Valor -->
     <div class="form-section">
       <h2>📅 Data e Valor</h2>
-      
+
       <div class="form-row">
         <div class="form-group">
           <label for="dataEvento">Data do Evento *</label>
-          <input 
-            type="date" 
-            id="dataEvento" 
-            [(ngModel)]="reserva.dataEvento" 
+          <input
+            type="date"
+            id="dataEvento"
+            [(ngModel)]="reserva.dataEvento"
             name="dataEvento"
             [min]="getMinDate()"
             required>
@@ -126,9 +113,9 @@
       <h2>📝 Observações</h2>
       <div class="form-group">
         <label for="observacoes">Observações Adicionais</label>
-        <textarea 
-          id="observacoes" 
-          [(ngModel)]="reserva.observacoes" 
+        <textarea
+          id="observacoes"
+          [(ngModel)]="reserva.observacoes"
           name="observacoes"
           rows="4"
           placeholder="Informações adicionais sobre a reserva..."></textarea>
@@ -138,24 +125,24 @@
     <!-- Pagamento -->
     <div class="form-section" *ngIf="reserva.espacoId && reserva.valorTotal > 0">
       <h2>💳 Pagamento</h2>
-      
+
       <div class="form-group">
         <label>Tipo de Pagamento *</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input 
-              type="radio" 
-              name="tipoPagamento" 
-              [value]="TipoPagamento.SINAL" 
+            <input
+              type="radio"
+              name="tipoPagamento"
+              [value]="TipoPagamento.SINAL"
               [(ngModel)]="tipoPagamento">
             <span>Sinal (50%)</span>
             <span class="radio-value">R$ {{ reserva.valorTotal * 0.5 | number:'1.2-2' }}</span>
           </label>
           <label class="radio-option">
-            <input 
-              type="radio" 
-              name="tipoPagamento" 
-              [value]="TipoPagamento.TOTAL" 
+            <input
+              type="radio"
+              name="tipoPagamento"
+              [value]="TipoPagamento.TOTAL"
               [(ngModel)]="tipoPagamento">
             <span>Pagamento Total (100%)</span>
             <span class="radio-value">R$ {{ reserva.valorTotal | number:'1.2-2' }}</span>
@@ -166,9 +153,9 @@
       <div class="form-row">
         <div class="form-group">
           <label for="formaPagamento">Forma de Pagamento *</label>
-          <select 
-            id="formaPagamento" 
-            [(ngModel)]="formaPagamento" 
+          <select
+            id="formaPagamento"
+            [(ngModel)]="formaPagamento"
             name="formaPagamento"
             required>
             <option value="">Selecione...</option>
@@ -182,10 +169,10 @@
 
         <div class="form-group">
           <label for="codigoTransacao">Código da Transação (opcional)</label>
-          <input 
-            type="text" 
-            id="codigoTransacao" 
-            [(ngModel)]="codigoTransacao" 
+          <input
+            type="text"
+            id="codigoTransacao"
+            [(ngModel)]="codigoTransacao"
             name="codigoTransacao"
             placeholder="Ex: código do PIX, autorização do cartão">
         </div>

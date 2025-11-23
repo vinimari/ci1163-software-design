@@ -16,11 +16,9 @@ import { ReservaRequest, ClienteResponse, EspacoResponse, FilialResponse, Perfil
 export class ReservaFormComponent implements OnInit {
   clientes: ClienteResponse[] = [];
   espacos: EspacoResponse[] = [];
-  filiais: FilialResponse[] = [];
-  
   loading = false;
   error: string | null = null;
-  
+
   reserva: ReservaRequest = {
     dataEvento: '',
     valorTotal: 0,
@@ -28,15 +26,11 @@ export class ReservaFormComponent implements OnInit {
     usuarioId: 0,
     espacoId: 0
   };
-  
-  selectedFilialId: number | null = null;
-  espacosFiltrados: EspacoResponse[] = [];
-  
+
   isAdmin = false;
   isFuncionario = false;
   isCliente = false;
-  userFilialId: number | null = null;
-  
+
   // Pagamento
   tipoPagamento: TipoPagamento = TipoPagamento.SINAL;
   formaPagamento: string = '';
@@ -48,7 +42,6 @@ export class ReservaFormComponent implements OnInit {
     private reservaService: ReservaService,
     private clienteService: ClienteService,
     private espacoService: EspacoService,
-    private filialService: FilialService,
     private pagamentoService: PagamentoService,
     private router: Router,
     private route: ActivatedRoute
@@ -57,7 +50,7 @@ export class ReservaFormComponent implements OnInit {
   ngOnInit(): void {
     this.checkUserPermissions();
     this.loadInitialData();
-    
+
     // Pré-selecionar espaço se vier da URL
     const espacoId = this.route.snapshot.queryParamMap.get('espacoId');
     if (espacoId) {
@@ -89,20 +82,14 @@ export class ReservaFormComponent implements OnInit {
   loadInitialData(): void {
     this.loading = true;
 
-    // Carregar filiais primeiro
-    this.filialService.getAll().subscribe({
-      next: (filiais) => {
-        this.filiais = filiais;
-        
-        // Se funcionário, pré-selecionar sua filial
-        if (this.isFuncionario && this.userFilialId) {
-          this.selectedFilialId = this.userFilialId;
-        }
-        
-        this.loadEspacos();
+    // Carregar espaços diretamente (sem filiais)
+    this.espacoService.getAll().subscribe({
+      next: (espacos) => {
+        this.espacos = espacos.filter(e => e.ativo);
+        this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar filiais';
+        this.error = 'Erro ao carregar espaços';
         console.error(err);
         this.loading = false;
       }
@@ -125,7 +112,6 @@ export class ReservaFormComponent implements OnInit {
     this.espacoService.getAll().subscribe({
       next: (espacos) => {
         this.espacos = espacos.filter(e => e.ativo);
-        this.filterEspacos();
         this.loading = false;
       },
       error: (err) => {
@@ -136,40 +122,18 @@ export class ReservaFormComponent implements OnInit {
     });
   }
 
-  onFilialChange(): void {
-    this.reserva.espacoId = 0;
-    this.filterEspacos();
-  }
-
-  filterEspacos(): void {
-    if (this.isFuncionario && this.userFilialId) {
-      // Funcionário só vê espaços da sua filial
-      this.espacosFiltrados = this.espacos.filter(e => e.filial.id === this.userFilialId);
-    } else if (this.selectedFilialId) {
-      // Admin/Cliente filtra por filial selecionada
-      this.espacosFiltrados = this.espacos.filter(e => e.filial.id === this.selectedFilialId);
-    } else {
-      // Mostrar todos
-      this.espacosFiltrados = this.espacos;
-    }
-  }
+  // Filtro de filial removido: todos os espaços são exibidos diretamente
 
   onEspacoChange(): void {
     // Converter para número caso venha como string do select
-    const espacoId = typeof this.reserva.espacoId === 'string' 
-      ? parseInt(this.reserva.espacoId) 
+    const espacoId = typeof this.reserva.espacoId === 'string'
+      ? parseInt(this.reserva.espacoId)
       : this.reserva.espacoId;
-    
+
     const espaco = this.espacos.find(e => e.id === espacoId);
     if (espaco) {
       this.reserva.espacoId = espacoId; // Garantir que é número
       this.reserva.valorTotal = espaco.precoDiaria;
-      
-      // Auto-selecionar filial se ainda não foi selecionada
-      if (!this.selectedFilialId) {
-        this.selectedFilialId = espaco.filial.id;
-        this.filterEspacos();
-      }
     }
   }
 
@@ -185,8 +149,8 @@ export class ReservaFormComponent implements OnInit {
     this.reservaService.create(this.reserva).subscribe({
       next: (reserva) => {
         // Criar pagamento
-        const valorPagamento = this.tipoPagamento === TipoPagamento.TOTAL 
-          ? this.reserva.valorTotal 
+        const valorPagamento = this.tipoPagamento === TipoPagamento.TOTAL
+          ? this.reserva.valorTotal
           : this.reserva.valorTotal * 0.5; // 50% para sinal
 
         const pagamento: PagamentoRequest = {
@@ -261,8 +225,8 @@ export class ReservaFormComponent implements OnInit {
   }
 
   getValorPagamento(): number {
-    return this.tipoPagamento === TipoPagamento.TOTAL 
-      ? this.reserva.valorTotal 
+    return this.tipoPagamento === TipoPagamento.TOTAL
+      ? this.reserva.valorTotal
       : this.reserva.valorTotal * 0.5;
   }
 
@@ -282,7 +246,7 @@ export class ReservaFormComponent implements OnInit {
   getEspacoInfo(espacoId: number): { nome: string; filial: string; capacidade: number; preco: number } | null {
     const espaco = this.espacos.find(e => e.id === espacoId);
     if (!espaco) return null;
-    
+
     return {
       nome: espaco.nome,
       filial: espaco.filial.nome,

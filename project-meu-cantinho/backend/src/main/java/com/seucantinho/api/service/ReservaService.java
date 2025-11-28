@@ -103,7 +103,6 @@ public class ReservaService implements IReservaService {
         reserva.setValorTotal(requestDTO.getValorTotal());
         reserva.setObservacoes(requestDTO.getObservacoes());
 
-        // Se estiver cancelando, usar o serviço de status que também remove os pagamentos
         if (requestDTO.getStatus() != null) {
             if (requestDTO.getStatus() == StatusReservaEnum.CANCELADA) {
                 reservaStatusService.cancelReservation(reserva);
@@ -121,7 +120,6 @@ public class ReservaService implements IReservaService {
     public ReservaResponseDTO updateStatus(Integer id, StatusReservaEnum novoStatus) {
         Reserva reserva = findReservaById(id);
 
-        // Se estiver cancelando, usar o serviço de status que também remove os pagamentos
         if (novoStatus == StatusReservaEnum.CANCELADA) {
             reservaStatusService.cancelReservation(reserva);
         } else {
@@ -162,7 +160,6 @@ public class ReservaService implements IReservaService {
                     .collect(Collectors.toList());
         }
 
-        // Por padrão, retorna apenas as reservas do próprio usuário
         return reservaRepository.findByUsuarioId(usuario.getId()).stream()
                 .map(reservaMapper::toResponseDTO)
                 .collect(Collectors.toList());

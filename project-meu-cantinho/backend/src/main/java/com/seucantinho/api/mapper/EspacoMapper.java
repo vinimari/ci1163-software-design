@@ -7,10 +7,6 @@ import com.seucantinho.api.dto.espaco.EspacoResponseDTO;
 import com.seucantinho.api.dto.filial.FilialResponseDTO;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper responsável pela conversão entre Espaco (Entity) e seus DTOs.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 public class EspacoMapper {
 

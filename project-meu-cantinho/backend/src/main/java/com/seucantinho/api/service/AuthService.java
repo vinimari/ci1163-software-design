@@ -24,7 +24,6 @@ public class AuthService {
             throw new BusinessException("Email ou senha inválidos");
         }
 
-        // Por enquanto, retorna um token simples (em produção, use JWT)
         String token = "Bearer " + usuario.getEmail();
 
         return new LoginResponse(

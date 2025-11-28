@@ -7,10 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper responsável pela conversão entre Cliente (Entity) e seus DTOs.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 @RequiredArgsConstructor
 public class ClienteMapper {

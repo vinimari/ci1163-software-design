@@ -11,9 +11,6 @@ import com.seucantinho.api.dto.usuario.FuncionarioResponseDTO;
 import com.seucantinho.api.dto.usuario.UsuarioResponseDTO;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper responsável pela conversão polimórfica de Usuario e suas subclasses.
- */
 @Component
 public class UsuarioMapper {
 

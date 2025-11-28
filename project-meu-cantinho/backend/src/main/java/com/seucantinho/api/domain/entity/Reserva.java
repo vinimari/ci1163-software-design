@@ -63,43 +63,21 @@ public class Reserva {
         }
     }
 
-    /**
-     * Calcula o total pago até o momento somando todos os pagamentos.
-     * Método de cálculo simples mantido na entidade (Tell, Don't Ask).
-     *
-     * @return O valor total já pago
-     */
     public BigDecimal calcularTotalPago() {
         return pagamentos.stream()
             .map(Pagamento::getValor)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    /**
-     * Calcula o saldo restante a ser pago (valor total - total já pago).
-     * Método de cálculo simples mantido na entidade (Tell, Don't Ask).
-     *
-     * @return O saldo restante
-     */
     public BigDecimal calcularSaldo() {
         return valorTotal.subtract(calcularTotalPago());
     }
 
-    /**
-     * Verifica se a reserva está completamente quitada.
-     *
-     * @return true se o saldo é zero e o status é QUITADA
-     */
     public boolean isQuitada() {
         return calcularSaldo().compareTo(BigDecimal.ZERO) == 0
             && status == StatusReservaEnum.QUITADA;
     }
 
-    /**
-     * Verifica se a reserva está ativa (não cancelada ou finalizada).
-     *
-     * @return true se a reserva está ativa
-     */
     public boolean isAtiva() {
         return status != StatusReservaEnum.CANCELADA
             && status != StatusReservaEnum.FINALIZADA;

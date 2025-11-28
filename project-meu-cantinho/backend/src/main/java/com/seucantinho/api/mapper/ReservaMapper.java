@@ -11,10 +11,6 @@ import com.seucantinho.api.dto.usuario.UsuarioResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper responsável pela conversão entre Reserva (Entity) e seus DTOs.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 @RequiredArgsConstructor
 public class ReservaMapper {

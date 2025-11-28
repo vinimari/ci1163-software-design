@@ -5,10 +5,6 @@ import com.seucantinho.api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Validador responsável pelas regras de negócio relacionadas a clientes.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 @RequiredArgsConstructor
 public class ClienteValidator {

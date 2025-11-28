@@ -6,10 +6,6 @@ import com.seucantinho.api.dto.pagamento.PagamentoRequestDTO;
 import com.seucantinho.api.dto.pagamento.PagamentoResponseDTO;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper responsável pela conversão entre Pagamento (Entity) e seus DTOs.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 public class PagamentoMapper {
 

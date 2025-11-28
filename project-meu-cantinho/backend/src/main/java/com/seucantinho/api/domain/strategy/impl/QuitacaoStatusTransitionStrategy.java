@@ -6,10 +6,6 @@ import com.seucantinho.api.domain.enums.TipoPagamentoEnum;
 import com.seucantinho.api.domain.strategy.StatusTransitionStrategy;
 import org.springframework.stereotype.Component;
 
-/**
- * Estratégia para transição de status quando recebe pagamento de QUITAÇÃO.
- * Transição: CONFIRMADA -> QUITADA
- */
 @Component
 public class QuitacaoStatusTransitionStrategy implements StatusTransitionStrategy {
 

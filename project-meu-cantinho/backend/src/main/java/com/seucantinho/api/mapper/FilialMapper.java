@@ -5,10 +5,6 @@ import com.seucantinho.api.dto.filial.FilialRequestDTO;
 import com.seucantinho.api.dto.filial.FilialResponseDTO;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper responsável pela conversão entre Filial (Entity) e seus DTOs.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 public class FilialMapper {
 

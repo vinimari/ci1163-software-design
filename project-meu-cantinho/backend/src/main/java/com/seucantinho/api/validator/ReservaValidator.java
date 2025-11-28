@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Validador responsável pelas regras de negócio relacionadas a reservas.
- * Aplica o princípio SRP (Single Responsibility Principle).
- */
 @Component
 @RequiredArgsConstructor
 public class ReservaValidator {

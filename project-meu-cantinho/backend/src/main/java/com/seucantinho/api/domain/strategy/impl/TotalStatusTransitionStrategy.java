@@ -6,10 +6,6 @@ import com.seucantinho.api.domain.enums.TipoPagamentoEnum;
 import com.seucantinho.api.domain.strategy.StatusTransitionStrategy;
 import org.springframework.stereotype.Component;
 
-/**
- * Estratégia para transição de status quando recebe pagamento TOTAL.
- * Transição: AGUARDANDO_SINAL -> QUITADA
- */
 @Component
 public class TotalStatusTransitionStrategy implements StatusTransitionStrategy {
 

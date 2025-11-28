@@ -61,7 +61,6 @@ public class PagamentoService implements IPagamentoService {
         Pagamento pagamento = pagamentoMapper.toEntity(requestDTO, reserva);
         Pagamento savedPagamento = pagamentoRepository.save(pagamento);
 
-        // Atualizar status da reserva com base no tipo de pagamento usando o serviço de domínio
         reservaStatusService.updateStatusAfterPayment(reserva, savedPagamento);
         reservaRepository.save(reserva);
 

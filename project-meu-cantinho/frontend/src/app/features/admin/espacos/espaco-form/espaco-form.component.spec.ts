@@ -143,8 +143,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('precoDiaria')?.value).toBe(mockEspaco.precoDiaria);
       expect(component.espacoForm.get('ativo')?.value).toBe(mockEspaco.ativo);
       expect(component.espacoForm.get('urlFotoPrincipal')?.value).toBe(mockEspaco.urlFotoPrincipal);
-      // Note: o form usa o objeto filial inteiro, não apenas o id
-      expect(component.espacoForm.get('filialId')?.value).toEqual(mockEspaco.filial);
+      expect(component.espacoForm.get('filialId')?.value).toBe(mockEspaco.filial.id);
     });
 
     it('should disable filialId field when filialIdFuncionario is provided', () => {
@@ -355,12 +354,9 @@ describe('EspacoFormComponent', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
 
-      // Precisa chamar ngOnInit manualmente após definir filialIdFuncionario
       component.ngOnInit();
 
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
-
-      // Preencher todos os campos obrigatórios
       component.espacoForm.patchValue({
         nome: 'Sala de Reunião',
         descricao: 'Sala ampla',
@@ -460,9 +456,7 @@ describe('EspacoFormComponent', () => {
       nomeControl?.setValue('a'.repeat(151));
       nomeControl?.markAsTouched();
 
-      // O erro do Angular é 'maxlength' (lowercase), mas o componente verifica 'maxLength'
-      // Como o componente não encontra, retorna 'Campo inválido'
-      expect(component.getErrorMessage('nome')).toBe('Campo inválido');
+      expect(component.getErrorMessage('nome')).toBe('Máximo 150 caracteres');
     });
 
     it('should return pattern error message for invalid URL', () => {

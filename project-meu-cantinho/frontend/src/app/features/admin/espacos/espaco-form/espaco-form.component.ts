@@ -43,7 +43,7 @@ export class EspacoFormComponent implements OnInit {
       ativo: [this.espaco?.ativo !== undefined ? this.espaco.ativo : true],
       urlFotoPrincipal: [this.espaco?.urlFotoPrincipal || '', [Validators.pattern('https?://.+')]],
       filialId: [
-        { value: this.espaco?.filial || this.filialIdFuncionario || '', disabled: !!this.filialIdFuncionario },
+        { value: this.espaco?.filial?.id || this.filialIdFuncionario || '', disabled: !!this.filialIdFuncionario },
         [Validators.required]
       ]
     });
@@ -94,7 +94,7 @@ export class EspacoFormComponent implements OnInit {
 
     if (field.errors['required']) return 'Campo obrigatório';
     if (field.errors['min']) return `Valor mínimo: ${field.errors['min'].min}`;
-    if (field.errors['maxLength']) return `Máximo ${field.errors['maxLength'].requiredLength} caracteres`;
+    if (field.errors['maxlength']) return `Máximo ${field.errors['maxlength'].requiredLength} caracteres`;
     if (field.errors['pattern']) return 'URL inválida';
 
     return 'Campo inválido';

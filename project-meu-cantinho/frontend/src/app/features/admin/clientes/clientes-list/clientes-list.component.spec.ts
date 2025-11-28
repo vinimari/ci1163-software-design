@@ -94,7 +94,7 @@ describe('ClientesListComponent', () => {
     component.clientes = mockClientes;
     component.onSearchChange('joão');
     component.filterClientes();
-    
+
     expect(component.clientesFiltrados).toHaveLength(1);
     expect(component.clientesFiltrados[0].nome).toBe('João Silva');
   });
@@ -103,7 +103,7 @@ describe('ClientesListComponent', () => {
     component.clientes = mockClientes;
     component.onSearchChange('maria@email.com');
     component.filterClientes();
-    
+
     expect(component.clientesFiltrados).toHaveLength(1);
     expect(component.clientesFiltrados[0].email).toBe('maria@email.com');
   });
@@ -112,7 +112,7 @@ describe('ClientesListComponent', () => {
     component.clientes = mockClientes;
     component.onSearchChange('123456');
     component.filterClientes();
-    
+
     expect(component.clientesFiltrados).toHaveLength(1);
     expect(component.clientesFiltrados[0].cpf).toBe('12345678900');
   });
@@ -121,7 +121,7 @@ describe('ClientesListComponent', () => {
     component.clientes = mockClientes;
     component.onSearchChange('');
     component.filterClientes();
-    
+
     expect(component.clientesFiltrados).toEqual(mockClientes);
   });
 
@@ -129,7 +129,7 @@ describe('ClientesListComponent', () => {
     component.clientes = mockClientes;
     component.onSearchChange('inexistente');
     component.filterClientes();
-    
+
     expect(component.clientesFiltrados).toHaveLength(0);
   });
 
@@ -183,13 +183,12 @@ describe('ClientesListComponent', () => {
   it('should set loading to true when toggling cliente status', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     let loadingDuringCall = false;
-    
-    // Capturar o estado de loading durante a chamada do serviço
+
     clienteService.toggleAtivo.mockImplementation(() => {
       loadingDuringCall = component.loading;
       return of(mockClientes[0]);
     });
-    
+
     component.toggleAtivo(mockClientes[0]);
 
     expect(loadingDuringCall).toBe(true);
@@ -211,7 +210,7 @@ describe('ClientesListComponent', () => {
     component.clientes = [...mockClientes, clienteSemCpf];
     component.onSearchChange('123456');
     component.filterClientes();
-    
+
     expect(component.clientesFiltrados).toHaveLength(1);
     expect(component.clientesFiltrados[0].id).toBe(1);
   });

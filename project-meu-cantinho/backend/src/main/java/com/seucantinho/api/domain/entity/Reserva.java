@@ -63,46 +63,45 @@ public class Reserva {
         }
     }
 
+    /**
+     * Calcula o total pago até o momento somando todos os pagamentos.
+     * Método de cálculo simples mantido na entidade (Tell, Don't Ask).
+     *
+     * @return O valor total já pago
+     */
     public BigDecimal calcularTotalPago() {
         return pagamentos.stream()
             .map(Pagamento::getValor)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    /**
+     * Calcula o saldo restante a ser pago (valor total - total já pago).
+     * Método de cálculo simples mantido na entidade (Tell, Don't Ask).
+     *
+     * @return O saldo restante
+     */
     public BigDecimal calcularSaldo() {
         return valorTotal.subtract(calcularTotalPago());
     }
 
-    public void validarValorTotal() {
-        if (espaco == null) {
-            throw new IllegalArgumentException("Espaço não pode ser nulo");
-        }
-
-        BigDecimal valorEsperado = espaco.getPrecoDiaria();
-        if (valorTotal.compareTo(valorEsperado) != 0) {
-            throw new IllegalArgumentException(
-                "Valor total incorreto. Esperado: R$ " + valorEsperado +
-                ", Recebido: R$ " + valorTotal
-            );
-        }
+    /**
+     * Verifica se a reserva está completamente quitada.
+     *
+     * @return true se o saldo é zero e o status é QUITADA
+     */
+    public boolean isQuitada() {
+        return calcularSaldo().compareTo(BigDecimal.ZERO) == 0
+            && status == StatusReservaEnum.QUITADA;
     }
 
-    public void cancelar() {
-        this.status = StatusReservaEnum.CANCELADA;
-        this.pagamentos.clear(); // Remove todos os pagamentos (orphanRemoval = true fará a exclusão no banco)
-    }
-
-    public void atualizarStatusAposPagamento(Pagamento pagamento) {
-        switch (pagamento.getTipo()) {
-            case TOTAL:
-                this.status = StatusReservaEnum.QUITADA;
-                break;
-            case SINAL:
-                this.status = StatusReservaEnum.CONFIRMADA;
-                break;
-            case QUITACAO:
-                this.status = StatusReservaEnum.QUITADA;
-                break;
-        }
+    /**
+     * Verifica se a reserva está ativa (não cancelada ou finalizada).
+     *
+     * @return true se a reserva está ativa
+     */
+    public boolean isAtiva() {
+        return status != StatusReservaEnum.CANCELADA
+            && status != StatusReservaEnum.FINALIZADA;
     }
 }

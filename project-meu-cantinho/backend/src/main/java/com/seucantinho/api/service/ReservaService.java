@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +31,7 @@ public class ReservaService implements IReservaService {
     private final EspacoRepository espacoRepository;
     private final ReservaMapper reservaMapper;
     private final ReservaValidator reservaValidator;
+    private final ReservaStatusService reservaStatusService;
 
     @Override
     @Transactional(readOnly = true)
@@ -79,7 +79,7 @@ public class ReservaService implements IReservaService {
         );
 
         Reserva reserva = reservaMapper.toEntity(requestDTO, usuario, espaco);
-        reserva.validarValorTotal();
+        reservaValidator.validateValorTotal(reserva);
         Reserva savedReserva = reservaRepository.save(reserva);
         return reservaMapper.toResponseDTO(savedReserva);
     }
@@ -103,10 +103,10 @@ public class ReservaService implements IReservaService {
         reserva.setValorTotal(requestDTO.getValorTotal());
         reserva.setObservacoes(requestDTO.getObservacoes());
 
-        // Se estiver cancelando, usar o método específico que também remove os pagamentos
+        // Se estiver cancelando, usar o serviço de status que também remove os pagamentos
         if (requestDTO.getStatus() != null) {
             if (requestDTO.getStatus() == StatusReservaEnum.CANCELADA) {
-                reserva.cancelar();
+                reservaStatusService.cancelReservation(reserva);
             } else {
                 reserva.setStatus(requestDTO.getStatus());
             }
@@ -121,9 +121,9 @@ public class ReservaService implements IReservaService {
     public ReservaResponseDTO updateStatus(Integer id, StatusReservaEnum novoStatus) {
         Reserva reserva = findReservaById(id);
 
-        // Se estiver cancelando, usar o método específico que também remove os pagamentos
+        // Se estiver cancelando, usar o serviço de status que também remove os pagamentos
         if (novoStatus == StatusReservaEnum.CANCELADA) {
-            reserva.cancelar();
+            reservaStatusService.cancelReservation(reserva);
         } else {
             reserva.setStatus(novoStatus);
         }

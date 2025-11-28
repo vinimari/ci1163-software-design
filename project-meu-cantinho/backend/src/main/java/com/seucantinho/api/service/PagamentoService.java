@@ -25,6 +25,7 @@ public class PagamentoService implements IPagamentoService {
     private final ReservaRepository reservaRepository;
     private final PagamentoMapper pagamentoMapper;
     private final PagamentoValidator pagamentoValidator;
+    private final ReservaStatusService reservaStatusService;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,8 +61,8 @@ public class PagamentoService implements IPagamentoService {
         Pagamento pagamento = pagamentoMapper.toEntity(requestDTO, reserva);
         Pagamento savedPagamento = pagamentoRepository.save(pagamento);
 
-        // Atualizar status da reserva com base no tipo de pagamento
-        reserva.atualizarStatusAposPagamento(savedPagamento);
+        // Atualizar status da reserva com base no tipo de pagamento usando o serviço de domínio
+        reservaStatusService.updateStatusAfterPayment(reserva, savedPagamento);
         reservaRepository.save(reserva);
 
         return pagamentoMapper.toResponseDTO(savedPagamento);

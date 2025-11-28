@@ -89,10 +89,19 @@ public class EspacoService implements EspacoServicePort {
     @Override
     @Transactional
     public void delete(Integer id) {
-        if (!espacoRepositoryPort.existsById(id)) {
-            throw new ResourceNotFoundException("Espaço não encontrado com ID: " + id);
+        Espaco espaco = findEspacoById(id);
+        Filial filial = espaco.getFilial();
+
+        if (filial != null) {
+            // Remove a associação bidirecional
+            filial.getEspacos().remove(espaco);
+            espaco.setFilial(null);
+
+            // Força a deleção do espaço
+            espacoRepositoryPort.deleteById(id);
+        } else {
+            espacoRepositoryPort.deleteById(id);
         }
-        espacoRepositoryPort.deleteById(id);
     }
 
     private Espaco findEspacoById(Integer id) {

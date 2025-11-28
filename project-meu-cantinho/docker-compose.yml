@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
     ports:
-      - "0.0.0.0:5432:5432"
+      - "0.0.0.0:5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -30,7 +30,6 @@ services:
     depends_on:
       - db
     environment:
-      # Note que usamos o nome do serviço 'db' como host
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/seucantinho
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass

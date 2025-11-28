@@ -110,8 +110,10 @@ class ClienteValidatorTest {
     @Test
     void shouldValidateCpfUnique_WhenCpfDoesNotExist() {
         // Given
+        // Given
         String cpf = "98765432100";
         when(clienteRepository.findByCpf(cpf)).thenReturn(Optional.empty());
+        // When & Then
 
         // When & Then
         assertThatCode(() -> clienteValidator.validateCpfUnique(cpf))
@@ -119,7 +121,9 @@ class ClienteValidatorTest {
 
         verify(clienteRepository, times(1)).findByCpf(cpf);
     }
+        // Given
 
+        // When & Then
     @Test
     void shouldValidateCpfUnique_WhenCpfIsNull() {
         // Given
@@ -127,8 +131,10 @@ class ClienteValidatorTest {
 
         // When & Then
         assertThatCode(() -> clienteValidator.validateCpfUnique(cpf))
+        // Given
                 .doesNotThrowAnyException();
 
+        // When & Then
         verify(clienteRepository, never()).findByCpf(any());
     }
 

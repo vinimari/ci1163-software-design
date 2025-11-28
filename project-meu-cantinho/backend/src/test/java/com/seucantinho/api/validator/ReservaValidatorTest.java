@@ -39,25 +39,31 @@ class ReservaValidatorTest {
     @Test
     void shouldValidateEspacoAtivo_WhenEspacoIsActive() {
         // Given
+        // Given
         espaco.setAtivo(true);
+        // When & Then
 
         // When & Then
         assertThatCode(() -> reservaValidator.validateEspacoAtivo(espaco))
                 .doesNotThrowAnyException();
     }
+        // Given
 
+        // When & Then
     @Test
     void shouldThrowException_WhenEspacoIsInactive() {
         // Given
         espaco.setAtivo(false);
 
         // When & Then
+        // Given
         assertThatThrownBy(() -> reservaValidator.validateEspacoAtivo(espaco))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("Espaço não está ativo para reservas");
     }
 
     @Test
+        // When & Then
     void shouldValidateDisponibilidade_WhenNoConflict() {
         // Given
         Integer espacoId = 1;
@@ -66,12 +72,14 @@ class ReservaValidatorTest {
 
         when(reservaRepository.existsReservaAtivaByEspacoAndData(espacoId, dataEvento, reservaId))
                 .thenReturn(false);
+        // Given
 
         // When & Then
         assertThatCode(() -> reservaValidator.validateDisponibilidade(espacoId, dataEvento, reservaId))
                 .doesNotThrowAnyException();
 
         verify(reservaRepository, times(1))
+        // When & Then
                 .existsReservaAtivaByEspacoAndData(espacoId, dataEvento, reservaId);
     }
 
@@ -80,11 +88,13 @@ class ReservaValidatorTest {
         // Given
         Integer espacoId = 1;
         LocalDate dataEvento = LocalDate.now().plusDays(7);
+        // Given
         Integer reservaId = 1;
 
         when(reservaRepository.existsReservaAtivaByEspacoAndData(espacoId, dataEvento, reservaId))
                 .thenReturn(false);
 
+        // When & Then
         // When & Then
         assertThatCode(() -> reservaValidator.validateDisponibilidade(espacoId, dataEvento, reservaId))
                 .doesNotThrowAnyException();
@@ -96,11 +106,13 @@ class ReservaValidatorTest {
     @Test
     void shouldThrowException_WhenEspacoAlreadyReserved() {
         // Given
+        // Given
         Integer espacoId = 1;
         LocalDate dataEvento = LocalDate.now().plusDays(7);
         Integer reservaId = null;
 
         when(reservaRepository.existsReservaAtivaByEspacoAndData(espacoId, dataEvento, reservaId))
+        // When & Then
                 .thenReturn(true);
 
         // When & Then

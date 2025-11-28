@@ -60,6 +60,7 @@ class FilialServiceTest {
     @Test
     void shouldFindAllFiliais() {
         // Given
+        // Given
         when(filialRepository.findAll()).thenReturn(Arrays.asList(filial));
         when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
                 FilialResponseDTO.builder()
@@ -67,13 +68,16 @@ class FilialServiceTest {
                         .nome(filial.getNome())
                         .build()
         );
+        // When
 
+        // Then
         // When
         List<FilialResponseDTO> result = filialService.findAll();
 
         // Then
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getNome()).isEqualTo("Filial Teste");
+        // Given
         verify(filialRepository, times(1)).findAll();
     }
 
@@ -81,7 +85,9 @@ class FilialServiceTest {
     void shouldFindFilialById() {
         // Given
         when(filialRepository.findById(1)).thenReturn(Optional.of(filial));
+        // When
         when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
+        // Then
                 FilialResponseDTO.builder()
                         .id(filial.getId())
                         .nome(filial.getNome())
@@ -89,13 +95,16 @@ class FilialServiceTest {
         );
 
         // When
+        // Given
         FilialResponseDTO result = filialService.findById(1);
+        // When & Then
 
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getNome()).isEqualTo("Filial Teste");
         verify(filialRepository, times(1)).findById(1);
+        // Given
     }
 
     @Test
@@ -104,13 +113,16 @@ class FilialServiceTest {
         when(filialRepository.findById(999)).thenReturn(Optional.empty());
 
         // When & Then
+        // When
         assertThatThrownBy(() -> filialService.findById(999))
+        // Then
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Filial não encontrada com ID: 999");
     }
 
     @Test
     void shouldCreateFilial() {
+        // Given
         // Given
         when(filialMapper.toEntity(any(FilialRequestDTO.class))).thenReturn(filial);
         when(filialRepository.save(any(Filial.class))).thenReturn(filial);
@@ -128,22 +140,29 @@ class FilialServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getNome()).isEqualTo("Filial Teste");
         verify(filialRepository, times(1)).save(any(Filial.class));
+        // When
     }
+        // Then
 
     @Test
     void shouldUpdateFilial() {
         // Given
         when(filialRepository.findById(1)).thenReturn(Optional.of(filial));
         doNothing().when(filialMapper).updateEntityFromDTO(any(Filial.class), any(FilialRequestDTO.class));
+        // Given
         when(filialRepository.save(any(Filial.class))).thenReturn(filial);
         when(filialMapper.toResponseDTO(any(Filial.class))).thenReturn(
+        // When
                 FilialResponseDTO.builder()
+        // Then
                         .id(filial.getId())
                         .nome(filial.getNome())
                         .build()
         );
 
+        // Given
         FilialRequestDTO updateDTO = FilialRequestDTO.builder()
+        // When & Then
                 .nome("Filial Atualizada")
                 .cidade("São Paulo")
                 .estado("SP")

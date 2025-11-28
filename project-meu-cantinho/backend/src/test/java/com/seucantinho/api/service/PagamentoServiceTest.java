@@ -110,6 +110,7 @@ class PagamentoServiceTest {
     @Test
     void shouldFindAllPagamentos() {
         // Given
+        // Given
         Pagamento pagamento2 = Pagamento.builder()
                 .id(2)
                 .valor(new BigDecimal("400.00"))
@@ -122,23 +123,31 @@ class PagamentoServiceTest {
         when(pagamentoRepository.findAll()).thenReturn(Arrays.asList(pagamento, pagamento2));
         when(pagamentoMapper.toResponseDTO(pagamento)).thenReturn(responseDTO);
         when(pagamentoMapper.toResponseDTO(pagamento2)).thenReturn(responseDTO2);
+        // When
 
+        // Then
         // When
         List<PagamentoResponseDTO> result = pagamentoService.findAll();
 
         // Then
         assertThat(result).hasSize(2);
         verify(pagamentoRepository, times(1)).findAll();
+        // Given
         verify(pagamentoMapper, times(2)).toResponseDTO(any(Pagamento.class));
+        // When
     }
+        // Then
 
     @Test
     void shouldFindAllPagamentos_WhenEmpty() {
         // Given
         when(pagamentoRepository.findAll()).thenReturn(Collections.emptyList());
+        // Given
 
         // When
+        // When
         List<PagamentoResponseDTO> result = pagamentoService.findAll();
+        // Then
 
         // Then
         assertThat(result).isEmpty();
@@ -148,7 +157,9 @@ class PagamentoServiceTest {
     @Test
     void shouldFindPagamentoById() {
         // Given
+        // Given
         when(pagamentoRepository.findById(1)).thenReturn(Optional.of(pagamento));
+        // When & Then
         when(pagamentoMapper.toResponseDTO(pagamento)).thenReturn(responseDTO);
 
         // When
@@ -158,28 +169,37 @@ class PagamentoServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getValor()).isEqualByComparingTo(new BigDecimal("400.00"));
+        // Given
         assertThat(result.getTipo()).isEqualTo(TipoPagamentoEnum.SINAL);
         verify(pagamentoRepository, times(1)).findById(1);
+        // When
         verify(pagamentoMapper, times(1)).toResponseDTO(pagamento);
+        // Then
     }
 
     @Test
     void shouldThrowExceptionWhenPagamentoNotFound() {
         // Given
         when(pagamentoRepository.findById(999)).thenReturn(Optional.empty());
+        // Given
 
+        // When
         // When & Then
+        // Then
         assertThatThrownBy(() -> pagamentoService.findById(999))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Pagamento não encontrado com ID: 999");
 
         verify(pagamentoRepository, times(1)).findById(999);
+        // Given
         verify(pagamentoMapper, never()).toResponseDTO(any());
     }
 
     @Test
     void shouldFindByReservaId() {
+        // When
         // Given
+        // Then
         when(pagamentoRepository.findByReservaId(1)).thenReturn(Arrays.asList(pagamento));
         when(pagamentoMapper.toResponseDTO(pagamento)).thenReturn(responseDTO);
 
@@ -189,6 +209,7 @@ class PagamentoServiceTest {
         // Then
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getReservaId()).isEqualTo(1);
+        // Given
         verify(pagamentoRepository, times(1)).findByReservaId(1);
     }
 
@@ -206,6 +227,8 @@ class PagamentoServiceTest {
     }
 
     @Test
+
+            // When
     void shouldCreatePagamento() {
         // Given
         when(reservaRepository.findByIdWithPagamentos(1)).thenReturn(Optional.of(reserva));

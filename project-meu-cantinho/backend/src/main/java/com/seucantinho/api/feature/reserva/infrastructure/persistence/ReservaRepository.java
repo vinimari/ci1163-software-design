@@ -20,7 +20,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 
     List<Reserva> findByStatus(StatusReservaEnum status);
 
-    List<Reserva> findByDataEvento(LocalDate dataEvento);
+    List<Reserva> findByDataEventoData(LocalDate dataEvento);
 
     @Query("SELECT r FROM Reserva r " +
            "LEFT JOIN FETCH r.usuario " +
@@ -36,7 +36,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END " +
            "FROM Reserva r " +
            "WHERE r.espaco.id = :espacoId " +
-           "AND r.dataEvento = :dataEvento " +
+           "AND r.dataEvento.data = :dataEvento " +
            "AND r.status NOT IN ('CANCELADA', 'FINALIZADA') " +
            "AND (:reservaId IS NULL OR r.id <> :reservaId)")
     boolean existsReservaAtivaByEspacoAndData(
@@ -47,7 +47,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 
     @Query("SELECT r FROM Reserva r " +
            "WHERE r.espaco.filial.id = :filialId " +
-           "AND r.dataEvento BETWEEN :dataInicio AND :dataFim")
+           "AND r.dataEvento.data BETWEEN :dataInicio AND :dataFim")
     List<Reserva> findReservasByFilialAndPeriodo(
         @Param("filialId") Integer filialId,
         @Param("dataInicio") LocalDate dataInicio,

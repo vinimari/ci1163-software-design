@@ -50,6 +50,13 @@ public class ReservaWebAdapter implements ReservaWebPort {
         return ResponseEntity.ok(reservas);
     }
 
+    @GetMapping("/acesso/{email}")
+    @Operation(summary = "Listar reservas por acesso de usuário (email)")
+    public ResponseEntity<List<ReservaResponseDTO>> findByAcessoPorEmail(@PathVariable String email) {
+        List<ReservaResponseDTO> reservas = reservaService.findByAcessoPorEmail(email);
+        return ResponseEntity.ok(reservas);
+    }
+
     @PostMapping
     @Operation(summary = "Criar nova reserva")
     public ResponseEntity<ReservaResponseDTO> create(@Valid @RequestBody ReservaRequestDTO requestDTO) {

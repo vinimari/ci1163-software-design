@@ -21,4 +21,6 @@ public interface ReservaWebPort {
     ResponseEntity<ReservaResponseDTO> update(Integer id, ReservaRequestDTO requestDTO);
 
     ResponseEntity<Void> delete(Integer id);
+
+    ResponseEntity<List<ReservaResponseDTO>> findByAcessoPorEmail(String email);
 }

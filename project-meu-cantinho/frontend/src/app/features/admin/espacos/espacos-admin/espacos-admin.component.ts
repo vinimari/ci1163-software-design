@@ -116,7 +116,8 @@ export class EspacosAdminComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Erro ao atualizar espaço:', error);
-          alert('Erro ao atualizar espaço. Tente novamente.');
+          const errorMessage = error.error?.message || 'Erro ao atualizar espaço. Tente novamente.';
+          alert(errorMessage);
         }
       });
     } else {
@@ -128,7 +129,8 @@ export class EspacosAdminComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Erro ao criar espaço:', error);
-          alert('Erro ao criar espaço. Tente novamente.');
+          const errorMessage = error.error?.message || 'Erro ao criar espaço. Tente novamente.';
+          alert(errorMessage);
         }
       });
     }
@@ -158,7 +160,8 @@ export class EspacosAdminComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Erro ao alterar status:', error);
-        alert('Erro ao alterar status do espaço.');
+        const errorMessage = error.error?.message || 'Erro ao alterar status do espaço.';
+        alert(errorMessage);
       }
     });
   }
@@ -172,7 +175,8 @@ export class EspacosAdminComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Erro ao excluir espaço:', error);
-          alert('Erro ao excluir espaço. Verifique se não há reservas associadas.');
+          const errorMessage = error.error?.message || 'Erro ao excluir espaço. Verifique se não há reservas associadas.';
+          alert(errorMessage);
         }
       });
     }

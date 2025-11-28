@@ -259,7 +259,25 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should handle create error', () => {
+    it('should handle create error with backend message', () => {
+      const errorResponse = {
+        error: {
+          message: 'Capacidade não pode exceder 1000 pessoas por questões de segurança'
+        }
+      };
+      espacoService.create.mockReturnValue(throwError(() => errorResponse));
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
+      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+      component.espacoSelecionado = undefined;
+      component.onSubmitForm(mockEspacoRequest);
+
+      expect(alertSpy).toHaveBeenCalledWith('Capacidade não pode exceder 1000 pessoas por questões de segurança');
+      alertSpy.mockRestore();
+      consoleError.mockRestore();
+    });
+
+    it('should handle create error without backend message', () => {
       espacoService.create.mockReturnValue(throwError(() => new Error('Create error')));
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -272,7 +290,25 @@ describe('EspacosAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle update error', () => {
+    it('should handle update error with backend message', () => {
+      const errorResponse = {
+        error: {
+          message: 'Capacidade não pode exceder 1000 pessoas por questões de segurança'
+        }
+      };
+      espacoService.update.mockReturnValue(throwError(() => errorResponse));
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
+      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+      component.espacoSelecionado = mockEspacoResponse;
+      component.onSubmitForm(mockEspacoRequest);
+
+      expect(alertSpy).toHaveBeenCalledWith('Capacidade não pode exceder 1000 pessoas por questões de segurança');
+      alertSpy.mockRestore();
+      consoleError.mockRestore();
+    });
+
+    it('should handle update error without backend message', () => {
       espacoService.update.mockReturnValue(throwError(() => new Error('Update error')));
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -336,7 +372,24 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should handle toggle error', () => {
+    it('should handle toggle error with backend message', () => {
+      const errorResponse = {
+        error: {
+          message: 'Não é possível desativar espaço com reservas ativas'
+        }
+      };
+      espacoService.update.mockReturnValue(throwError(() => errorResponse));
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
+      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+      component.toggleAtivo(mockEspacoResponse);
+
+      expect(alertSpy).toHaveBeenCalledWith('Não é possível desativar espaço com reservas ativas');
+      alertSpy.mockRestore();
+      consoleError.mockRestore();
+    });
+
+    it('should handle toggle error without backend message', () => {
       espacoService.update.mockReturnValue(throwError(() => new Error('Toggle error')));
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -377,7 +430,26 @@ describe('EspacosAdminComponent', () => {
       confirmSpy.mockRestore();
     });
 
-    it('should handle delete error', () => {
+    it('should handle delete error with backend message', () => {
+      const errorResponse = {
+        error: {
+          message: 'Espaço não pode ser excluído pois possui reservas vinculadas'
+        }
+      };
+      espacoService.delete.mockReturnValue(throwError(() => errorResponse));
+      const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
+      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+      component.excluirEspaco(mockEspacoResponse);
+
+      expect(alertSpy).toHaveBeenCalledWith('Espaço não pode ser excluído pois possui reservas vinculadas');
+      confirmSpy.mockRestore();
+      alertSpy.mockRestore();
+      consoleError.mockRestore();
+    });
+
+    it('should handle delete error without backend message', () => {
       espacoService.delete.mockReturnValue(throwError(() => new Error('Delete error')));
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();

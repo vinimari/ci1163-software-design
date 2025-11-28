@@ -57,4 +57,27 @@ public abstract class Usuario {
     }
 
     public abstract PerfilUsuarioEnum getPerfil();
+
+    public void validarEmail() {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email é obrigatório");
+        }
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new IllegalArgumentException("Email inválido");
+        }
+    }
+
+    public void validarCpf() {
+        if (cpf != null && !cpf.matches("\\d{11}")) {
+            throw new IllegalArgumentException("CPF deve conter 11 dígitos");
+        }
+    }
+
+    public void validar() {
+        validarEmail();
+        validarCpf();
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+    }
 }

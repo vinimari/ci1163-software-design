@@ -4,9 +4,6 @@ import com.seucantinho.api.feature.pagamento.domain.Pagamento;
 import com.seucantinho.api.feature.reserva.domain.enums.StatusReservaEnum;
 import com.seucantinho.api.feature.pagamento.domain.enums.TipoPagamentoEnum;
 import com.seucantinho.api.feature.reserva.domain.strategy.StatusTransitionStrategy;
-import org.springframework.stereotype.Component;
-
-@Component
 public class QuitacaoStatusTransitionStrategy implements StatusTransitionStrategy {
 
     @Override

@@ -2,7 +2,7 @@ package com.seucantinho.api.feature.reserva.infrastructure.mapper;
 
 import com.seucantinho.api.feature.espaco.infrastructure.mapper.EspacoMapper;
 import com.seucantinho.api.feature.usuario.infrastructure.mapper.UsuarioMapper;
-import com.seucantinho.api.feature.cliente.domain.Cliente;
+
 import com.seucantinho.api.feature.espaco.domain.Espaco;
 import com.seucantinho.api.feature.reserva.domain.Reserva;
 import com.seucantinho.api.feature.usuario.domain.Usuario;
@@ -11,7 +11,7 @@ import com.seucantinho.api.feature.reserva.domain.valueobject.DataEvento;
 import com.seucantinho.api.shared.domain.valueobject.ValorMonetario;
 import com.seucantinho.api.feature.reserva.application.dto.ReservaRequestDTO;
 import com.seucantinho.api.feature.reserva.application.dto.ReservaResponseDTO;
-import com.seucantinho.api.feature.usuario.application.dto.UsuarioResponseDTO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

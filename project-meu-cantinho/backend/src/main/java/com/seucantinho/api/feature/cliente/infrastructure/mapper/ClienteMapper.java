@@ -3,21 +3,21 @@ package com.seucantinho.api.feature.cliente.infrastructure.mapper;
 import com.seucantinho.api.feature.cliente.domain.Cliente;
 import com.seucantinho.api.feature.cliente.application.dto.ClienteRequestDTO;
 import com.seucantinho.api.feature.cliente.application.dto.ClienteResponseDTO;
+import com.seucantinho.api.feature.auth.domain.port.out.PasswordEncoderPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ClienteMapper {
 
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoderPort passwordEncoderPort;
 
     public Cliente toEntity(ClienteRequestDTO dto) {
         return Cliente.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
-                .senhaHash(passwordEncoder.encode(dto.getSenha()))
+                .senhaHash(passwordEncoderPort.encode(dto.getSenha()))
                 .cpf(dto.getCpf())
                 .telefone(dto.getTelefone())
                 .ativo(dto.getAtivo() != null ? dto.getAtivo() : true)
@@ -41,7 +41,7 @@ public class ClienteMapper {
         cliente.setNome(dto.getNome());
         cliente.setEmail(dto.getEmail());
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
-            cliente.setSenhaHash(passwordEncoder.encode(dto.getSenha()));
+            cliente.setSenhaHash(passwordEncoderPort.encode(dto.getSenha()));
         }
         cliente.setCpf(dto.getCpf());
         cliente.setTelefone(dto.getTelefone());

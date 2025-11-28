@@ -5,9 +5,9 @@ import com.seucantinho.api.feature.cliente.application.dto.ClienteRequestDTO;
 import com.seucantinho.api.feature.cliente.application.dto.ClienteResponseDTO;
 import com.seucantinho.api.shared.domain.exception.ResourceNotFoundException;
 import com.seucantinho.api.feature.cliente.infrastructure.mapper.ClienteMapper;
-import com.seucantinho.api.feature.cliente.infrastructure.persistence.ClienteRepository;
-import com.seucantinho.api.feature.cliente.application.port.in.IClienteService;
-import com.seucantinho.api.feature.cliente.application.validator.ClienteValidator;
+import com.seucantinho.api.feature.cliente.domain.port.out.ClienteRepositoryPort;
+import com.seucantinho.api.feature.cliente.domain.port.in.ClienteServicePort;
+import com.seucantinho.api.feature.cliente.domain.service.ClienteUniquenessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ClienteService implements IClienteService {
+public class ClienteService implements ClienteServicePort {
 
-    private final ClienteRepository clienteRepository;
+    private final ClienteRepositoryPort clienteRepositoryPort;
     private final ClienteMapper clienteMapper;
-    private final ClienteValidator clienteValidator;
+    private final ClienteUniquenessService clienteUniquenessService;
 
     @Override
     @Transactional(readOnly = true)
     public List<ClienteResponseDTO> findAll() {
-        return clienteRepository.findAll().stream()
+        return clienteRepositoryPort.findAll().stream()
                 .map(clienteMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -41,11 +41,12 @@ public class ClienteService implements IClienteService {
     @Override
     @Transactional
     public ClienteResponseDTO create(ClienteRequestDTO requestDTO) {
-        clienteValidator.validateEmailUnique(requestDTO.getEmail());
-        clienteValidator.validateCpfUnique(requestDTO.getCpf());
+        clienteUniquenessService.validarEmailUnico(requestDTO.getEmail());
+        clienteUniquenessService.validarCpfUnico(requestDTO.getCpf());
 
         Cliente cliente = clienteMapper.toEntity(requestDTO);
-        Cliente savedCliente = clienteRepository.save(cliente);
+        cliente.validar();
+        Cliente savedCliente = clienteRepositoryPort.save(cliente);
         return clienteMapper.toResponseDTO(savedCliente);
     }
 
@@ -53,20 +54,23 @@ public class ClienteService implements IClienteService {
     @Transactional
     public ClienteResponseDTO update(Integer id, ClienteRequestDTO requestDTO) {
         Cliente cliente = findClienteById(id);
-        clienteValidator.validateEmailUniqueForUpdate(requestDTO.getEmail(), id);
+        clienteUniquenessService.validarEmailUnicoParaAtualizacao(requestDTO.getEmail(), id);
 
         clienteMapper.updateEntityFromDTO(cliente, requestDTO);
-        Cliente updatedCliente = clienteRepository.save(cliente);
+        cliente.validar();
+
+        clienteMapper.updateEntityFromDTO(cliente, requestDTO);
+        Cliente updatedCliente = clienteRepositoryPort.save(cliente);
         return clienteMapper.toResponseDTO(updatedCliente);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        if (!clienteRepository.existsById(id)) {
+        if (clienteRepositoryPort.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("Cliente não encontrado com ID: " + id);
         }
-        clienteRepository.deleteById(id);
+        clienteRepositoryPort.deleteById(id);
     }
 
     @Override
@@ -74,12 +78,12 @@ public class ClienteService implements IClienteService {
     public ClienteResponseDTO toggleAtivo(Integer id, Boolean ativo) {
         Cliente cliente = findClienteById(id);
         cliente.setAtivo(ativo);
-        Cliente updatedCliente = clienteRepository.save(cliente);
+        Cliente updatedCliente = clienteRepositoryPort.save(cliente);
         return clienteMapper.toResponseDTO(updatedCliente);
     }
 
     private Cliente findClienteById(Integer id) {
-        return clienteRepository.findById(id)
+        return clienteRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado com ID: " + id));
     }
 }

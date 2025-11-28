@@ -1,7 +1,7 @@
 package com.seucantinho.api.feature.cliente.application.dto;
 
 import com.seucantinho.api.feature.usuario.application.dto.UsuarioResponseDTO;
-import com.seucantinho.api.feature.usuario.domain.Usuario;
+
 
 import com.seucantinho.api.feature.usuario.domain.enums.PerfilUsuarioEnum;
 import lombok.*;

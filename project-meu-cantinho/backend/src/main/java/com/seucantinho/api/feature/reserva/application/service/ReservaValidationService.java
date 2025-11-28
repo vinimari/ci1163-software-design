@@ -1,7 +1,7 @@
 package com.seucantinho.api.feature.reserva.application.service;
 
 import com.seucantinho.api.feature.reserva.domain.Reserva;
-import com.seucantinho.api.feature.reserva.infrastructure.persistence.ReservaRepository;
+import com.seucantinho.api.feature.reserva.domain.service.ReservaAvailabilityService;
 import com.seucantinho.api.feature.espaco.domain.Espaco;
 import com.seucantinho.api.feature.reserva.domain.valueobject.DataEvento;
 import com.seucantinho.api.shared.domain.exception.BusinessException;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ReservaValidationService {
 
-    private final ReservaRepository reservaRepository;
+    private final ReservaAvailabilityService reservaAvailabilityService;
 
     public void validateEspacoAtivo(Espaco espaco) {
         if (!espaco.getAtivo()) {
@@ -24,9 +24,7 @@ public class ReservaValidationService {
 
     public void validateDisponibilidade(Integer espacoId, LocalDate dataEvento, Integer reservaId) {
         DataEvento.of(dataEvento);
-        if (reservaRepository.existsReservaAtivaByEspacoAndData(espacoId, dataEvento, reservaId)) {
-            throw new BusinessException("Espaço já possui reserva ativa para esta data");
-        }
+        reservaAvailabilityService.validarDisponibilidade(espacoId, dataEvento, reservaId);
     }
 
     public void validateValorTotal(Reserva reserva) {

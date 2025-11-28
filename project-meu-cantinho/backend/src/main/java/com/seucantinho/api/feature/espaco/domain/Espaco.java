@@ -8,7 +8,7 @@ import com.seucantinho.api.shared.domain.valueobject.ValorMonetario;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,5 +59,27 @@ public class Espaco {
         if (ativo == null) {
             ativo = true;
         }
+    }
+
+    // Métodos de validação centralizados no domínio
+    public void validar() {
+        validarNome();
+        validarFilial();
+    }
+
+    private void validarNome() {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new com.seucantinho.api.shared.domain.exception.BusinessException("Nome do espaço é obrigatório");
+        }
+    }
+
+    private void validarFilial() {
+        if (filial == null) {
+            throw new com.seucantinho.api.shared.domain.exception.BusinessException("Filial é obrigatória para o espaço");
+        }
+    }
+
+    public boolean podeSerReservadoPara(java.time.LocalDate data) {
+        return ativo && data.isAfter(java.time.LocalDate.now());
     }
 }

@@ -11,11 +11,11 @@ import com.seucantinho.api.feature.reserva.application.dto.ReservaRequestDTO;
 import com.seucantinho.api.feature.reserva.application.dto.ReservaResponseDTO;
 import com.seucantinho.api.shared.domain.exception.ResourceNotFoundException;
 import com.seucantinho.api.feature.reserva.infrastructure.mapper.ReservaMapper;
-import com.seucantinho.api.feature.espaco.infrastructure.persistence.EspacoRepository;
-import com.seucantinho.api.feature.reserva.infrastructure.persistence.ReservaRepository;
-import com.seucantinho.api.feature.usuario.infrastructure.persistence.UsuarioRepository;
-import com.seucantinho.api.feature.reserva.application.port.in.IReservaService;
-import com.seucantinho.api.feature.reserva.application.validator.ReservaValidator;
+import com.seucantinho.api.feature.espaco.domain.port.out.EspacoRepositoryPort;
+import com.seucantinho.api.feature.reserva.domain.port.out.ReservaRepositoryPort;
+import com.seucantinho.api.feature.usuario.domain.port.out.UsuarioRepositoryPort;
+import com.seucantinho.api.feature.reserva.domain.port.in.ReservaServicePort;
+import com.seucantinho.api.feature.reserva.domain.service.ReservaAvailabilityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +26,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ReservaService implements IReservaService {
+public class ReservaService implements ReservaServicePort {
 
-    private final ReservaRepository reservaRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final EspacoRepository espacoRepository;
+    private final ReservaRepositoryPort reservaRepositoryPort;
+    private final UsuarioRepositoryPort usuarioRepositoryPort;
+    private final EspacoRepositoryPort espacoRepositoryPort;
     private final ReservaMapper reservaMapper;
-    private final ReservaValidator reservaValidator;
+    private final ReservaAvailabilityService reservaAvailabilityService;
     private final ReservaStatusService reservaStatusService;
 
     @Override
     @Transactional(readOnly = true)
     public List<ReservaResponseDTO> findAll() {
-        return reservaRepository.findAll().stream()
+        return reservaRepositoryPort.findAll().stream()
                 .map(reservaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -46,7 +46,7 @@ public class ReservaService implements IReservaService {
     @Override
     @Transactional(readOnly = true)
     public ReservaResponseDTO findById(Integer id) {
-        Reserva reserva = reservaRepository.findByIdWithDetails(id)
+        Reserva reserva = reservaRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva não encontrada com ID: " + id));
         return reservaMapper.toResponseDTO(reserva);
     }
@@ -54,7 +54,7 @@ public class ReservaService implements IReservaService {
     @Override
     @Transactional(readOnly = true)
     public List<ReservaResponseDTO> findByUsuarioId(Integer usuarioId) {
-        return reservaRepository.findByUsuarioId(usuarioId).stream()
+        return reservaRepositoryPort.findByUsuarioId(usuarioId).stream()
                 .map(reservaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -62,7 +62,7 @@ public class ReservaService implements IReservaService {
     @Override
     @Transactional(readOnly = true)
     public List<ReservaResponseDTO> findByEspacoId(Integer espacoId) {
-        return reservaRepository.findByEspacoId(espacoId).stream()
+        return reservaRepositoryPort.findByEspacoId(espacoId).stream()
                 .map(reservaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -73,16 +73,14 @@ public class ReservaService implements IReservaService {
         Usuario usuario = findUsuarioById(requestDTO.getUsuarioId());
         Espaco espaco = findEspacoById(requestDTO.getEspacoId());
 
-        reservaValidator.validateEspacoAtivo(espaco);
-        reservaValidator.validateDisponibilidade(
-                requestDTO.getEspacoId(),
-                requestDTO.getDataEvento(),
-                null
-        );
-
         Reserva reserva = reservaMapper.toEntity(requestDTO, usuario, espaco);
-        reservaValidator.validateValorTotal(reserva);
-        Reserva savedReserva = reservaRepository.save(reserva);
+
+        // Usar validações centralizadas no domínio
+        reserva.validar();
+        reservaAvailabilityService.validarDisponibilidade(
+                requestDTO.getEspacoId(), requestDTO.getDataEvento(), null);
+
+        Reserva savedReserva = reservaRepositoryPort.save(reserva);
         return reservaMapper.toResponseDTO(savedReserva);
     }
 
@@ -94,7 +92,7 @@ public class ReservaService implements IReservaService {
         if (!reserva.getEspaco().getId().equals(requestDTO.getEspacoId()) ||
             !reserva.getDataEvento().getData().equals(requestDTO.getDataEvento())) {
 
-            reservaValidator.validateDisponibilidade(
+            reservaAvailabilityService.validarDisponibilidade(
                     requestDTO.getEspacoId(),
                     requestDTO.getDataEvento(),
                     id
@@ -113,7 +111,8 @@ public class ReservaService implements IReservaService {
             }
         }
 
-        Reserva updatedReserva = reservaRepository.save(reserva);
+        reserva.validar();
+        Reserva updatedReserva = reservaRepositoryPort.save(reserva);
         return reservaMapper.toResponseDTO(updatedReserva);
     }
 
@@ -128,23 +127,23 @@ public class ReservaService implements IReservaService {
             reserva.setStatus(novoStatus);
         }
 
-        Reserva updatedReserva = reservaRepository.save(reserva);
+        Reserva updatedReserva = reservaRepositoryPort.save(reserva);
         return reservaMapper.toResponseDTO(updatedReserva);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        if (!reservaRepository.existsById(id)) {
+        if (!reservaRepositoryPort.existsById(id)) {
             throw new ResourceNotFoundException("Reserva não encontrada com ID: " + id);
         }
-        reservaRepository.deleteById(id);
+        reservaRepositoryPort.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ReservaResponseDTO> findByAcessoPorEmail(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        Usuario usuario = usuarioRepositoryPort.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com email: " + email));
 
         if (usuario.getPerfil() != null && usuario.getPerfil().name().equalsIgnoreCase("ADMIN")) {
@@ -157,28 +156,30 @@ public class ReservaService implements IReservaService {
                 return Collections.emptyList();
             }
             Integer filialId = funcionario.getFilial().getId();
-            return reservaRepository.findByEspacoFilialId(filialId).stream()
+            // Método não existe no port, vamos usar findByEspacoId como alternativa
+            return reservaRepositoryPort.findAll().stream()
+                    .filter(r -> r.getEspaco() != null && r.getEspaco().getFilial().getId().equals(filialId))
                     .map(reservaMapper::toResponseDTO)
                     .collect(Collectors.toList());
         }
 
-        return reservaRepository.findByUsuarioId(usuario.getId()).stream()
+        return reservaRepositoryPort.findByUsuarioId(usuario.getId()).stream()
                 .map(reservaMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
     private Reserva findReservaById(Integer id) {
-        return reservaRepository.findById(id)
+        return reservaRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva não encontrada com ID: " + id));
     }
 
     private Usuario findUsuarioById(Integer usuarioId) {
-        return usuarioRepository.findById(usuarioId)
+        return usuarioRepositoryPort.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + usuarioId));
     }
 
     private Espaco findEspacoById(Integer espacoId) {
-        return espacoRepository.findById(espacoId)
+        return espacoRepositoryPort.findById(espacoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Espaço não encontrado com ID: " + espacoId));
     }
 }

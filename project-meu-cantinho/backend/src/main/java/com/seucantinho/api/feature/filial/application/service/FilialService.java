@@ -5,8 +5,8 @@ import com.seucantinho.api.feature.filial.application.dto.FilialRequestDTO;
 import com.seucantinho.api.feature.filial.application.dto.FilialResponseDTO;
 import com.seucantinho.api.shared.domain.exception.ResourceNotFoundException;
 import com.seucantinho.api.feature.filial.infrastructure.mapper.FilialMapper;
-import com.seucantinho.api.feature.filial.infrastructure.persistence.FilialRepository;
-import com.seucantinho.api.feature.filial.application.port.in.IFilialService;
+import com.seucantinho.api.feature.filial.domain.port.out.FilialRepositoryPort;
+import com.seucantinho.api.feature.filial.domain.port.in.FilialServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class FilialService implements IFilialService {
+public class FilialService implements FilialServicePort {
 
-    private final FilialRepository filialRepository;
+    private final FilialRepositoryPort filialRepositoryPort;
     private final FilialMapper filialMapper;
 
     @Override
     @Transactional(readOnly = true)
     public List<FilialResponseDTO> findAll() {
-        return filialRepository.findAll().stream()
+        return filialRepositoryPort.findAll().stream()
                 .map(filialMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -40,7 +40,7 @@ public class FilialService implements IFilialService {
     @Transactional
     public FilialResponseDTO create(FilialRequestDTO requestDTO) {
         Filial filial = filialMapper.toEntity(requestDTO);
-        Filial savedFilial = filialRepository.save(filial);
+        Filial savedFilial = filialRepositoryPort.save(filial);
         return filialMapper.toResponseDTO(savedFilial);
     }
 
@@ -49,21 +49,21 @@ public class FilialService implements IFilialService {
     public FilialResponseDTO update(Integer id, FilialRequestDTO requestDTO) {
         Filial filial = findFilialById(id);
         filialMapper.updateEntityFromDTO(filial, requestDTO);
-        Filial updatedFilial = filialRepository.save(filial);
+        Filial updatedFilial = filialRepositoryPort.save(filial);
         return filialMapper.toResponseDTO(updatedFilial);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        if (!filialRepository.existsById(id)) {
+        if (filialRepositoryPort.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("Filial não encontrada com ID: " + id);
         }
-        filialRepository.deleteById(id);
+        filialRepositoryPort.deleteById(id);
     }
 
     private Filial findFilialById(Integer id) {
-        return filialRepository.findById(id)
+        return filialRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Filial não encontrada com ID: " + id));
     }
 }

@@ -1,7 +1,7 @@
 package com.seucantinho.api.feature.funcionario.application.dto;
 
 import com.seucantinho.api.feature.usuario.application.dto.UsuarioRequestDTO;
-import com.seucantinho.api.feature.usuario.domain.Usuario;
+
 
 import com.seucantinho.api.feature.usuario.domain.enums.PerfilUsuarioEnum;
 import jakarta.validation.constraints.NotBlank;

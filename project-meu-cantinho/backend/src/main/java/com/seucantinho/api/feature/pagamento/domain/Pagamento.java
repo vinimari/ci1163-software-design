@@ -8,7 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -49,5 +49,73 @@ public class Pagamento {
     @PrePersist
     protected void onCreate() {
         dataPagamento = LocalDateTime.now();
+    }
+
+    public void validar() {
+        if (reserva == null) {
+            throw new IllegalArgumentException("Reserva é obrigatória");
+        }
+        if (valor == null) {
+            throw new IllegalArgumentException("Valor é obrigatório");
+        }
+        if (tipo == null) {
+            throw new IllegalArgumentException("Tipo de pagamento é obrigatório");
+        }
+
+        if (valor.getValor().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Valor deve ser positivo");
+        }
+        validarTipoPagamento();
+    }
+
+    private void validarTipoPagamento() {
+        ValorMonetario valorTotal = reserva.getValorTotal();
+        ValorMonetario metadeValor = valorTotal.calcularMetade();
+        boolean possuiPagamentos = !reserva.getPagamentos().isEmpty();
+
+        switch (tipo) {
+            case TOTAL:
+                if (possuiPagamentos) {
+                    throw new IllegalArgumentException("Pagamento TOTAL só pode ser feito na criação da reserva");
+                }
+                if (!valor.isIgualA(valorTotal)) {
+                    throw new IllegalArgumentException(
+                        String.format("Pagamento TOTAL deve ser o valor completo: %s", valorTotal.getValorFormatado())
+                    );
+                }
+                break;
+
+            case SINAL:
+                if (possuiPagamentos) {
+                    throw new IllegalArgumentException("Pagamento SINAL só pode ser feito na criação da reserva");
+                }
+                if (!valor.isIgualA(metadeValor)) {
+                    throw new IllegalArgumentException(
+                        String.format("Pagamento SINAL deve ser 50%% do valor total: %s", metadeValor.getValorFormatado())
+                    );
+                }
+                break;
+
+            case QUITACAO:
+                if (!possuiPagamentos) {
+                    throw new IllegalArgumentException("Pagamento QUITACAO só pode ser feito após o pagamento do SINAL");
+                }
+                if (reserva.getPagamentos().get(0).getTipo() != TipoPagamentoEnum.SINAL) {
+                    throw new IllegalArgumentException("Pagamento QUITACAO só é permitido para reservas com pagamento inicial do tipo SINAL");
+                }
+                if (reserva.getPagamentos().size() > 1) {
+                    throw new IllegalArgumentException("Esta reserva já foi quitada");
+                }
+                ValorMonetario saldoRestante = reserva.calcularSaldo();
+                if (!valor.isIgualA(saldoRestante)) {
+                    throw new IllegalArgumentException(
+                        String.format("Pagamento QUITACAO deve ser o saldo restante: %s", saldoRestante.getValorFormatado())
+                    );
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Tipo de pagamento inválido");
+        }
     }
 }

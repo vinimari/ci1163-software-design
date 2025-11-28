@@ -6,13 +6,13 @@ import com.seucantinho.api.feature.reserva.domain.valueobject.DataEvento;
 import com.seucantinho.api.shared.domain.valueobject.ValorMonetario;
 import com.seucantinho.api.feature.espaco.domain.Espaco;
 import com.seucantinho.api.feature.pagamento.domain.Pagamento;
+import com.seucantinho.api.shared.domain.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,5 +88,43 @@ public class Reserva {
     public boolean isAtiva() {
         return status != StatusReservaEnum.CANCELADA
             && status != StatusReservaEnum.FINALIZADA;
+    }
+
+    // Métodos de validação centralizados no domínio
+    public void validar() {
+        validarEspaco();
+        validarValorTotal();
+        validarDataEvento();
+    }
+
+    private void validarEspaco() {
+        if (espaco == null) {
+            throw new BusinessException("Espaço não pode ser nulo");
+        }
+        if (!espaco.getAtivo()) {
+            throw new BusinessException("Não é possível reservar um espaço inativo");
+        }
+    }
+
+    private void validarValorTotal() {
+        if (espaco != null && !valorTotal.isIgualA(espaco.getPrecoDiaria())) {
+            throw new BusinessException(
+                String.format("Valor total incorreto. Esperado: %s, Recebido: %s",
+                    espaco.getPrecoDiaria().getValorFormatado(),
+                    valorTotal.getValorFormatado())
+            );
+        }
+    }
+
+    private void validarDataEvento() {
+        if (dataEvento != null && dataEvento.getData().isBefore(LocalDateTime.now().toLocalDate())) {
+            throw new BusinessException("Data do evento não pode ser no passado");
+        }
+    }
+
+    public void validarDisponibilidade(boolean espacoDisponivel) {
+        if (!espacoDisponivel) {
+            throw new BusinessException("Espaço já possui reserva ativa para esta data");
+        }
     }
 }

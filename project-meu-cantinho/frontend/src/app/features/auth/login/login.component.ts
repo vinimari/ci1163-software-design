@@ -39,7 +39,6 @@ export class LoginComponent {
       next: () => {
         this.loading = false;
 
-        // Redirecionar baseado no perfil do usuário
         if (this.authService.isAdmin()) {
           this.router.navigate(['/admin/reservas']);
         } else if (this.authService.isFuncionario()) {

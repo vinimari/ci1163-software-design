@@ -21,7 +21,6 @@ export class ReservaDetailComponent implements OnInit {
   loadingPagamentos = false;
   error: string | null = null;
 
-  // Modal de novo pagamento
   showPagamentoModal = false;
   novoPagamento: PagamentoRequest = {
     valor: 0,
@@ -109,22 +108,17 @@ export class ReservaDetailComponent implements OnInit {
     const possuiPagamentos = this.pagamentos.length > 0;
 
     if (!possuiPagamentos) {
-      // Primeiro pagamento: pode ser SINAL (50%) ou TOTAL (100%)
-      // Por padrão, sugerimos SINAL
       return { tipo: TipoPagamento.SINAL, valor: metadeValor };
     } else {
-      // Segundo pagamento: deve ser QUITACAO (50% restantes)
       const primeiroPagamento = this.pagamentos[0];
       if (primeiroPagamento.tipo === TipoPagamento.SINAL) {
         return { tipo: TipoPagamento.QUITACAO, valor: metadeValor };
       }
-      // Se o primeiro foi TOTAL, não deve permitir mais pagamentos
       return { tipo: TipoPagamento.QUITACAO, valor: 0 };
     }
   }
 
   permitirTrocarTipoPagamento(): boolean {
-    // Só permite trocar entre SINAL e TOTAL no primeiro pagamento
     return this.pagamentos.length === 0;
   }
 

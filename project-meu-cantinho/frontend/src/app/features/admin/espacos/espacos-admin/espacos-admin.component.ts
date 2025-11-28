@@ -38,9 +38,7 @@ export class EspacosAdminComponent implements OnInit {
   private verificarPermissoes(): void {
     const user = this.authService.getCurrentUser();
     if (this.authService.isFuncionario() && user) {
-      // TODO: Buscar filialId do funcionário do backend
-      // Por enquanto, vamos usar um mock
-      this.filialIdFuncionario = 1; // Mock
+      this.filialIdFuncionario = 1;
     }
   }
 
@@ -48,7 +46,6 @@ export class EspacosAdminComponent implements OnInit {
     this.loading = true;
 
     if (this.filialIdFuncionario) {
-      // Funcionário: busca apenas da sua filial
       this.espacoService.getByFilialId(this.filialIdFuncionario).subscribe({
         next: (espacos: EspacoResponse[]) => {
           this.espacos = espacos;
@@ -61,7 +58,6 @@ export class EspacosAdminComponent implements OnInit {
         }
       });
     } else {
-      // Admin: busca todos
       this.espacoService.getAll().subscribe({
         next: (espacos: EspacoResponse[]) => {
           this.espacos = espacos;
@@ -112,7 +108,6 @@ export class EspacosAdminComponent implements OnInit {
 
   onSubmitForm(espacoRequest: EspacoRequest): void {
     if (this.espacoSelecionado) {
-      // Editar
       this.espacoService.update(this.espacoSelecionado.id, espacoRequest).subscribe({
         next: () => {
           this.showForm = false;
@@ -125,7 +120,6 @@ export class EspacosAdminComponent implements OnInit {
         }
       });
     } else {
-      // Criar
       this.espacoService.create(espacoRequest).subscribe({
         next: () => {
           this.showForm = false;

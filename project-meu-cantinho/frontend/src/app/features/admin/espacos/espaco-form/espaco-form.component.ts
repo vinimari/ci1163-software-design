@@ -51,7 +51,6 @@ export class EspacoFormComponent implements OnInit {
 
   private loadFiliais(): void {
     if (this.filialIdFuncionario) {
-      // Funcionário só vê sua filial
       this.filialService.getById(this.filialIdFuncionario).subscribe({
         next: (filial) => {
           this.filiais = [filial];
@@ -59,7 +58,6 @@ export class EspacoFormComponent implements OnInit {
         error: (error) => console.error('Erro ao carregar filial:', error)
       });
     } else {
-      // Admin vê todas as filiais
       this.filialService.getAll().subscribe({
         next: (filiais) => {
           this.filiais = filiais;

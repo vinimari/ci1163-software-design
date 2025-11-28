@@ -22,7 +22,6 @@ export class ReservasAdminComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  // Filtros
   searchTerm = '';
   statusFilter: StatusReserva | 'TODOS' = 'TODOS';
   dataFilter: 'TODAS' | 'FUTURAS' | 'PASSADAS' = 'FUTURAS';
@@ -68,7 +67,6 @@ export class ReservasAdminComponent implements OnInit {
   applyFilters(): void {
     let filtered = [...this.reservas];
 
-    // Filtro por termo de busca (cliente ou espaço)
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(reserva =>
@@ -77,12 +75,10 @@ export class ReservasAdminComponent implements OnInit {
       );
     }
 
-    // Filtro por status
     if (this.statusFilter !== 'TODOS') {
       filtered = filtered.filter(reserva => reserva.status === this.statusFilter);
     }
 
-    // Filtro por data
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
@@ -98,7 +94,6 @@ export class ReservasAdminComponent implements OnInit {
       });
     }
 
-    // Filtro por status de pagamento
     if (this.pagamentoFilter === 'QUITADA') {
       filtered = filtered.filter(reserva =>
         reserva.saldo === 0 || (reserva.totalPago !== undefined && reserva.totalPago >= reserva.valorTotal)
@@ -109,7 +104,6 @@ export class ReservasAdminComponent implements OnInit {
       );
     }
 
-    // Ordenar por data do evento (mais próximas primeiro para futuras, mais recentes primeiro para passadas)
     filtered.sort((a, b) => {
       const dataA = new Date(a.dataEvento).getTime();
       const dataB = new Date(b.dataEvento).getTime();

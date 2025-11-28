@@ -31,7 +31,6 @@ export class ReservaFormComponent implements OnInit {
   isFuncionario = false;
   isCliente = false;
 
-  // Pagamento
   tipoPagamento: TipoPagamento = TipoPagamento.SINAL;
   formaPagamento: string = '';
   codigoTransacao: string = '';
@@ -51,7 +50,6 @@ export class ReservaFormComponent implements OnInit {
     this.checkUserPermissions();
     this.loadInitialData();
 
-    // Pré-selecionar espaço se vier da URL
     const espacoId = this.route.snapshot.queryParamMap.get('espacoId');
     if (espacoId) {
       this.reserva.espacoId = +espacoId;
@@ -69,24 +67,17 @@ export class ReservaFormComponent implements OnInit {
     this.isFuncionario = this.authService.isFuncionario();
     this.isCliente = this.authService.isCliente();
 
-    // Cliente faz reserva para si mesmo
     if (this.isCliente) {
       this.reserva.usuarioId = user.id;
     }
-
-    // TODO: Funcionário precisa ter filialId no perfil
-    // Por enquanto, vamos assumir que está disponível
-    // this.userFilialId = user.filialId;
   }
 
   loadInitialData(): void {
     this.loading = true;
 
-    // Carregar espaços diretamente (sem filiais)
     this.espacoService.getAll().subscribe({
       next: (espacos) => {
         this.espacos = espacos.filter(e => e.ativo);
-        // Se já existe um espacoId pré-selecionado, definir valorTotal
         if (this.reserva.espacoId) {
           const espaco = this.espacos.find(e => e.id === this.reserva.espacoId);
           if (espaco) {
@@ -102,7 +93,6 @@ export class ReservaFormComponent implements OnInit {
       }
     });
 
-    // Carregar clientes se for admin ou funcionário
     if (this.isAdmin || this.isFuncionario) {
       this.clienteService.getAll().subscribe({
         next: (clientes) => {
@@ -129,17 +119,14 @@ export class ReservaFormComponent implements OnInit {
     });
   }
 
-  // Filtro de filial removido: todos os espaços são exibidos diretamente
-
   onEspacoChange(): void {
-    // Converter para número caso venha como string do select
     const espacoId = typeof this.reserva.espacoId === 'string'
       ? parseInt(this.reserva.espacoId)
       : this.reserva.espacoId;
 
     const espaco = this.espacos.find(e => e.id === espacoId);
     if (espaco) {
-      this.reserva.espacoId = espacoId; // Garantir que é número
+      this.reserva.espacoId = espacoId;
       this.reserva.valorTotal = espaco.precoDiaria;
     }
   }
@@ -152,10 +139,8 @@ export class ReservaFormComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Criar reserva primeiro
     this.reservaService.create(this.reserva).subscribe({
       next: (reserva) => {
-        // Criar pagamento
         const valorPagamento = this.tipoPagamento === TipoPagamento.TOTAL
           ? this.reserva.valorTotal
           : this.reserva.valorTotal * 0.5; // 50% para sinal
@@ -170,7 +155,6 @@ export class ReservaFormComponent implements OnInit {
 
         this.pagamentoService.create(pagamento).subscribe({
           next: () => {
-            // Redirecionar baseado no perfil
             if (this.isCliente) {
               this.router.navigate(['/reservas']);
             } else {

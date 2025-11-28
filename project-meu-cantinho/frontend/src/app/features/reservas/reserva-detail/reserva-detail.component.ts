@@ -107,11 +107,9 @@ export class ReservaDetailComponent implements OnInit {
         valor: valor,
         tipo: tipo
       });
-      // Desabilita os campos tipo e valor para que não possam ser alterados
       this.pagamentoForm.get('tipo')?.disable();
       this.pagamentoForm.get('valor')?.disable();
     } else {
-      // Reabilita os campos quando fechar
       this.pagamentoForm.get('tipo')?.enable();
       this.pagamentoForm.get('valor')?.enable();
     }
@@ -126,16 +124,12 @@ export class ReservaDetailComponent implements OnInit {
     const possuiPagamentos = this.pagamentos.length > 0;
 
     if (!possuiPagamentos) {
-      // Primeiro pagamento: pode ser SINAL (50%) ou TOTAL (100%)
-      // Por padrão, sugerimos SINAL
       return { tipo: TipoPagamento.SINAL, valor: metadeValor };
     } else {
-      // Segundo pagamento: deve ser QUITACAO (50% restantes)
       const primeiroPagamento = this.pagamentos[0];
       if (primeiroPagamento.tipo === TipoPagamento.SINAL) {
         return { tipo: TipoPagamento.QUITACAO, valor: metadeValor };
       }
-      // Se o primeiro foi TOTAL, não deve permitir mais pagamentos
       return { tipo: TipoPagamento.QUITACAO, valor: 0 };
     }
   }
@@ -157,14 +151,12 @@ export class ReservaDetailComponent implements OnInit {
   }
 
   permitirTrocarTipoPagamento(): boolean {
-    // Só permite trocar entre SINAL e TOTAL no primeiro pagamento
     return this.pagamentos.length === 0;
   }
 
   onSubmitPagamento(): void {
     if (!this.reserva) return;
 
-    // Valida apenas os campos habilitados
     const formaPagamento = this.pagamentoForm.get('formaPagamento')?.value;
     if (!formaPagamento) {
       this.error = 'Forma de pagamento é obrigatória';
@@ -175,7 +167,6 @@ export class ReservaDetailComponent implements OnInit {
     this.error = '';
     this.successMessage = '';
 
-    // Pega os valores diretamente dos campos, mesmo que estejam desabilitados
     const { tipo, valor } = this.calcularProximoPagamento();
 
     const pagamento: PagamentoRequest = {
@@ -194,7 +185,6 @@ export class ReservaDetailComponent implements OnInit {
         this.pagamentoForm.reset({
           tipo: TipoPagamento.SINAL
         });
-        // Recarrega os dados
         this.loadReserva(this.reserva!.id);
         this.loadPagamentos(this.reserva!.id);
       },

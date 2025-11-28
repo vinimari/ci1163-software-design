@@ -25,7 +25,6 @@ export const routes: Routes = [
         path: '',
         component: HomeComponent
       },
-      // Rotas para CLIENTES
       {
         path: 'espacos',
         loadChildren: () => import('./features/espacos/espacos.routes').then(m => m.ESPACOS_ROUTES)
@@ -35,13 +34,11 @@ export const routes: Routes = [
         canActivate: [roleGuard([PerfilUsuario.CLIENTE])],
         loadChildren: () => import('./features/reservas/reservas.routes').then(m => m.RESERVAS_ROUTES)
       },
-      // Rotas para ADMIN
       {
         path: 'admin',
         canActivate: [roleGuard([PerfilUsuario.ADMIN])],
         loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
       },
-      // Rotas para FUNCIONARIO
       {
         path: 'funcionario',
         canActivate: [roleGuard([PerfilUsuario.FUNCIONARIO])],

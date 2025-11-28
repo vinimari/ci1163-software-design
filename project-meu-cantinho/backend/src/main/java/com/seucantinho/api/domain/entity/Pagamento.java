@@ -1,6 +1,7 @@
 package com.seucantinho.api.domain.entity;
 
 import com.seucantinho.api.domain.enums.TipoPagamentoEnum;
+import com.seucantinho.api.domain.valueobject.ValorMonetario;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -25,8 +26,9 @@ public class Pagamento {
     @Column(name = "data_pagamento", updatable = false)
     private LocalDateTime dataPagamento;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valor;
+    @Embedded
+    @AttributeOverride(name = "valor", column = @Column(nullable = false, precision = 10, scale = 2))
+    private ValorMonetario valor;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)

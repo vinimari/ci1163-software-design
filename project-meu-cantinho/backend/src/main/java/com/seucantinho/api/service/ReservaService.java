@@ -5,6 +5,8 @@ import com.seucantinho.api.domain.entity.Reserva;
 import com.seucantinho.api.domain.entity.Usuario;
 import com.seucantinho.api.domain.entity.Funcionario;
 import com.seucantinho.api.domain.enums.StatusReservaEnum;
+import com.seucantinho.api.domain.valueobject.DataEvento;
+import com.seucantinho.api.domain.valueobject.ValorMonetario;
 import com.seucantinho.api.dto.reserva.ReservaRequestDTO;
 import com.seucantinho.api.dto.reserva.ReservaResponseDTO;
 import com.seucantinho.api.exception.ResourceNotFoundException;
@@ -90,7 +92,7 @@ public class ReservaService implements IReservaService {
         Reserva reserva = findReservaById(id);
 
         if (!reserva.getEspaco().getId().equals(requestDTO.getEspacoId()) ||
-            !reserva.getDataEvento().equals(requestDTO.getDataEvento())) {
+            !reserva.getDataEvento().getData().equals(requestDTO.getDataEvento())) {
 
             reservaValidator.validateDisponibilidade(
                     requestDTO.getEspacoId(),
@@ -99,8 +101,8 @@ public class ReservaService implements IReservaService {
             );
         }
 
-        reserva.setDataEvento(requestDTO.getDataEvento());
-        reserva.setValorTotal(requestDTO.getValorTotal());
+        reserva.setDataEvento(DataEvento.of(requestDTO.getDataEvento()));
+        reserva.setValorTotal(ValorMonetario.of(requestDTO.getValorTotal()));
         reserva.setObservacoes(requestDTO.getObservacoes());
 
         if (requestDTO.getStatus() != null) {

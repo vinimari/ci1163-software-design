@@ -2,19 +2,18 @@ package com.seucantinho.api.validator;
 
 import com.seucantinho.api.domain.entity.Reserva;
 import com.seucantinho.api.domain.enums.TipoPagamentoEnum;
+import com.seucantinho.api.domain.valueobject.ValorMonetario;
 import com.seucantinho.api.dto.pagamento.PagamentoRequestDTO;
 import com.seucantinho.api.exception.BusinessException;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @Component
 public class PagamentoValidator {
 
     public void validatePagamento(PagamentoRequestDTO requestDTO, Reserva reserva) {
-        BigDecimal valorTotal = reserva.getValorTotal();
-        BigDecimal metadeValor = valorTotal.divide(new BigDecimal("2"), 2, RoundingMode.HALF_UP);
+        ValorMonetario valorTotal = reserva.getValorTotal();
+        ValorMonetario metadeValor = valorTotal.calcularMetade();
+        ValorMonetario valorPagamento = ValorMonetario.of(requestDTO.getValor());
         boolean possuiPagamentos = !reserva.getPagamentos().isEmpty();
 
         switch (requestDTO.getTipo()) {
@@ -22,9 +21,9 @@ public class PagamentoValidator {
                 if (possuiPagamentos) {
                     throw new BusinessException("Pagamento TOTAL só pode ser feito na criação da reserva");
                 }
-                if (requestDTO.getValor().compareTo(valorTotal) != 0) {
+                if (!valorPagamento.isIgualA(valorTotal)) {
                     throw new BusinessException(
-                        String.format("Pagamento TOTAL deve ser o valor completo: R$ %.2f", valorTotal)
+                        String.format("Pagamento TOTAL deve ser o valor completo: %s", valorTotal.getValorFormatado())
                     );
                 }
                 break;
@@ -33,9 +32,9 @@ public class PagamentoValidator {
                 if (possuiPagamentos) {
                     throw new BusinessException("Pagamento SINAL só pode ser feito na criação da reserva");
                 }
-                if (requestDTO.getValor().compareTo(metadeValor) != 0) {
+                if (!valorPagamento.isIgualA(metadeValor)) {
                     throw new BusinessException(
-                        String.format("Pagamento SINAL deve ser 50%% do valor total: R$ %.2f", metadeValor)
+                        String.format("Pagamento SINAL deve ser 50%% do valor total: %s", metadeValor.getValorFormatado())
                     );
                 }
                 break;
@@ -50,10 +49,10 @@ public class PagamentoValidator {
                 if (reserva.getPagamentos().size() > 1) {
                     throw new BusinessException("Esta reserva já foi quitada");
                 }
-                BigDecimal saldoRestante = valorTotal.subtract(reserva.calcularTotalPago());
-                if (requestDTO.getValor().compareTo(saldoRestante) != 0) {
+                ValorMonetario saldoRestante = reserva.calcularSaldo();
+                if (!valorPagamento.isIgualA(saldoRestante)) {
                     throw new BusinessException(
-                        String.format("Pagamento QUITACAO deve ser o saldo restante: R$ %.2f", saldoRestante)
+                        String.format("Pagamento QUITACAO deve ser o saldo restante: %s", saldoRestante.getValorFormatado())
                     );
                 }
                 break;

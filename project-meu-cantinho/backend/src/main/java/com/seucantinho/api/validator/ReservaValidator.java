@@ -2,12 +2,12 @@ package com.seucantinho.api.validator;
 
 import com.seucantinho.api.domain.entity.Espaco;
 import com.seucantinho.api.domain.entity.Reserva;
+import com.seucantinho.api.domain.valueobject.DataEvento;
 import com.seucantinho.api.exception.BusinessException;
 import com.seucantinho.api.repository.ReservaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Component
@@ -23,6 +23,7 @@ public class ReservaValidator {
     }
 
     public void validateDisponibilidade(Integer espacoId, LocalDate dataEvento, Integer reservaId) {
+        DataEvento.of(dataEvento);
         if (reservaRepository.existsReservaAtivaByEspacoAndData(espacoId, dataEvento, reservaId)) {
             throw new BusinessException("Espaço já possui reserva ativa para esta data");
         }
@@ -33,11 +34,11 @@ public class ReservaValidator {
             throw new BusinessException("Espaço não pode ser nulo");
         }
 
-        BigDecimal valorEsperado = reserva.getEspaco().getPrecoDiaria();
-        if (reserva.getValorTotal().compareTo(valorEsperado) != 0) {
+        if (!reserva.getValorTotal().isIgualA(reserva.getEspaco().getPrecoDiaria())) {
             throw new BusinessException(
-                String.format("Valor total incorreto. Esperado: R$ %s, Recebido: R$ %s",
-                    valorEsperado, reserva.getValorTotal())
+                String.format("Valor total incorreto. Esperado: %s, Recebido: %s",
+                    reserva.getEspaco().getPrecoDiaria().getValorFormatado(),
+                    reserva.getValorTotal().getValorFormatado())
             );
         }
     }

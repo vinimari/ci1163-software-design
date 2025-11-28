@@ -1,6 +1,8 @@
 package com.seucantinho.api.domain.entity;
 
 import com.seucantinho.api.domain.enums.StatusReservaEnum;
+import com.seucantinho.api.domain.valueobject.DataEvento;
+import com.seucantinho.api.domain.valueobject.ValorMonetario;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -28,11 +30,13 @@ public class Reserva {
     @Column(name = "data_criacao", updatable = false)
     private LocalDateTime dataCriacao;
 
-    @Column(name = "data_evento", nullable = false)
-    private LocalDate dataEvento;
+    @Embedded
+    @AttributeOverride(name = "data", column = @Column(name = "data_evento", nullable = false))
+    private DataEvento dataEvento;
 
-    @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorTotal;
+    @Embedded
+    @AttributeOverride(name = "valor", column = @Column(name = "valor_total", nullable = false, precision = 10, scale = 2))
+    private ValorMonetario valorTotal;
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
@@ -63,18 +67,18 @@ public class Reserva {
         }
     }
 
-    public BigDecimal calcularTotalPago() {
+    public ValorMonetario calcularTotalPago() {
         return pagamentos.stream()
             .map(Pagamento::getValor)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .reduce(ValorMonetario.zero(), ValorMonetario::somar);
     }
 
-    public BigDecimal calcularSaldo() {
-        return valorTotal.subtract(calcularTotalPago());
+    public ValorMonetario calcularSaldo() {
+        return valorTotal.subtrair(calcularTotalPago());
     }
 
     public boolean isQuitada() {
-        return calcularSaldo().compareTo(BigDecimal.ZERO) == 0
+        return calcularSaldo().isZero()
             && status == StatusReservaEnum.QUITADA;
     }
 

@@ -1,5 +1,7 @@
 package com.seucantinho.api.domain.entity;
 
+import com.seucantinho.api.domain.valueobject.Capacidade;
+import com.seucantinho.api.domain.valueobject.ValorMonetario;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,11 +28,13 @@ public class Espaco {
     @Column(columnDefinition = "TEXT")
     private String descricao;
 
-    @Column(nullable = false)
-    private Integer capacidade;
+    @Embedded
+    @AttributeOverride(name = "quantidade", column = @Column(name = "capacidade", nullable = false))
+    private Capacidade capacidade;
 
-    @Column(name = "preco_diaria", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precoDiaria;
+    @Embedded
+    @AttributeOverride(name = "valor", column = @Column(name = "preco_diaria", nullable = false, precision = 10, scale = 2))
+    private ValorMonetario precoDiaria;
 
     @Column(nullable = false)
     @Builder.Default

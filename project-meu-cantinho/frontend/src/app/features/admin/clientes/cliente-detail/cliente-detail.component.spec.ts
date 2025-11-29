@@ -60,6 +60,8 @@ describe('ClienteDetailComponent', () => {
   ];
 
   beforeEach(async () => {
+    window.alert = jest.fn();
+
     const clienteServiceMock = {
       getById: jest.fn().mockReturnValue(of(mockCliente)),
       getAll: jest.fn(),
@@ -129,11 +131,12 @@ describe('ClienteDetailComponent', () => {
 
   it('deve tratar erro when loading cliente fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const alertSpy = jest.spyOn(window, 'alert');
     clienteService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
     component.loadCliente(1);
 
-    expect(component.error).toBe('Erro ao carregar cliente');
+    expect(alertSpy).toHaveBeenCalledWith('Erro ao carregar cliente');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
   });

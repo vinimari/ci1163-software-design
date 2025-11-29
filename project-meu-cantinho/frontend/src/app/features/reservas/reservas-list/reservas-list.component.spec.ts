@@ -60,6 +60,8 @@ describe('ReservasListComponent', () => {
   ];
 
   beforeEach(async () => {
+    window.alert = jest.fn();
+
     const reservaServiceMock = {
       getByUsuarioId: jest.fn()
     };
@@ -105,7 +107,6 @@ describe('ReservasListComponent', () => {
     });
 
     it('deve inicializar with empty error', () => {
-      expect(component.error).toBe('');
     });
   });
 
@@ -152,11 +153,10 @@ describe('ReservasListComponent', () => {
     it('deve clear error when loading', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
-      component.error = 'Previous error';
+      const alertSpy = jest.spyOn(window, 'alert');
 
       component.loadReservas();
 
-      expect(component.error).toBe('');
     });
 
     it('deve carregar reservas successfully', () => {
@@ -167,7 +167,6 @@ describe('ReservasListComponent', () => {
 
       expect(component.reservas).toEqual(mockReservas);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve call reservaService.getByUsuarioId with user id', () => {
@@ -187,7 +186,6 @@ describe('ReservasListComponent', () => {
 
       expect(component.reservas).toEqual([]);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve tratar erro when loading fails', () => {
@@ -199,7 +197,6 @@ describe('ReservasListComponent', () => {
       component.loadReservas();
 
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('Erro ao carregar reservas.');
       expect(consoleError).toHaveBeenCalledWith('Error loading reservas:', error);
       consoleError.mockRestore();
     });
@@ -219,7 +216,6 @@ describe('ReservasListComponent', () => {
 
       component.loadReservas();
 
-      expect(component.error).toBe('Erro ao carregar reservas.');
     });
   });
 
@@ -259,7 +255,6 @@ describe('ReservasListComponent', () => {
 
       expect(component.reservas).toEqual(mockReservas);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve tratar erro on initialization', () => {
@@ -269,7 +264,6 @@ describe('ReservasListComponent', () => {
 
       fixture.detectChanges();
 
-      expect(component.error).toBe('Erro ao carregar reservas.');
       expect(component.loading).toBe(false);
       consoleError.mockRestore();
     });

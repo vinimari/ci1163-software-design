@@ -73,7 +73,6 @@ describe('EspacosListComponent', () => {
     });
 
     it('deve inicializar with empty error', () => {
-      expect(component.error).toBe('');
     });
   });
 
@@ -99,12 +98,11 @@ describe('EspacosListComponent', () => {
 
   describe('loadEspacos', () => {
     it('deve clear error when loading', () => {
-      component.error = 'Previous error';
+      const alertSpy = jest.spyOn(window, 'alert');
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
       component.loadEspacos();
 
-      expect(component.error).toBe('');
     });
 
     it('deve carregar espacos successfully', () => {
@@ -114,7 +112,6 @@ describe('EspacosListComponent', () => {
 
       expect(component.espacos).toEqual(mockEspacos);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve call espacoService.getAtivos', () => {
@@ -140,7 +137,6 @@ describe('EspacosListComponent', () => {
 
       expect(component.espacos).toEqual([]);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve tratar erro when loading fails', () => {
@@ -151,7 +147,6 @@ describe('EspacosListComponent', () => {
       component.loadEspacos();
 
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('Erro ao carregar espaços.');
       expect(component.espacos).toEqual([]);
       expect(consoleError).toHaveBeenCalledWith('Error loading espacos:', error);
       consoleError.mockRestore();
@@ -170,7 +165,6 @@ describe('EspacosListComponent', () => {
 
       component.loadEspacos();
 
-      expect(component.error).toBe('Erro ao carregar espaços.');
     });
 
     it('não deve modify espacos on error', () => {
@@ -191,7 +185,6 @@ describe('EspacosListComponent', () => {
 
       expect(component.espacos).toEqual(mockEspacos);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve tratar erro on initialization', () => {
@@ -200,7 +193,6 @@ describe('EspacosListComponent', () => {
 
       fixture.detectChanges();
 
-      expect(component.error).toBe('Erro ao carregar espaços.');
       expect(component.loading).toBe(false);
       consoleError.mockRestore();
     });

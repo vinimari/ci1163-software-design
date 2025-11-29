@@ -33,6 +33,8 @@ describe('FiliaisListComponent', () => {
   ];
 
   beforeEach(async () => {
+    window.alert = jest.fn();
+
     const filialServiceMock = {
       getAll: jest.fn().mockReturnValue(of(mockFiliais)),
       delete: jest.fn().mockReturnValue(of(undefined)),
@@ -72,11 +74,12 @@ describe('FiliaisListComponent', () => {
 
   it('deve tratar erro when loading filiais fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const alertSpy = jest.spyOn(window, 'alert');
     filialService.getAll.mockReturnValue(throwError(() => new Error('Error')));
 
     component.loadFiliais();
 
-    expect(component.error).toBe('Erro ao carregar filiais');
+    expect(alertSpy).toHaveBeenCalledWith('Erro ao carregar filiais');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
   });
@@ -119,24 +122,16 @@ describe('FiliaisListComponent', () => {
 
   it('deve tratar erro when delete fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const alertSpy = jest.spyOn(window, 'alert');
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     filialService.delete.mockReturnValue(throwError(() => new Error('Error')));
 
     component.deleteFilial(1);
 
-    expect(component.error).toBe('Erro ao excluir filial');
+    expect(alertSpy).toHaveBeenCalled();
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
     confirmSpy.mockRestore();
-  });
-
-  it('deve display error message when error is set', () => {
-    filialService.getAll.mockReturnValue(throwError(() => new Error('Test error')));
-    component.loadFiliais();
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement;
-    expect(compiled.textContent).toContain('Erro ao carregar filiais');
   });
 
   it('deve display empty state when no filiais', () => {

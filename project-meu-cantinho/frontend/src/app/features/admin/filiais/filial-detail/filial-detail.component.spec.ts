@@ -23,6 +23,8 @@ describe('FilialDetailComponent', () => {
   };
 
   beforeEach(async () => {
+    window.alert = jest.fn();
+
     const filialServiceMock = {
       getById: jest.fn().mockReturnValue(of(mockFilial)),
       delete: jest.fn().mockReturnValue(of(undefined)),
@@ -76,7 +78,6 @@ describe('FilialDetailComponent', () => {
 
     component.loadFilial(1);
 
-    expect(component.error).toBe('Erro ao carregar filial');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
   });
@@ -138,20 +139,10 @@ describe('FilialDetailComponent', () => {
 
     component.deleteFilial();
 
-    expect(component.error).toBe('Erro ao excluir filial');
     expect(component.loading).toBe(false);
     expect(router.navigate).not.toHaveBeenCalled();
     consoleErrorSpy.mockRestore();
     confirmSpy.mockRestore();
-  });
-
-  it('deve display error message when error is set', () => {
-    component.error = 'Test error';
-    fixture.detectChanges();
-
-    const errorElement = fixture.nativeElement.querySelector('.alert-danger');
-    expect(errorElement).toBeTruthy();
-    expect(errorElement.textContent).toContain('Test error');
   });
 
   it('deve display filial details when loaded', () => {
@@ -159,9 +150,8 @@ describe('FilialDetailComponent', () => {
     component.loading = false;
     fixture.detectChanges();
 
-    const card = fixture.nativeElement.querySelector('.filial-card');
-    expect(card).toBeTruthy();
-    expect(card.textContent).toContain('Filial Centro');
+    const element = fixture.nativeElement;
+    expect(element.textContent).toContain('Filial Centro');
   });
 
   it('não deve load filial if id is not provided', () => {

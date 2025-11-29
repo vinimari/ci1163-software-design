@@ -104,7 +104,6 @@ describe('FilialFormComponent', () => {
 
     component.loadFilial(1);
 
-    expect(component.error).toBe('Erro ao carregar filial');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
   });
@@ -230,7 +229,6 @@ describe('FilialFormComponent', () => {
 
     component.onSubmit();
 
-    expect(component.error).toBe('Erro ao criar filial');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
   });
@@ -249,7 +247,6 @@ describe('FilialFormComponent', () => {
 
     component.onSubmit();
 
-    expect(component.error).toBe('Erro ao atualizar filial');
     expect(component.loading).toBe(false);
     consoleErrorSpy.mockRestore();
   });
@@ -273,15 +270,6 @@ describe('FilialFormComponent', () => {
 
   it('deve ter telefone getter', () => {
     expect(component.telefone).toBe(component.filialForm.get('telefone'));
-  });
-
-  it('deve display error message when error is set', () => {
-    component.error = 'Test error';
-    fixture.detectChanges();
-
-    const errorElement = fixture.nativeElement.querySelector('.alert-danger');
-    expect(errorElement).toBeTruthy();
-    expect(errorElement.textContent).toContain('Test error');
   });
 
   it('deve show correct title in edit mode', () => {

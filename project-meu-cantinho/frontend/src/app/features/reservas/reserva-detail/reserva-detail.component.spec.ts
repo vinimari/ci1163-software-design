@@ -39,6 +39,9 @@ describe('ReservaDetailComponent', () => {
   ];
 
   beforeEach(async () => {
+    window.alert = jest.fn();
+    window.confirm = jest.fn();
+
     const activatedRouteMock = {
       snapshot: {
         paramMap: {
@@ -102,16 +105,16 @@ describe('ReservaDetailComponent', () => {
 
       expect(component.loading).toBe(false);
       expect(component.reserva).toEqual(mockReserva);
-      expect(component.error).toBe('');
     });
 
     it('deve tratar erro when loading reserva', () => {
+      const alertSpy = jest.spyOn(window, 'alert');
       reservaService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadReserva(1);
 
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('Erro ao carregar reserva');
+      expect(alertSpy).toHaveBeenCalledWith('Erro ao carregar reserva');
     });
   });
 
@@ -186,6 +189,7 @@ describe('ReservaDetailComponent', () => {
     });
 
     it('deve criar pagamento successfully', fakeAsync(() => {
+      const alertSpy = jest.spyOn(window, 'alert');
       reservaService.getById.mockReturnValue(of(mockReserva));
       pagamentoService.getByReservaId.mockReturnValue(of([]));
       pagamentoService.create.mockReturnValue(of({
@@ -201,45 +205,48 @@ describe('ReservaDetailComponent', () => {
       tick();
 
       expect(pagamentoService.create).toHaveBeenCalled();
-      expect(component.successMessage).toBe('Pagamento registrado com sucesso!');
+      expect(alertSpy).toHaveBeenCalledWith('Pagamento registrado com sucesso!');
       expect(component.showPagamentoForm).toBe(false);
     }));
 
     it('deve tratar erro when creating pagamento', () => {
+      const alertSpy = jest.spyOn(window, 'alert');
       pagamentoService.create.mockReturnValue(throwError(() => ({ error: { message: 'Erro ao processar' } })));
 
       component.onSubmitPagamento();
 
-      expect(component.error).toBe('Erro ao processar');
+      expect(alertSpy).toHaveBeenCalledWith('Erro ao processar');
     });
 
     it('deve show error if forma pagamento is empty', () => {
+      const alertSpy = jest.spyOn(window, 'alert');
       component.pagamentoForm.patchValue({ formaPagamento: '' });
 
       component.onSubmitPagamento();
 
-      expect(component.error).toBe('Forma de pagamento é obrigatória');
+      expect(alertSpy).toHaveBeenCalledWith('Forma de pagamento é obrigatória');
     });
   });
 
   describe('cancelarReserva', () => {
     beforeEach(() => {
       component.reserva = mockReserva;
-      global.confirm = jest.fn(() => true);
+      (window.confirm as jest.Mock).mockReturnValue(true);
     });
 
     it('deve cancel reserva successfully', fakeAsync(() => {
+      const alertSpy = jest.spyOn(window, 'alert');
       reservaService.updateStatus.mockReturnValue(of({ ...mockReserva, status: StatusReserva.CANCELADA }));
 
       component.cancelarReserva();
       tick();
 
       expect(reservaService.updateStatus).toHaveBeenCalledWith(1, StatusReserva.CANCELADA);
-      expect(component.successMessage).toBe('Reserva cancelada com sucesso!');
+      expect(alertSpy).toHaveBeenCalledWith('Reserva cancelada com sucesso!');
     }));
 
     it('não deve cancel if user cancels confirmation', () => {
-      global.confirm = jest.fn(() => false);
+      (window.confirm as jest.Mock).mockReturnValue(false);
 
       component.cancelarReserva();
 
@@ -247,11 +254,12 @@ describe('ReservaDetailComponent', () => {
     });
 
     it('deve tratar erro when canceling reserva', () => {
+      const alertSpy = jest.spyOn(window, 'alert');
       reservaService.updateStatus.mockReturnValue(throwError(() => new Error('Error')));
 
       component.cancelarReserva();
 
-      expect(component.error).toBe('Erro ao cancelar reserva');
+      expect(alertSpy).toHaveBeenCalled();
     });
   });
 

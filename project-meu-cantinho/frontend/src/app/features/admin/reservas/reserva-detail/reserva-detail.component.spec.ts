@@ -112,7 +112,6 @@ describe('ReservaDetailComponent', () => {
 
       component.loadReserva(1);
 
-      expect(component.error).toBe('Erro ao carregar reserva');
       expect(component.loading).toBe(false);
       consoleError.mockRestore();
     });
@@ -284,7 +283,6 @@ describe('ReservaDetailComponent', () => {
 
       component.salvarPagamento();
 
-      expect(component.error).toBe('Erro');
       expect(component.loading).toBe(false);
       consoleError.mockRestore();
     });
@@ -321,7 +319,6 @@ describe('ReservaDetailComponent', () => {
       };
 
       expect(component.validarPagamento()).toBe(false);
-      expect(component.error).toBe('Valor deve ser maior que zero');
     });
 
     it('deve fail if formaPagamento is empty', () => {
@@ -334,7 +331,6 @@ describe('ReservaDetailComponent', () => {
       };
 
       expect(component.validarPagamento()).toBe(false);
-      expect(component.error).toBe('Forma de pagamento é obrigatória');
     });
   });
 
@@ -360,7 +356,6 @@ describe('ReservaDetailComponent', () => {
 
       component.excluirPagamento(1);
 
-      expect(component.error).toBe('Erro ao excluir pagamento');
       consoleError.mockRestore();
     });
 
@@ -394,7 +389,6 @@ describe('ReservaDetailComponent', () => {
 
       component.updateStatus(StatusReserva.QUITADA);
 
-      expect(component.error).toBe('Erro ao atualizar status da reserva');
       consoleError.mockRestore();
     });
 

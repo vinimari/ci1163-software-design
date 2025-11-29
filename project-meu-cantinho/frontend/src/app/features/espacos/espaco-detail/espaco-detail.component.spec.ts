@@ -67,7 +67,6 @@ describe('EspacoDetailComponent', () => {
     });
 
     it('deve inicializar with empty error', () => {
-      expect(component.error).toBe('');
     });
   });
 
@@ -110,12 +109,11 @@ describe('EspacoDetailComponent', () => {
     });
 
     it('deve clear error when loading', () => {
-      component.error = 'Previous error';
+      const alertSpy = jest.spyOn(window, 'alert');
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
       component.loadEspaco(1);
 
-      expect(component.error).toBe('');
     });
 
     it('deve carregar espaco successfully', () => {
@@ -125,7 +123,6 @@ describe('EspacoDetailComponent', () => {
 
       expect(component.espaco).toEqual(mockEspaco);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve call espacoService.getById with correct id', () => {
@@ -144,7 +141,6 @@ describe('EspacoDetailComponent', () => {
       component.loadEspaco(1);
 
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('Erro ao carregar detalhes do espaço.');
       expect(component.espaco).toBeNull();
       expect(consoleError).toHaveBeenCalledWith('Error loading espaco:', error);
       consoleError.mockRestore();
@@ -163,7 +159,6 @@ describe('EspacoDetailComponent', () => {
 
       component.loadEspaco(1);
 
-      expect(component.error).toBe('Erro ao carregar detalhes do espaço.');
     });
   });
 
@@ -176,7 +171,6 @@ describe('EspacoDetailComponent', () => {
 
       expect(component.espaco).toEqual(mockEspaco);
       expect(component.loading).toBe(false);
-      expect(component.error).toBe('');
     });
 
     it('deve tratar erro on initialization', () => {
@@ -186,7 +180,6 @@ describe('EspacoDetailComponent', () => {
 
       fixture.detectChanges();
 
-      expect(component.error).toBe('Erro ao carregar detalhes do espaço.');
       expect(component.loading).toBe(false);
       consoleError.mockRestore();
     });

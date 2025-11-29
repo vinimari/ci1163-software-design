@@ -5,6 +5,7 @@ import com.seucantinho.api.feature.usuario.application.dto.UsuarioResponseDTO;
 
 import com.seucantinho.api.feature.usuario.domain.enums.PerfilUsuarioEnum;
 import com.seucantinho.api.feature.filial.application.dto.FilialResponseDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,9 +13,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@Schema(description = "Dados de resposta de um funcionário com informações da filial")
 public class FuncionarioResponseDTO extends UsuarioResponseDTO {
 
+    @Schema(description = "Matrícula única do funcionário", example = "F001")
     private String matricula;
+
+    @Schema(description = "Dados completos da filial onde o funcionário está alocado")
     private FilialResponseDTO filial;
 
     @Builder

@@ -19,7 +19,6 @@ export class ReservaDetailComponent implements OnInit {
   pagamentos: PagamentoResponse[] = [];
   loading = false;
   loadingPagamentos = false;
-  error: string | null = null;
 
   showPagamentoModal = false;
   novoPagamento: PagamentoRequest = {
@@ -50,7 +49,6 @@ export class ReservaDetailComponent implements OnInit {
 
   loadReserva(id: number): void {
     this.loading = true;
-    this.error = null;
 
     this.reservaService.getById(id).subscribe({
       next: (reserva) => {
@@ -59,8 +57,8 @@ export class ReservaDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar reserva';
         this.loading = false;
+        alert('Erro ao carregar reserva');
         console.error('Erro ao carregar reserva:', err);
       }
     });
@@ -150,10 +148,12 @@ export class ReservaDetailComponent implements OnInit {
         this.loadPagamentos(this.reserva!.id);
         this.closePagamentoModal();
         this.loading = false;
+        alert('Pagamento registrado com sucesso!');
       },
       error: (err) => {
-        this.error = err.error?.message || 'Erro ao registrar pagamento';
         this.loading = false;
+        const errorMessage = err.error?.message || 'Erro ao registrar pagamento';
+        alert(errorMessage);
         console.error('Erro ao registrar pagamento:', err);
       }
     });
@@ -161,16 +161,15 @@ export class ReservaDetailComponent implements OnInit {
 
   validarPagamento(): boolean {
     if (this.novoPagamento.valor <= 0) {
-      this.error = 'Valor deve ser maior que zero';
+      alert('Valor deve ser maior que zero');
       return false;
     }
 
     if (!this.novoPagamento.formaPagamento) {
-      this.error = 'Forma de pagamento é obrigatória';
+      alert('Forma de pagamento é obrigatória');
       return false;
     }
 
-    this.error = null;
     return true;
   }
 
@@ -182,10 +181,11 @@ export class ReservaDetailComponent implements OnInit {
           this.loadReserva(this.reserva!.id);
           this.loadPagamentos(this.reserva!.id);
           this.loading = false;
+          alert('Pagamento excluído com sucesso!');
         },
         error: (err) => {
-          this.error = 'Erro ao excluir pagamento';
           this.loading = false;
+          alert('Erro ao excluir pagamento');
           console.error('Erro ao excluir pagamento:', err);
         }
       });
@@ -201,8 +201,15 @@ export class ReservaDetailComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          this.error = 'Erro ao atualizar status da reserva';
           this.loading = false;
+          // Extrair mensagem de erro do backend
+          let errorMessage = 'Erro ao atualizar status da reserva';
+          if (err.error?.extractedMessage) {
+            errorMessage = err.error.extractedMessage;
+          } else if (err.error?.message) {
+            errorMessage = err.error.message;
+          }
+          alert(errorMessage);
           console.error('Erro ao atualizar status:', err);
         }
       });

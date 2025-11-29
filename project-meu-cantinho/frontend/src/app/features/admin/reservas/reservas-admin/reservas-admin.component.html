@@ -94,10 +94,6 @@
 
   <app-loading *ngIf="loading"></app-loading>
 
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
-
   <!-- Lista de Reservas -->
   <div *ngIf="!loading && reservasFiltradas.length === 0" class="empty-state">
     <span class="empty-icon">📭</span>

@@ -6,8 +6,6 @@
 
   @if (loading) {
     <app-loading></app-loading>
-  } @else if (error) {
-    <div class="alert alert-error">{{ error }}</div>
   } @else {
     <div class="reservas-list">
       @for (reserva of reservas; track reserva.id) {

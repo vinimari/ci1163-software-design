@@ -20,7 +20,6 @@ export class ReservasAdminComponent implements OnInit {
   reservas: ReservaResponse[] = [];
   reservasFiltradas: ReservaResponse[] = [];
   loading = false;
-  error: string | null = null;
 
   searchTerm = '';
   statusFilter: StatusReserva | 'TODOS' = 'TODOS';
@@ -41,24 +40,23 @@ export class ReservasAdminComponent implements OnInit {
 
   loadReservas(): void {
     this.loading = true;
-    this.error = null;
 
     const user = this.authService.getCurrentUser();
     if (!user) {
-      this.error = 'Usuário não autenticado';
       this.loading = false;
+      alert('Usuário não autenticado');
       return;
     }
     const usuarioEmail = user.email;
-    this.reservaService.getByAcesso(usuarioEmail).subscribe({
+    this.reservaService.getByAcesso(user.email).subscribe({
       next: (reservas) => {
         this.reservas = reservas;
         this.applyFilters();
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar reservas';
         this.loading = false;
+        alert('Erro ao carregar reservas');
         console.error('Erro ao carregar reservas:', err);
       }
     });
@@ -145,8 +143,15 @@ export class ReservasAdminComponent implements OnInit {
           this.loadReservas();
         },
         error: (err) => {
-          this.error = 'Erro ao atualizar status da reserva';
           this.loading = false;
+          // Extrair mensagem de erro do backend
+          let errorMessage = 'Erro ao atualizar status da reserva';
+          if (err.error?.extractedMessage) {
+            errorMessage = err.error.extractedMessage;
+          } else if (err.error?.message) {
+            errorMessage = err.error.message;
+          }
+          alert(errorMessage);
           console.error('Erro ao atualizar status:', err);
         }
       });

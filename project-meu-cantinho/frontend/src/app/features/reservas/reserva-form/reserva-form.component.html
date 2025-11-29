@@ -7,10 +7,6 @@
     <p *ngIf="!isCliente">Crie uma reserva para um cliente</p>
   </div>
 
-  <div class="error-message" *ngIf="error">
-    {{ error }}
-  </div>
-
   <form class="reserva-form" (ngSubmit)="onSubmit()" *ngIf="!loading">
     <!-- Seleção de Cliente (apenas para Admin e Funcionário) -->
     <div class="form-section" *ngIf="!isCliente">

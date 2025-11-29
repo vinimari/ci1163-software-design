@@ -8,17 +8,7 @@
 
   @if (loading) {
     <app-loading></app-loading>
-  } @else if (error && !reserva) {
-    <div class="alert alert-error">{{ error }}</div>
   } @else if (reserva) {
-
-    @if (successMessage) {
-      <div class="alert alert-success">{{ successMessage }}</div>
-    }
-
-    @if (error) {
-      <div class="alert alert-error">{{ error }}</div>
-    }
 
     <div class="detail-grid">
       <!-- Informações da Reserva -->

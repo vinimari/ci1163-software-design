@@ -17,7 +17,6 @@ import { LoadingComponent } from '../../../shared/components/loading/loading.com
 export class ReservasListComponent implements OnInit {
   reservas: ReservaResponse[] = [];
   loading = false;
-  error = '';
 
   constructor(
     private reservaService: ReservaService,
@@ -33,7 +32,6 @@ export class ReservasListComponent implements OnInit {
     if (!user) return;
 
     this.loading = true;
-    this.error = '';
 
     this.reservaService.getByUsuarioId(user.id).subscribe({
       next: (reservas) => {
@@ -41,8 +39,8 @@ export class ReservasListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar reservas.';
         this.loading = false;
+        alert('Erro ao carregar reservas.');
         console.error('Error loading reservas:', err);
       }
     });

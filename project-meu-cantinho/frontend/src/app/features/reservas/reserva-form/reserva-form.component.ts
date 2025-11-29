@@ -17,7 +17,6 @@ export class ReservaFormComponent implements OnInit {
   clientes: ClienteResponse[] = [];
   espacos: EspacoResponse[] = [];
   loading = false;
-  error: string | null = null;
 
   reserva: ReservaRequest = {
     dataEvento: '',
@@ -87,7 +86,7 @@ export class ReservaFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar espaços';
+        alert('Erro ao carregar espaços');
         console.error(err);
         this.loading = false;
       }
@@ -112,7 +111,7 @@ export class ReservaFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar espaços';
+        alert('Erro ao carregar espaços');
         console.error(err);
         this.loading = false;
       }
@@ -137,7 +136,6 @@ export class ReservaFormComponent implements OnInit {
     }
 
     this.loading = true;
-    this.error = null;
 
     this.reservaService.create(this.reserva).subscribe({
       next: (reserva) => {
@@ -162,15 +160,15 @@ export class ReservaFormComponent implements OnInit {
             }
           },
           error: (err) => {
-            this.error = 'Reserva criada mas erro ao registrar pagamento: ' + (err.error?.message || 'Erro desconhecido');
             this.loading = false;
+            alert('Reserva criada mas erro ao registrar pagamento: ' + (err.error?.message || 'Erro desconhecido'));
             console.error('Erro ao criar pagamento:', err);
           }
         });
       },
       error: (err) => {
-        this.error = err.error?.message || 'Erro ao criar reserva';
         this.loading = false;
+        alert(err.error?.message || 'Erro ao criar reserva');
         console.error('Erro ao criar reserva:', err);
       }
     });
@@ -178,17 +176,17 @@ export class ReservaFormComponent implements OnInit {
 
   validateForm(): boolean {
     if (!this.reserva.usuarioId) {
-      this.error = 'Selecione um cliente';
+      alert('Selecione um cliente');
       return false;
     }
 
     if (!this.reserva.espacoId) {
-      this.error = 'Selecione um espaço';
+      alert('Selecione um espaço');
       return false;
     }
 
     if (!this.reserva.dataEvento) {
-      this.error = 'Selecione a data do evento';
+      alert('Selecione a data do evento');
       return false;
     }
 
@@ -197,21 +195,20 @@ export class ReservaFormComponent implements OnInit {
     hoje.setHours(0, 0, 0, 0);
 
     if (dataEvento < hoje) {
-      this.error = 'A data do evento não pode ser no passado';
+      alert('A data do evento não pode ser no passado');
       return false;
     }
 
     if (this.reserva.valorTotal <= 0) {
-      this.error = 'Valor total deve ser maior que zero';
+      alert('Valor total deve ser maior que zero');
       return false;
     }
 
     if (!this.formaPagamento) {
-      this.error = 'Selecione a forma de pagamento';
+      alert('Selecione a forma de pagamento');
       return false;
     }
 
-    this.error = null;
     return true;
   }
 

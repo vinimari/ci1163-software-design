@@ -20,8 +20,6 @@ export class ReservaDetailComponent implements OnInit {
   reserva?: ReservaResponse;
   pagamentos: PagamentoResponse[] = [];
   loading = false;
-  error = '';
-  successMessage = '';
   showPagamentoForm = false;
   pagamentoForm: FormGroup;
 
@@ -53,7 +51,6 @@ export class ReservaDetailComponent implements OnInit {
 
   loadReserva(id: number): void {
     this.loading = true;
-    this.error = '';
 
     this.reservaService.getById(id).subscribe({
       next: (reserva) => {
@@ -61,8 +58,8 @@ export class ReservaDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar reserva';
         this.loading = false;
+        alert('Erro ao carregar reserva');
         console.error(err);
       }
     });
@@ -159,13 +156,11 @@ export class ReservaDetailComponent implements OnInit {
 
     const formaPagamento = this.pagamentoForm.get('formaPagamento')?.value;
     if (!formaPagamento) {
-      this.error = 'Forma de pagamento é obrigatória';
+      alert('Forma de pagamento é obrigatória');
       return;
     }
 
     this.loading = true;
-    this.error = '';
-    this.successMessage = '';
 
     const { tipo, valor } = this.calcularProximoPagamento();
 
@@ -179,7 +174,6 @@ export class ReservaDetailComponent implements OnInit {
 
     this.pagamentoService.create(pagamento).subscribe({
       next: () => {
-        this.successMessage = 'Pagamento registrado com sucesso!';
         this.loading = false;
         this.showPagamentoForm = false;
         this.pagamentoForm.reset({
@@ -187,10 +181,12 @@ export class ReservaDetailComponent implements OnInit {
         });
         this.loadReserva(this.reserva!.id);
         this.loadPagamentos(this.reserva!.id);
+        alert('Pagamento registrado com sucesso!');
       },
       error: (err) => {
-        this.error = err.error?.message || 'Erro ao registrar pagamento';
         this.loading = false;
+        const errorMessage = err.error?.message || 'Erro ao registrar pagamento';
+        alert(errorMessage);
         console.error(err);
       }
     });
@@ -202,19 +198,23 @@ export class ReservaDetailComponent implements OnInit {
     if (!confirm('Tem certeza que deseja cancelar esta reserva?')) return;
 
     this.loading = true;
-    this.error = '';
 
     this.reservaService.updateStatus(this.reserva.id, StatusReserva.CANCELADA).subscribe({
       next: () => {
-        this.successMessage = 'Reserva cancelada com sucesso!';
         this.loading = false;
-        setTimeout(() => {
-          this.router.navigate(['/reservas']);
-        }, 2000);
+        alert('Reserva cancelada com sucesso!');
+        this.router.navigate(['/reservas']);
       },
       error: (err) => {
-        this.error = 'Erro ao cancelar reserva';
         this.loading = false;
+        // Extrair mensagem de erro do backend
+        let errorMessage = 'Erro ao cancelar reserva';
+        if (err.error?.extractedMessage) {
+          errorMessage = err.error.extractedMessage;
+        } else if (err.error?.message) {
+          errorMessage = err.error.message;
+        }
+        alert(errorMessage);
         console.error(err);
       }
     });

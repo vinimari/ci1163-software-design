@@ -15,7 +15,25 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         router.navigate(['/login']);
       }
 
-      return throwError(() => error);
+      let errorMessage = 'Ocorreu um erro inesperado';
+
+      if (error.error && typeof error.error === 'object') {
+        errorMessage = error.error.message || error.error.error || error.statusText;
+      } else if (typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      const enhancedError = new HttpErrorResponse({
+        error: { ...error.error, extractedMessage: errorMessage },
+        headers: error.headers,
+        status: error.status,
+        statusText: error.statusText,
+        url: error.url || undefined
+      });
+
+      return throwError(() => enhancedError);
     })
   );
 };

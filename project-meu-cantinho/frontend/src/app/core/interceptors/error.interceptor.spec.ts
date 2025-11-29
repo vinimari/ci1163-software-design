@@ -445,4 +445,91 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
   });
+
+  describe('Error Message Extraction', () => {
+    it('deve extrair message from backend error object', () => {
+      const testUrl = '/api/test';
+      const errorResponse = {
+        error: 'Business Rule Violation',
+        message: 'Não é possível cancelar reservas com menos de 1 dia de antecedência do evento',
+        status: 400
+      };
+
+      httpClient.get(testUrl).subscribe({
+        next: () => fail('should have failed'),
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(400);
+          expect(error.error.extractedMessage).toBe(errorResponse.message);
+        }
+      });
+
+      const req = httpMock.expectOne(testUrl);
+      req.flush(errorResponse, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('deve extrair error field if message is not present', () => {
+      const testUrl = '/api/test';
+      const errorResponse = {
+        error: 'Validation Error',
+        status: 400
+      };
+
+      httpClient.get(testUrl).subscribe({
+        next: () => fail('should have failed'),
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(400);
+          expect(error.error.extractedMessage).toBe('Validation Error');
+        }
+      });
+
+      const req = httpMock.expectOne(testUrl);
+      req.flush(errorResponse, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('deve usar statusText if no message or error field', () => {
+      const testUrl = '/api/test';
+
+      httpClient.get(testUrl).subscribe({
+        next: () => fail('should have failed'),
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(400);
+          expect(error.error.extractedMessage).toBe('Bad Request');
+        }
+      });
+
+      const req = httpMock.expectOne(testUrl);
+      req.flush({}, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('deve handle string error response', () => {
+      const testUrl = '/api/test';
+      const errorMessage = 'Simple error message';
+
+      httpClient.get(testUrl).subscribe({
+        next: () => fail('should have failed'),
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(400);
+          expect(error.error.extractedMessage).toBe(errorMessage);
+        }
+      });
+
+      const req = httpMock.expectOne(testUrl);
+      req.flush(errorMessage, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('deve usar default message if all else fails', () => {
+      const testUrl = '/api/test';
+
+      httpClient.get(testUrl).subscribe({
+        next: () => fail('should have failed'),
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(500);
+          expect(error.error.extractedMessage).toBeTruthy();
+        }
+      });
+
+      const req = httpMock.expectOne(testUrl);
+      req.flush(null, { status: 500, statusText: '' });
+    });
+  });
 });

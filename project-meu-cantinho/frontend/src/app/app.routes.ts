@@ -13,6 +13,10 @@ export const routes: Routes = [
     component: LoginComponent
   },
   {
+    path: 'register',
+    loadComponent: () => import('./features/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
     path: 'unauthorized',
     component: UnauthorizedComponent
   },

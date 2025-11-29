@@ -14,11 +14,7 @@
     <p>Carregando filiais...</p>
   </div>
 
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
-
-  <div class="filiais-grid" *ngIf="!loading && !error">
+  <div class="filiais-grid" *ngIf="!loading">
     <div *ngFor="let filial of filiais" class="filial-card">
       <h3>{{ filial.nome }}</h3>
 
@@ -62,7 +58,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && !error && filiais.length === 0" class="empty-state">
+  <div *ngIf="!loading && filiais.length === 0" class="empty-state">
     <span class="empty-icon">🏢</span>
     <h3>Nenhuma filial cadastrada</h3>
     <p>Comece cadastrando sua primeira filial</p>

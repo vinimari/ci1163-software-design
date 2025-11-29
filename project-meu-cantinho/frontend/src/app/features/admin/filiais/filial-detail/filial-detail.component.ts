@@ -16,7 +16,6 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 export class FilialDetailComponent implements OnInit {
   filial: FilialResponse | null = null;
   loading = false;
-  error: string | null = null;
 
   constructor(
     private filialService: FilialService,
@@ -39,8 +38,8 @@ export class FilialDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar filial';
         this.loading = false;
+        alert('Erro ao carregar filial');
         console.error('Erro ao carregar filial:', err);
       }
     });
@@ -55,23 +54,24 @@ export class FilialDetailComponent implements OnInit {
   deleteFilial(): void {
     if (this.filial && confirm('Tem certeza que deseja excluir esta filial?')) {
       this.loading = true;
-      this.error = null;
       this.filialService.delete(this.filial.id).subscribe({
         next: () => {
           this.router.navigate(['/admin/filiais']);
         },
         error: (err) => {
           this.loading = false;
-
-          if (err.error?.message) {
-            this.error = err.error.message;
+          // Extrair mensagem de erro
+          let errorMessage = 'Erro ao excluir filial. Tente novamente.';
+          if (err.error?.extractedMessage) {
+            errorMessage = err.error.extractedMessage;
+          } else if (err.error?.message) {
+            errorMessage = err.error.message;
           } else if (err.status === 400) {
-            this.error = 'Não foi possível excluir a filial. Verifique se há funcionários associados.';
+            errorMessage = 'Não foi possível excluir a filial. Verifique se há funcionários associados.';
           } else if (err.status === 404) {
-            this.error = 'Filial não encontrada.';
-          } else {
-            this.error = 'Erro ao excluir filial. Tente novamente.';
+            errorMessage = 'Filial não encontrada.';
           }
+          alert(errorMessage);
           console.error('Erro ao excluir filial:', err);
         }
       });

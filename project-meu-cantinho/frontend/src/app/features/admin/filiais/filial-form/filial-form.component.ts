@@ -17,7 +17,6 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 export class FilialFormComponent implements OnInit {
   filialForm: FormGroup;
   loading = false;
-  error: string | null = null;
   isEditMode = false;
   filialId: number | null = null;
 
@@ -59,8 +58,8 @@ export class FilialFormComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar filial';
         this.loading = false;
+        alert('Erro ao carregar filial');
         console.error('Erro ao carregar filial:', err);
       }
     });
@@ -69,7 +68,6 @@ export class FilialFormComponent implements OnInit {
   onSubmit(): void {
     if (this.filialForm.valid) {
       this.loading = true;
-      this.error = null;
 
       const filialData: FilialRequest = this.filialForm.value;
 
@@ -82,10 +80,10 @@ export class FilialFormComponent implements OnInit {
           this.router.navigate(['/admin/filiais']);
         },
         error: (err) => {
-          this.error = this.isEditMode
-            ? 'Erro ao atualizar filial'
-            : 'Erro ao criar filial';
           this.loading = false;
+          alert(this.isEditMode
+            ? 'Erro ao atualizar filial'
+            : 'Erro ao criar filial');
           console.error('Erro ao salvar filial:', err);
         }
       });

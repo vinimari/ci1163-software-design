@@ -5,10 +5,6 @@
 
   <app-loading *ngIf="loading"></app-loading>
 
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
-
   <form [formGroup]="filialForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
     <div class="form-group">
       <label for="nome">🏢 Nome da Filial *</label>

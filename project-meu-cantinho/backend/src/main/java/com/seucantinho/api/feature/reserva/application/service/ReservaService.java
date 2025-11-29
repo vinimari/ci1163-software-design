@@ -107,7 +107,7 @@ public class ReservaService implements ReservaServicePort {
             if (requestDTO.getStatus() == StatusReservaEnum.CANCELADA) {
                 reservaStatusService.cancelReservation(reserva);
             } else {
-                reserva.setStatus(requestDTO.getStatus());
+                reserva.transitionToStatus(requestDTO.getStatus());
             }
         }
 
@@ -124,7 +124,7 @@ public class ReservaService implements ReservaServicePort {
         if (novoStatus == StatusReservaEnum.CANCELADA) {
             reservaStatusService.cancelReservation(reserva);
         } else {
-            reserva.setStatus(novoStatus);
+            reserva.transitionToStatus(novoStatus);
         }
 
         Reserva updatedReserva = reservaRepositoryPort.save(reserva);

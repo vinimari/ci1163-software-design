@@ -1,6 +1,8 @@
 package com.seucantinho.api.feature.reserva.domain;
 
 import com.seucantinho.api.feature.reserva.domain.enums.StatusReservaEnum;
+import com.seucantinho.api.feature.reserva.domain.state.ReservaState;
+import com.seucantinho.api.feature.reserva.domain.state.ReservaStateFactory;
 import com.seucantinho.api.feature.usuario.domain.Usuario;
 import com.seucantinho.api.feature.reserva.domain.valueobject.DataEvento;
 import com.seucantinho.api.shared.domain.valueobject.ValorMonetario;
@@ -50,6 +52,9 @@ public class Reserva {
     @Builder.Default
     private StatusReservaEnum status = StatusReservaEnum.AGUARDANDO_SINAL;
 
+    @Transient
+    private ReservaState state;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
@@ -67,6 +72,18 @@ public class Reserva {
         dataCriacao = LocalDateTime.now();
         if (status == null) {
             status = StatusReservaEnum.AGUARDANDO_SINAL;
+        }
+        initializeState();
+    }
+
+    @PostLoad
+    protected void onLoad() {
+        initializeState();
+    }
+
+    private void initializeState() {
+        if (status != null) {
+            this.state = ReservaStateFactory.createState(status);
         }
     }
 
@@ -126,5 +143,32 @@ public class Reserva {
         if (!espacoDisponivel) {
             throw new BusinessException("Espaço já possui reserva ativa para esta data");
         }
+    }
+
+    public void transitionToStatus(StatusReservaEnum targetStatus) {
+        if (state == null) {
+            initializeState();
+        }
+        state.transitionTo(this, targetStatus);
+        this.status = targetStatus;
+    }
+
+    public boolean canTransitionTo(StatusReservaEnum targetStatus) {
+        if (state == null) {
+            initializeState();
+        }
+        return state.canTransitionTo(targetStatus);
+    }
+
+    public void setState(ReservaState newState) {
+        this.state = newState;
+        this.status = newState.getStatus();
+    }
+
+    public ReservaState getState() {
+        if (state == null) {
+            initializeState();
+        }
+        return state;
     }
 }

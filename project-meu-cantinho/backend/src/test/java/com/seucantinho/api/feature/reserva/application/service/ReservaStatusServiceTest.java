@@ -44,7 +44,7 @@ class ReservaStatusServiceTest {
     void setUp() {
         transitionStrategies = Arrays.asList(strategy1, strategy2);
         reservaStatusService = new ReservaStatusService(transitionStrategies);
-        
+
         reserva = Reserva.builder()
                 .id(1)
                 .status(StatusReservaEnum.AGUARDANDO_SINAL)
@@ -81,6 +81,7 @@ class ReservaStatusServiceTest {
     @DisplayName("Deve usar segunda estratégia quando primeira não pode tratar")
     void deveUsarSegundaEstrategiaQuandoPrimeiraNaoPodeTratar() {
         // Arrange
+        reserva.setStatus(StatusReservaEnum.CONFIRMADA);
         when(strategy1.canHandle(pagamento)).thenReturn(false);
         when(strategy2.canHandle(pagamento)).thenReturn(true);
         when(strategy2.determineNewStatus(pagamento)).thenReturn(StatusReservaEnum.QUITADA);
@@ -106,7 +107,7 @@ class ReservaStatusServiceTest {
         assertThatThrownBy(() -> reservaStatusService.updateStatusAfterPayment(reserva, pagamento))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("Nenhuma estratégia de transição encontrada para o tipo de pagamento");
-        
+
         verify(strategy1).canHandle(pagamento);
         verify(strategy2).canHandle(pagamento);
         verify(strategy1, never()).determineNewStatus(any());
@@ -161,6 +162,7 @@ class ReservaStatusServiceTest {
     @DisplayName("Deve atualizar status com pagamento total")
     void deveAtualizarStatusComPagamentoTotal() {
         // Arrange
+        reserva.setStatus(StatusReservaEnum.CONFIRMADA);
         pagamento.setTipo(TipoPagamentoEnum.TOTAL);
         when(strategy1.canHandle(pagamento)).thenReturn(true);
         when(strategy1.determineNewStatus(pagamento)).thenReturn(StatusReservaEnum.QUITADA);

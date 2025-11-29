@@ -19,11 +19,12 @@ public class ReservaStatusService {
     public void updateStatusAfterPayment(Reserva reserva, Pagamento pagamento) {
         StatusTransitionStrategy strategy = findStrategyForPayment(pagamento);
         StatusReservaEnum newStatus = strategy.determineNewStatus(pagamento);
-        reserva.setStatus(newStatus);
+
+        reserva.transitionToStatus(newStatus);
     }
 
     public void cancelReservation(Reserva reserva) {
-        reserva.setStatus(StatusReservaEnum.CANCELADA);
+        reserva.transitionToStatus(StatusReservaEnum.CANCELADA);
         reserva.getPagamentos().clear();
     }
 

@@ -2,6 +2,7 @@ package com.seucantinho.api.feature.reserva.infrastructure.adapter.in.web;
 
 import com.seucantinho.api.feature.reserva.application.dto.ReservaRequestDTO;
 import com.seucantinho.api.feature.reserva.application.dto.ReservaResponseDTO;
+import com.seucantinho.api.feature.reserva.domain.enums.StatusReservaEnum;
 import com.seucantinho.api.feature.reserva.domain.port.in.ReservaServicePort;
 import com.seucantinho.api.feature.reserva.domain.port.in.ReservaWebPort;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,6 +71,15 @@ public class ReservaWebAdapter implements ReservaWebPort {
             @PathVariable Integer id,
             @Valid @RequestBody ReservaRequestDTO requestDTO) {
         ReservaResponseDTO reserva = reservaService.update(id, requestDTO);
+        return ResponseEntity.ok(reserva);
+    }
+
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Atualizar status da reserva")
+    public ResponseEntity<ReservaResponseDTO> updateStatus(
+            @PathVariable Integer id,
+            @RequestParam StatusReservaEnum status) {
+        ReservaResponseDTO reserva = reservaService.updateStatus(id, status);
         return ResponseEntity.ok(reserva);
     }
 

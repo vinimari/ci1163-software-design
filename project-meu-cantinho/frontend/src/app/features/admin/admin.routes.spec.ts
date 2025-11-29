@@ -19,7 +19,7 @@ describe('Admin Routes', () => {
   });
 
   it('deve ter correct number of routes', () => {
-    expect(ADMIN_ROUTES.length).toBe(4);
+    expect(ADMIN_ROUTES.length).toBe(5);
   });
 
   describe('Filiais Routes', () => {

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError, delay } from 'rxjs';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,15 +20,14 @@ describe('LoginComponent', () => {
       isFuncionario: jest.fn()
     };
 
-    const routerMock = {
-      navigate: jest.fn()
-    };
-
     await TestBed.configureTestingModule({
-      imports: [LoginComponent, ReactiveFormsModule],
+      imports: [
+        LoginComponent,
+        ReactiveFormsModule,
+        RouterTestingModule
+      ],
       providers: [
-        { provide: AuthService, useValue: authServiceMock },
-        { provide: Router, useValue: routerMock }
+        { provide: AuthService, useValue: authServiceMock }
       ]
     }).compileComponents();
 
@@ -35,6 +35,7 @@ describe('LoginComponent', () => {
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jest.Mocked<AuthService>;
     router = TestBed.inject(Router) as jest.Mocked<Router>;
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
     fixture.detectChanges();
   });
 

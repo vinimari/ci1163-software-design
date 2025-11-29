@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
-import { ClienteFormComponent } from './cliente-form.component';
-import { ClienteService } from '../../../../core/services';
-import { ClienteResponse } from '../../../../core/models';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { RegisterComponent } from './register.component';
+import { ClienteService } from '../../core/services';
+import { ClienteResponse } from '../../core/models';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 
-describe('ClienteFormComponent', () => {
-  let component: ClienteFormComponent;
-  let fixture: ComponentFixture<ClienteFormComponent>;
+describe('RegisterComponent', () => {
+  let component: RegisterComponent;
+  let fixture: ComponentFixture<RegisterComponent>;
   let clienteService: any;
   let router: any;
-  let activatedRoute: any;
 
   const mockCliente: ClienteResponse = {
     id: 1,
@@ -36,31 +35,22 @@ describe('ClienteFormComponent', () => {
       toggleAtivo: jest.fn()
     };
 
-    const routerMock = {
-      navigate: jest.fn()
-    };
-
-    const activatedRouteMock = {
-      snapshot: {
-        paramMap: {
-          get: jest.fn().mockReturnValue(null)
-        }
-      }
-    };
-
     await TestBed.configureTestingModule({
-      imports: [ClienteFormComponent, ReactiveFormsModule, LoadingComponent, ButtonComponent],
+      imports: [
+        RegisterComponent,
+        ReactiveFormsModule,
+        LoadingComponent,
+        RouterTestingModule
+      ],
       providers: [
-        { provide: ClienteService, useValue: clienteServiceMock },
-        { provide: Router, useValue: routerMock },
-        { provide: ActivatedRoute, useValue: activatedRouteMock }
+        { provide: ClienteService, useValue: clienteServiceMock }
       ]
     }).compileComponents();
 
     clienteService = TestBed.inject(ClienteService);
     router = TestBed.inject(Router);
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    fixture = TestBed.createComponent(ClienteFormComponent);
+    jest.spyOn(router, 'navigate');
+    fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
   });
 
@@ -74,19 +64,6 @@ describe('ClienteFormComponent', () => {
     expect(component.clienteForm.get('nome')?.value).toBe('');
     expect(component.clienteForm.get('email')?.value).toBe('');
     expect(component.clienteForm.get('senha')?.value).toBe('');
-    expect(component.clienteForm.get('ativo')?.value).toBe(true);
-    expect(component.isEditMode).toBe(false);
-  });
-
-  it('deve carregar cliente em modo de edição', () => {
-    activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('1');
-    
-    component.ngOnInit();
-
-    expect(clienteService.getById).toHaveBeenCalledWith(1);
-    expect(component.isEditMode).toBe(true);
-    expect(component.clienteForm.get('nome')?.value).toBe(mockCliente.nome);
-    expect(component.clienteForm.get('email')?.value).toBe(mockCliente.email);
   });
 
   it('deve validar campos obrigatórios', () => {
@@ -164,23 +141,7 @@ describe('ClienteFormComponent', () => {
     component.onSubmit();
 
     expect(clienteService.create).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/admin/clientes']);
-  });
-
-  it('deve atualizar cliente com sucesso', () => {
-    activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('1');
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    component.clienteForm.patchValue({ nome: 'João Atualizado' });
-    component.onSubmit();
-
-    const callArg = clienteService.update.mock.calls[0][1];
-    expect(clienteService.update).toHaveBeenCalledWith(1, callArg);
-    expect(callArg.nome).toBe('João Atualizado');
-    expect(callArg.senha).toBeUndefined(); // senha removida porque estava vazia
-    expect(router.navigate).toHaveBeenCalledWith(['/admin/clientes']);
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
   it('deve exibir erro ao falhar na criação', () => {
@@ -237,56 +198,5 @@ describe('ClienteFormComponent', () => {
     component.formatTelefone(event);
 
     expect(event.target.value).toBe('(11) 8765-4321');
-  });
-
-  it('deve cancelar e navegar de volta', () => {
-    component.cancel();
-    expect(router.navigate).toHaveBeenCalledWith(['/admin/clientes']);
-  });
-
-  it('não deve exigir senha em modo de edição', () => {
-    activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('1');
-
-    component.ngOnInit();
-
-    const senha = component.clienteForm.get('senha');
-    expect(senha?.hasError('required')).toBe(false);
-  });
-
-  it('deve remover senha do payload se estiver vazia em modo de edição', () => {
-    activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('1');
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    component.clienteForm.patchValue({
-      nome: 'João Silva',
-      email: 'joao@teste.com',
-      senha: '' // senha vazia
-    });
-
-    component.onSubmit();
-
-    const callArg = clienteService.update.mock.calls[0][1];
-    expect(clienteService.update).toHaveBeenCalledWith(1, callArg);
-    expect(callArg.senha).toBeUndefined();
-  });
-
-  it('deve definir loading como true durante carregamento', () => {
-    activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue('1');
-
-    component.loadCliente(1);
-
-    expect(component.loading).toBe(false); // false após sucesso
-  });
-
-  it('deve redirecionar se falhar ao carregar cliente', () => {
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
-    clienteService.getById = jest.fn().mockReturnValue(throwError(() => new Error('Erro')));
-
-    component.loadCliente(1);
-
-    expect(alertSpy).toHaveBeenCalledWith('Erro ao carregar cliente');
-    expect(router.navigate).toHaveBeenCalledWith(['/admin/clientes']);
   });
 });

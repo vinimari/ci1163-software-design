@@ -150,7 +150,7 @@ describe('App Routes', () => {
 
   describe('Route Structure', () => {
     it('deve ter correct number of top-level routes', () => {
-      expect(routes.length).toBe(4);
+      expect(routes.length).toBe(5);
     });
 
     it('deve ter layout route with children', () => {

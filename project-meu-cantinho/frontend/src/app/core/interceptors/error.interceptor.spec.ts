@@ -40,7 +40,7 @@ describe('errorInterceptor', () => {
   });
 
   describe('401 Unauthorized Errors', () => {
-    it('should call logout when receiving 401 error', () => {
+    it('deve call logout when receiving 401 error', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -56,7 +56,7 @@ describe('errorInterceptor', () => {
       expect(authService.logout).toHaveBeenCalled();
     });
 
-    it('should navigate to /login when receiving 401 error', () => {
+    it('deve navegar to /login when receiving 401 error', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -72,7 +72,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should call logout before navigating to login', () => {
+    it('deve call logout before navigating to login', () => {
       const testUrl = '/api/test';
       const callOrder: string[] = [];
 
@@ -98,7 +98,7 @@ describe('errorInterceptor', () => {
       expect(callOrder).toEqual(['logout', 'navigate']);
     });
 
-    it('should still throw the error after handling 401', () => {
+    it('deve still throw the error after handling 401', () => {
       const testUrl = '/api/test';
       let errorThrown = false;
 
@@ -119,7 +119,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should handle 401 error with custom error message', () => {
+    it('deve handle 401 error with custom error message', () => {
       const testUrl = '/api/test';
       const errorMessage = 'Token expired';
 
@@ -138,7 +138,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should handle 401 error with JSON response', () => {
+    it('deve handle 401 error with JSON response', () => {
       const testUrl = '/api/test';
       const errorResponse = { message: 'Session expired', code: 'AUTH_001' };
 
@@ -159,7 +159,7 @@ describe('errorInterceptor', () => {
   });
 
   describe('Other HTTP Errors', () => {
-    it('should not call logout for 400 Bad Request', () => {
+    it('não deve call logout for 400 Bad Request', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -176,7 +176,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should not call logout for 403 Forbidden', () => {
+    it('não deve call logout for 403 Forbidden', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -193,7 +193,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should not call logout for 404 Not Found', () => {
+    it('não deve call logout for 404 Not Found', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -210,7 +210,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should not call logout for 500 Internal Server Error', () => {
+    it('não deve call logout for 500 Internal Server Error', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -227,7 +227,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should still throw error for non-401 status codes', () => {
+    it('deve still throw error for non-401 status codes', () => {
       const testUrl = '/api/test';
       let errorThrown = false;
 
@@ -248,7 +248,7 @@ describe('errorInterceptor', () => {
   });
 
   describe('Successful Requests', () => {
-    it('should not interfere with successful requests', () => {
+    it('não deve interfere with successful requests', () => {
       const testUrl = '/api/test';
       const testData = { id: 1, name: 'Test' };
 
@@ -266,7 +266,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should pass through successful POST requests', () => {
+    it('deve pass through successful POST requests', () => {
       const testUrl = '/api/test';
       const postData = { name: 'New Item' };
       const responseData = { id: 1, ...postData };
@@ -287,7 +287,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should pass through successful PUT requests', () => {
+    it('deve pass through successful PUT requests', () => {
       const testUrl = '/api/test/1';
       const putData = { id: 1, name: 'Updated Item' };
 
@@ -306,7 +306,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).not.toHaveBeenCalled();
     });
 
-    it('should pass through successful DELETE requests', () => {
+    it('deve pass through successful DELETE requests', () => {
       const testUrl = '/api/test/1';
 
       httpClient.delete(testUrl).subscribe({
@@ -326,7 +326,7 @@ describe('errorInterceptor', () => {
   });
 
   describe('Multiple Requests', () => {
-    it('should handle multiple 401 errors correctly', () => {
+    it('deve handle multiple 401 errors correctly', () => {
       const testUrl1 = '/api/test1';
       const testUrl2 = '/api/test2';
 
@@ -354,7 +354,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledTimes(2);
     });
 
-    it('should handle mixed success and error requests', () => {
+    it('deve handle mixed success and error requests', () => {
       const successUrl = '/api/success';
       const errorUrl = '/api/error';
       const testData = { id: 1, name: 'Test' };
@@ -385,7 +385,7 @@ describe('errorInterceptor', () => {
   });
 
   describe('Edge Cases', () => {
-    it('should handle 401 error with empty response body', () => {
+    it('deve handle 401 error with empty response body', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -403,7 +403,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should handle 401 error with null response', () => {
+    it('deve handle 401 error with null response', () => {
       const testUrl = '/api/test';
 
       httpClient.get(testUrl).subscribe({
@@ -420,7 +420,7 @@ describe('errorInterceptor', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should preserve error details when re-throwing', () => {
+    it('deve preserve error details when re-throwing', () => {
       const testUrl = '/api/test';
       const errorMessage = 'Custom error message';
       const errorHeaders = { 'X-Error-Code': 'AUTH_FAILED' };

@@ -48,12 +48,12 @@ describe('EspacoService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('deve ser created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getAll()', () => {
-    it('should retrieve all espacos', (done) => {
+    it('deve retrieve all espacos', (done) => {
       const mockEspacos = [mockEspacoResponse];
 
       service.getAll().subscribe(espacos => {
@@ -67,7 +67,7 @@ describe('EspacoService', () => {
       req.flush(mockEspacos);
     });
 
-    it('should handle empty list', (done) => {
+    it('deve handle empty list', (done) => {
       service.getAll().subscribe(espacos => {
         expect(espacos).toEqual([]);
         expect(espacos.length).toBe(0);
@@ -78,7 +78,7 @@ describe('EspacoService', () => {
       req.flush([]);
     });
 
-    it('should handle error', (done) => {
+    it('deve tratar erro', (done) => {
       service.getAll().subscribe({
         next: () => fail('should have failed'),
         error: (error) => {
@@ -93,7 +93,7 @@ describe('EspacoService', () => {
   });
 
   describe('getById()', () => {
-    it('should retrieve a single espaco by id', (done) => {
+    it('deve retrieve a single espaco by id', (done) => {
       const espacoId = 1;
 
       service.getById(espacoId).subscribe(espaco => {
@@ -107,7 +107,7 @@ describe('EspacoService', () => {
       req.flush(mockEspacoResponse);
     });
 
-    it('should handle not found error', (done) => {
+    it('deve handle not found error', (done) => {
       const espacoId = 999;
 
       service.getById(espacoId).subscribe({
@@ -124,7 +124,7 @@ describe('EspacoService', () => {
   });
 
   describe('getByFilialId()', () => {
-    it('should retrieve espacos by filial id', (done) => {
+    it('deve retrieve espacos by filial id', (done) => {
       const filialId = 1;
       const mockEspacos = [mockEspacoResponse];
 
@@ -139,7 +139,7 @@ describe('EspacoService', () => {
       req.flush(mockEspacos);
     });
 
-    it('should return empty array when filial has no espacos', (done) => {
+    it('deve retornar empty array when filial has no espacos', (done) => {
       const filialId = 999;
 
       service.getByFilialId(filialId).subscribe(espacos => {
@@ -153,7 +153,7 @@ describe('EspacoService', () => {
   });
 
   describe('getAtivos()', () => {
-    it('should retrieve only active espacos', (done) => {
+    it('deve retrieve only active espacos', (done) => {
       const activeEspacos = [
         { ...mockEspacoResponse, ativo: true },
         { ...mockEspacoResponse, id: 2, ativo: true }
@@ -172,7 +172,7 @@ describe('EspacoService', () => {
   });
 
   describe('create()', () => {
-    it('should create a new espaco', (done) => {
+    it('deve criar a new espaco', (done) => {
       service.create(mockEspacoRequest).subscribe(espaco => {
         expect(espaco).toEqual(mockEspacoResponse);
         expect(espaco.nome).toBe(mockEspacoRequest.nome);
@@ -185,7 +185,7 @@ describe('EspacoService', () => {
       req.flush(mockEspacoResponse);
     });
 
-    it('should handle validation error', (done) => {
+    it('deve handle validation error', (done) => {
       const invalidRequest = { ...mockEspacoRequest, nome: '' };
 
       service.create(invalidRequest).subscribe({
@@ -202,7 +202,7 @@ describe('EspacoService', () => {
   });
 
   describe('update()', () => {
-    it('should update an existing espaco', (done) => {
+    it('deve atualizar an existing espaco', (done) => {
       const espacoId = 1;
       const updatedEspaco = { ...mockEspacoResponse, nome: 'Nome Atualizado' };
 
@@ -217,7 +217,7 @@ describe('EspacoService', () => {
       req.flush(updatedEspaco);
     });
 
-    it('should handle not found on update', (done) => {
+    it('deve handle not found on update', (done) => {
       const espacoId = 999;
 
       service.update(espacoId, mockEspacoRequest).subscribe({
@@ -234,7 +234,7 @@ describe('EspacoService', () => {
   });
 
   describe('delete()', () => {
-    it('should delete an espaco', (done) => {
+    it('deve delete an espaco', (done) => {
       const espacoId = 1;
 
       service.delete(espacoId).subscribe(response => {
@@ -247,7 +247,7 @@ describe('EspacoService', () => {
       req.flush(null);
     });
 
-    it('should handle conflict when deleting espaco with reservas', (done) => {
+    it('deve handle conflict when deleting espaco with reservas', (done) => {
       const espacoId = 1;
 
       service.delete(espacoId).subscribe({
@@ -262,7 +262,7 @@ describe('EspacoService', () => {
       req.flush('Cannot delete espaco with reservas', { status: 409, statusText: 'Conflict' });
     });
 
-    it('should handle not found on delete', (done) => {
+    it('deve handle not found on delete', (done) => {
       const espacoId = 999;
 
       service.delete(espacoId).subscribe({

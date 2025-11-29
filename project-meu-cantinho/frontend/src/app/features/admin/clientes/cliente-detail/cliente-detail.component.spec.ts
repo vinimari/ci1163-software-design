@@ -109,25 +109,25 @@ describe('ClienteDetailComponent', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load cliente on init', () => {
+  it('deve carregar cliente on init', () => {
     fixture.detectChanges();
     expect(clienteService.getById).toHaveBeenCalledWith(1);
     expect(component.cliente).toEqual(mockCliente);
     expect(component.loading).toBe(false);
   });
 
-  it('should load reservas on init', () => {
+  it('deve carregar reservas on init', () => {
     fixture.detectChanges();
     expect(reservaService.getByUsuarioId).toHaveBeenCalledWith(1);
     expect(component.reservas).toEqual(mockReservas);
     expect(component.loadingReservas).toBe(false);
   });
 
-  it('should handle error when loading cliente fails', () => {
+  it('deve tratar erro when loading cliente fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     clienteService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -138,7 +138,7 @@ describe('ClienteDetailComponent', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should handle error when loading reservas fails', () => {
+  it('deve tratar erro when loading reservas fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     reservaService.getByUsuarioId.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -148,77 +148,77 @@ describe('ClienteDetailComponent', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should navigate back when goBack is called', () => {
+  it('deve navegar back when goBack is called', () => {
     component.goBack();
     expect(router.navigate).toHaveBeenCalledWith(['/admin/clientes']);
   });
 
-  it('should navigate to reserva detail when viewReserva is called', () => {
+  it('deve navegar to reserva detail when viewReserva is called', () => {
     component.viewReserva(1);
     expect(router.navigate).toHaveBeenCalledWith(['/admin/reservas', 1]);
   });
 
-  it('should return correct status class for AGUARDANDO_SINAL', () => {
+  it('deve retornar corretamente status class for AGUARDANDO_SINAL', () => {
     expect(component.getStatusClass('AGUARDANDO_SINAL')).toBe('status-pendente');
   });
 
-  it('should return correct status class for CONFIRMADA', () => {
+  it('deve retornar corretamente status class for CONFIRMADA', () => {
     expect(component.getStatusClass('CONFIRMADA')).toBe('status-confirmada');
   });
 
-  it('should return correct status class for CANCELADA', () => {
+  it('deve retornar corretamente status class for CANCELADA', () => {
     expect(component.getStatusClass('CANCELADA')).toBe('status-cancelada');
   });
 
-  it('should return correct status class for CONCLUIDA', () => {
+  it('deve retornar corretamente status class for CONCLUIDA', () => {
     expect(component.getStatusClass('CONCLUIDA')).toBe('status-concluida');
   });
 
-  it('should return empty string for unknown status', () => {
+  it('deve retornar empty string for unknown status', () => {
     expect(component.getStatusClass('UNKNOWN')).toBe('');
   });
 
-  it('should return correct status icon for AGUARDANDO_SINAL', () => {
+  it('deve retornar corretamente status icon for AGUARDANDO_SINAL', () => {
     expect(component.getStatusIcon('AGUARDANDO_SINAL')).toBe('⏳');
   });
 
-  it('should return correct status icon for CONFIRMADA', () => {
+  it('deve retornar corretamente status icon for CONFIRMADA', () => {
     expect(component.getStatusIcon('CONFIRMADA')).toBe('✅');
   });
 
-  it('should return correct status icon for CANCELADA', () => {
+  it('deve retornar corretamente status icon for CANCELADA', () => {
     expect(component.getStatusIcon('CANCELADA')).toBe('❌');
   });
 
-  it('should return correct status icon for CONCLUIDA', () => {
+  it('deve retornar corretamente status icon for CONCLUIDA', () => {
     expect(component.getStatusIcon('CONCLUIDA')).toBe('🎉');
   });
 
-  it('should return default icon for unknown status', () => {
+  it('deve retornar default icon for unknown status', () => {
     expect(component.getStatusIcon('UNKNOWN')).toBe('📋');
   });
 
-  it('should return total number of reservas', () => {
+  it('deve retornar total number of reservas', () => {
     component.reservas = mockReservas;
     expect(component.getTotalReservas()).toBe(2);
   });
 
-  it('should return zero when no reservas', () => {
+  it('deve retornar zero when no reservas', () => {
     component.reservas = [];
     expect(component.getTotalReservas()).toBe(0);
   });
 
-  it('should calculate total value of all reservas', () => {
+  it('deve calcular total value of all reservas', () => {
     component.reservas = mockReservas;
     expect(component.getValorTotalReservas()).toBe(2300.00);
   });
 
-  it('should return zero when calculating total with no reservas', () => {
+  it('deve retornar zero when calculating total with no reservas', () => {
     component.reservas = [];
     expect(component.getValorTotalReservas()).toBe(0);
   });
 
-  it('should not load cliente or reservas when id is null', () => {
+  it('não deve load cliente or reservas when id is null', () => {
     activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue(null);
 
     component.ngOnInit();
@@ -227,7 +227,7 @@ describe('ClienteDetailComponent', () => {
     expect(reservaService.getByUsuarioId).not.toHaveBeenCalled();
   });
 
-  it('should set loading to true when loading cliente', () => {
+  it('deve definir loading to true when loading cliente', () => {
     let loadingDuringCall = false;
 
     clienteService.getById.mockImplementation(() => {
@@ -239,7 +239,7 @@ describe('ClienteDetailComponent', () => {
     expect(loadingDuringCall).toBe(true);
   });
 
-  it('should set loadingReservas to true when loading reservas', () => {
+  it('deve definir loadingReservas to true when loading reservas', () => {
     let loadingDuringCall = false;
 
     reservaService.getByUsuarioId.mockImplementation(() => {
@@ -251,7 +251,7 @@ describe('ClienteDetailComponent', () => {
     expect(loadingDuringCall).toBe(true);
   });
 
-  it('should handle cliente without CPF', () => {
+  it('deve handle cliente without CPF', () => {
     const clienteSemCpf = { ...mockCliente, cpf: undefined };
     clienteService.getById.mockReturnValue(of(clienteSemCpf));
 
@@ -260,7 +260,7 @@ describe('ClienteDetailComponent', () => {
     expect(component.cliente?.cpf).toBeUndefined();
   });
 
-  it('should handle cliente without telefone', () => {
+  it('deve handle cliente without telefone', () => {
     const clienteSemTelefone = { ...mockCliente, telefone: undefined };
     clienteService.getById.mockReturnValue(of(clienteSemTelefone));
 
@@ -269,7 +269,7 @@ describe('ClienteDetailComponent', () => {
     expect(component.cliente?.telefone).toBeUndefined();
   });
 
-  it('should handle reservas without saldo defined', () => {
+  it('deve handle reservas without saldo defined', () => {
     const reservaSemSaldo: ReservaResponse = {
       id: 3,
       usuarioId: 1,

@@ -97,12 +97,12 @@ describe('ReservasAdminComponent', () => {
     reservaService.getByAcesso.mockReturnValue(of(mockReservas as any));
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should load reservas on init', () => {
+    it('deve carregar reservas on init', () => {
       component.ngOnInit();
 
       expect(reservaService.getByAcesso).toHaveBeenCalledWith('admin@example.com');
@@ -110,14 +110,14 @@ describe('ReservasAdminComponent', () => {
   });
 
   describe('loadReservas', () => {
-    it('should load and filter reservas successfully', () => {
+    it('deve carregar and filter reservas successfully', () => {
       component.loadReservas();
 
       expect(component.reservas.length).toBe(2);
       expect(component.loading).toBe(false);
     });
 
-    it('should handle error when no user', () => {
+    it('deve tratar erro when no user', () => {
       authService.getCurrentUser.mockReturnValue(null);
 
       component.loadReservas();
@@ -125,7 +125,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.error).toBe('Usuário não autenticado');
     });
 
-    it('should handle error when loading reservas', () => {
+    it('deve tratar erro when loading reservas', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       reservaService.getByAcesso.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -141,7 +141,7 @@ describe('ReservasAdminComponent', () => {
       component.reservas = mockReservas as any;
     });
 
-    it('should filter by search term', () => {
+    it('deve filter by search term', () => {
       component.searchTerm = 'Cliente A';
       component.applyFilters();
 
@@ -149,7 +149,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.reservasFiltradas[0].usuarioNome).toBe('Cliente A');
     });
 
-    it('should filter by espaco name', () => {
+    it('deve filter by espaco name', () => {
       component.dataFilter = 'TODAS';
       component.searchTerm = 'Secundária';
       component.applyFilters();
@@ -158,7 +158,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.reservasFiltradas[0].espacoNome).toBe('Sala Secundária');
     });
 
-    it('should filter by status', () => {
+    it('deve filter by status', () => {
       component.dataFilter = 'TODAS';
       component.statusFilter = StatusReserva.QUITADA;
       component.applyFilters();
@@ -167,7 +167,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.reservasFiltradas[0].status).toBe(StatusReserva.QUITADA);
     });
 
-    it('should filter future dates', () => {
+    it('deve filter future dates', () => {
       component.dataFilter = 'FUTURAS';
       component.applyFilters();
 
@@ -175,7 +175,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.reservasFiltradas[0].id).toBe(1);
     });
 
-    it('should filter past dates', () => {
+    it('deve filter past dates', () => {
       component.dataFilter = 'PASSADAS';
       component.applyFilters();
 
@@ -183,7 +183,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.reservasFiltradas[0].id).toBe(2);
     });
 
-    it('should filter quitadas', () => {
+    it('deve filter quitadas', () => {
       component.dataFilter = 'TODAS';
       component.pagamentoFilter = 'QUITADA';
       component.applyFilters();
@@ -192,7 +192,7 @@ describe('ReservasAdminComponent', () => {
       expect(component.reservasFiltradas[0].saldo).toBe(0);
     });
 
-    it('should filter pendentes', () => {
+    it('deve filter pendentes', () => {
       component.pagamentoFilter = 'PENDENTE';
       component.applyFilters();
 
@@ -202,25 +202,25 @@ describe('ReservasAdminComponent', () => {
   });
 
   describe('filter change methods', () => {
-    it('should update search term', () => {
+    it('deve atualizar search term', () => {
       component.onSearchChange('test');
 
       expect(component.searchTerm).toBe('test');
     });
 
-    it('should update status filter', () => {
+    it('deve atualizar status filter', () => {
       component.onStatusFilterChange(StatusReserva.CONFIRMADA);
 
       expect(component.statusFilter).toBe(StatusReserva.CONFIRMADA);
     });
 
-    it('should update data filter', () => {
+    it('deve atualizar data filter', () => {
       component.onDataFilterChange('PASSADAS');
 
       expect(component.dataFilter).toBe('PASSADAS');
     });
 
-    it('should update pagamento filter', () => {
+    it('deve atualizar pagamento filter', () => {
       component.onPagamentoFilterChange('QUITADA');
 
       expect(component.pagamentoFilter).toBe('QUITADA');
@@ -228,7 +228,7 @@ describe('ReservasAdminComponent', () => {
   });
 
   describe('viewReserva', () => {
-    it('should navigate to reserva detail', () => {
+    it('deve navegar to reserva detail', () => {
       component.viewReserva(1);
 
       expect(router.navigate).toHaveBeenCalledWith(['/admin/reservas', 1]);
@@ -240,7 +240,7 @@ describe('ReservasAdminComponent', () => {
       global.confirm = jest.fn(() => true);
     });
 
-    it('should update status when confirmed', () => {
+    it('deve atualizar status when confirmed', () => {
       reservaService.updateStatus.mockReturnValue(of({} as any));
       const reserva = mockReservas[0] as any;
 
@@ -249,7 +249,7 @@ describe('ReservasAdminComponent', () => {
       expect(reservaService.updateStatus).toHaveBeenCalledWith(1, StatusReserva.FINALIZADA);
     });
 
-    it('should handle error when updating status', () => {
+    it('deve tratar erro when updating status', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       reservaService.updateStatus.mockReturnValue(throwError(() => new Error('Error')));
       const reserva = mockReservas[0] as any;
@@ -260,7 +260,7 @@ describe('ReservasAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should not update if not confirmed', () => {
+    it('não deve update if not confirmed', () => {
       global.confirm = jest.fn(() => false);
       const reserva = mockReservas[0] as any;
 
@@ -271,35 +271,35 @@ describe('ReservasAdminComponent', () => {
   });
 
   describe('helper methods', () => {
-    it('should return correct status class', () => {
+    it('deve retornar corretamente status class', () => {
       expect(component.getStatusClass(StatusReserva.CONFIRMADA)).toBe('status-confirmada');
     });
 
-    it('should return correct status icon', () => {
+    it('deve retornar corretamente status icon', () => {
       expect(component.getStatusIcon(StatusReserva.QUITADA)).toBe('💰');
     });
 
-    it('should return quitada pagamento status', () => {
+    it('deve retornar quitada pagamento status', () => {
       const reserva = { ...mockReservas[1] } as any;
       expect(component.getPagamentoStatus(reserva)).toBe('✅ Quitada');
     });
 
-    it('should return sinal pago status', () => {
+    it('deve retornar sinal pago status', () => {
       const reserva = { ...mockReservas[0] } as any;
       expect(component.getPagamentoStatus(reserva)).toBe('⚠️ Sinal Pago');
     });
 
-    it('should return pendente status', () => {
+    it('deve retornar pendente status', () => {
       const reserva = { ...mockReservas[0], totalPago: 0 } as any;
       expect(component.getPagamentoStatus(reserva)).toBe('❌ Pendente');
     });
 
-    it('should return correct pagamento class', () => {
+    it('deve retornar corretamente pagamento class', () => {
       expect(component.getPagamentoClass(mockReservas[1] as any)).toBe('pagamento-quitada');
       expect(component.getPagamentoClass(mockReservas[0] as any)).toBe('pagamento-parcial');
     });
 
-    it('should return correct data class', () => {
+    it('deve retornar corretamente data class', () => {
       expect(component.getDataClass(yesterday.toISOString().split('T')[0])).toBe('data-passada');
       expect(component.getDataClass(tomorrow.toISOString().split('T')[0])).toBe('data-futura');
     });
@@ -310,19 +310,19 @@ describe('ReservasAdminComponent', () => {
       component.reservasFiltradas = mockReservas as any;
     });
 
-    it('should calculate total reservas', () => {
+    it('deve calcular total reservas', () => {
       expect(component.getTotalReservas()).toBe(2);
     });
 
-    it('should calculate valor total reservas', () => {
+    it('deve calcular valor total reservas', () => {
       expect(component.getValorTotalReservas()).toBe(1500);
     });
 
-    it('should calculate valor total pago', () => {
+    it('deve calcular valor total pago', () => {
       expect(component.getValorTotalPago()).toBe(1000);
     });
 
-    it('should calculate saldo pendente', () => {
+    it('deve calcular saldo pendente', () => {
       expect(component.getSaldoPendente()).toBe(500);
     });
   });

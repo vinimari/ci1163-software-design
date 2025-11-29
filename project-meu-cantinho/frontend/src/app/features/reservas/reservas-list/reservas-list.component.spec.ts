@@ -92,25 +92,25 @@ describe('ReservasListComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize with empty reservas array', () => {
+    it('deve inicializar with empty reservas array', () => {
       expect(component.reservas).toEqual([]);
     });
 
-    it('should initialize with loading false', () => {
+    it('deve inicializar with loading false', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should initialize with empty error', () => {
+    it('deve inicializar with empty error', () => {
       expect(component.error).toBe('');
     });
   });
 
   describe('ngOnInit', () => {
-    it('should call loadReservas on initialization', () => {
+    it('deve call loadReservas on initialization', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
       const loadSpy = jest.spyOn(component, 'loadReservas');
@@ -120,7 +120,7 @@ describe('ReservasListComponent', () => {
       expect(loadSpy).toHaveBeenCalled();
     });
 
-    it('should load reservas on initialization when user exists', () => {
+    it('deve carregar reservas on initialization when user exists', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
 
@@ -130,7 +130,7 @@ describe('ReservasListComponent', () => {
       expect(component.reservas).toEqual(mockReservas);
     });
 
-    it('should not load reservas when user is null', () => {
+    it('não deve load reservas when user is null', () => {
       authService.getCurrentUser.mockReturnValue(null);
 
       fixture.detectChanges();
@@ -140,7 +140,7 @@ describe('ReservasListComponent', () => {
   });
 
   describe('loadReservas', () => {
-    it('should return early if no user is logged in', () => {
+    it('deve retornar early if no user is logged in', () => {
       authService.getCurrentUser.mockReturnValue(null);
 
       component.loadReservas();
@@ -149,7 +149,7 @@ describe('ReservasListComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should clear error when loading', () => {
+    it('deve clear error when loading', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
       component.error = 'Previous error';
@@ -159,7 +159,7 @@ describe('ReservasListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should load reservas successfully', () => {
+    it('deve carregar reservas successfully', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
 
@@ -170,7 +170,7 @@ describe('ReservasListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should call reservaService.getByUsuarioId with user id', () => {
+    it('deve call reservaService.getByUsuarioId with user id', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
 
@@ -179,7 +179,7 @@ describe('ReservasListComponent', () => {
       expect(reservaService.getByUsuarioId).toHaveBeenCalledWith(1);
     });
 
-    it('should handle empty reservas list', () => {
+    it('deve handle empty reservas list', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of([]));
 
@@ -190,7 +190,7 @@ describe('ReservasListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should handle error when loading fails', () => {
+    it('deve tratar erro when loading fails', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
       authService.getCurrentUser.mockReturnValue(mockUser);
@@ -204,7 +204,7 @@ describe('ReservasListComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should set loading to false after error', () => {
+    it('deve definir loading to false after error', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -213,7 +213,7 @@ describe('ReservasListComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should set error message on failure', () => {
+    it('deve definir error message on failure', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -224,34 +224,34 @@ describe('ReservasListComponent', () => {
   });
 
   describe('getStatusLabel', () => {
-    it('should return "Aguardando Sinal" for AGUARDANDO_SINAL', () => {
+    it('deve retornar "Aguardando Sinal" for AGUARDANDO_SINAL', () => {
       expect(component.getStatusLabel(StatusReserva.AGUARDANDO_SINAL)).toBe('Aguardando Sinal');
     });
 
-    it('should return "Confirmada" for CONFIRMADA', () => {
+    it('deve retornar "Confirmada" for CONFIRMADA', () => {
       expect(component.getStatusLabel(StatusReserva.CONFIRMADA)).toBe('Confirmada');
     });
 
-    it('should return "Quitada" for QUITADA', () => {
+    it('deve retornar "Quitada" for QUITADA', () => {
       expect(component.getStatusLabel(StatusReserva.QUITADA)).toBe('Quitada');
     });
 
-    it('should return "Finalizada" for FINALIZADA', () => {
+    it('deve retornar "Finalizada" for FINALIZADA', () => {
       expect(component.getStatusLabel(StatusReserva.FINALIZADA)).toBe('Finalizada');
     });
 
-    it('should return "Cancelada" for CANCELADA', () => {
+    it('deve retornar "Cancelada" for CANCELADA', () => {
       expect(component.getStatusLabel(StatusReserva.CANCELADA)).toBe('Cancelada');
     });
 
-    it('should return status value for unknown status', () => {
+    it('deve retornar status value for unknown status', () => {
       const unknownStatus = 'UNKNOWN' as StatusReserva;
       expect(component.getStatusLabel(unknownStatus)).toBe('UNKNOWN');
     });
   });
 
   describe('Integration', () => {
-    it('should load reservas on initialization with authenticated user', () => {
+    it('deve carregar reservas on initialization with authenticated user', () => {
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(of(mockReservas));
 
@@ -262,7 +262,7 @@ describe('ReservasListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should handle error on initialization', () => {
+    it('deve tratar erro on initialization', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       authService.getCurrentUser.mockReturnValue(mockUser);
       reservaService.getByUsuarioId.mockReturnValue(throwError(() => new Error('Failed')));
@@ -274,7 +274,7 @@ describe('ReservasListComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should not load reservas when user is not authenticated', () => {
+    it('não deve load reservas when user is not authenticated', () => {
       authService.getCurrentUser.mockReturnValue(null);
 
       fixture.detectChanges();

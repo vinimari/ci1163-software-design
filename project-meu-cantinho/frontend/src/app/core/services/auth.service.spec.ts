@@ -38,11 +38,11 @@ describe('AuthService', () => {
   });
 
   describe('Constructor and Initialization', () => {
-    it('should be created', () => {
+    it('deve ser created', () => {
       expect(service).toBeTruthy();
     });
   });  describe('login()', () => {
-    it('should authenticate user and store credentials', (done) => {
+    it('deve authenticate user and store credentials', (done) => {
       service.login(mockLoginRequest).subscribe(response => {
         expect(response).toEqual(mockLoginResponse);
         expect(localStorage.getItem('token')).toBe(mockLoginResponse.token);
@@ -62,7 +62,7 @@ describe('AuthService', () => {
       req.flush(mockLoginResponse);
     });
 
-    it('should update currentUser$ observable on login', (done) => {
+    it('deve atualizar currentUser$ observable on login', (done) => {
       service.login(mockLoginRequest).subscribe(() => {
         service.currentUser$.subscribe(user => {
           if (user) {
@@ -77,7 +77,7 @@ describe('AuthService', () => {
       req.flush(mockLoginResponse);
     });
 
-    it('should handle login error', (done) => {
+    it('deve handle login error', (done) => {
       const errorResponse = { status: 401, statusText: 'Unauthorized' };
 
       service.login(mockLoginRequest).subscribe({
@@ -106,13 +106,13 @@ describe('AuthService', () => {
       }));
     });
 
-    it('should clear localStorage', () => {
+    it('deve clear localStorage', () => {
       service.logout();
       expect(localStorage.getItem('token')).toBeNull();
       expect(localStorage.getItem('user')).toBeNull();
     });
 
-    it('should set currentUser$ to null', (done) => {
+    it('deve definir currentUser$ to null', (done) => {
       service.logout();
       service.currentUser$.subscribe(user => {
         expect(user).toBeNull();
@@ -122,32 +122,32 @@ describe('AuthService', () => {
   });
 
   describe('isAuthenticated()', () => {
-    it('should return true when token exists', () => {
+    it('deve retornar true when token exists', () => {
       localStorage.setItem('token', 'test-token');
       expect(service.isAuthenticated()).toBe(true);
     });
 
-    it('should return false when token does not exist', () => {
+    it('deve retornar false when token does not exist', () => {
       localStorage.removeItem('token');
       expect(service.isAuthenticated()).toBe(false);
     });
   });
 
   describe('getToken()', () => {
-    it('should return token from localStorage', () => {
+    it('deve retornar token from localStorage', () => {
       const testToken = 'test-jwt-token';
       localStorage.setItem('token', testToken);
       expect(service.getToken()).toBe(testToken);
     });
 
-    it('should return null when no token exists', () => {
+    it('deve retornar null when no token exists', () => {
       localStorage.removeItem('token');
       expect(service.getToken()).toBeNull();
     });
   });
 
   describe('getCurrentUser()', () => {
-    it('should return current user after login', (done) => {
+    it('deve retornar current user after login', (done) => {
       service.login(mockLoginRequest).subscribe(() => {
         const user = service.getCurrentUser();
         expect(user).toBeTruthy();
@@ -160,7 +160,7 @@ describe('AuthService', () => {
       req.flush(mockLoginResponse);
     });
 
-    it('should return null when no user exists', () => {
+    it('deve retornar null when no user exists', () => {
       localStorage.removeItem('user');
       const user = service.getCurrentUser();
       expect(user).toBeNull();
@@ -170,7 +170,7 @@ describe('AuthService', () => {
       localStorage.clear();
     });
 
-    it('isAdmin() should return true for ADMIN user', (done) => {
+    it('isAdmin() deve retornar true for ADMIN user', (done) => {
       const adminResponse: LoginResponse = {
         id: 1,
         nome: 'Admin',
@@ -188,7 +188,7 @@ describe('AuthService', () => {
       req.flush(adminResponse);
     });
 
-    it('isAdmin() should return false for non-ADMIN user', (done) => {
+    it('isAdmin() deve retornar false for non-ADMIN user', (done) => {
       const clienteResponse: LoginResponse = {
         id: 1,
         nome: 'Cliente',
@@ -206,7 +206,7 @@ describe('AuthService', () => {
       req.flush(clienteResponse);
     });
 
-    it('isFuncionario() should return true for FUNCIONARIO user', (done) => {
+    it('isFuncionario() deve retornar true for FUNCIONARIO user', (done) => {
       const funcResponse: LoginResponse = {
         id: 1,
         nome: 'Funcionario',
@@ -224,7 +224,7 @@ describe('AuthService', () => {
       req.flush(funcResponse);
     });
 
-    it('isCliente() should return true for CLIENTE user', (done) => {
+    it('isCliente() deve retornar true for CLIENTE user', (done) => {
       const clienteResponse: LoginResponse = {
         id: 1,
         nome: 'Cliente',
@@ -242,7 +242,7 @@ describe('AuthService', () => {
       req.flush(clienteResponse);
     });
 
-    it('hasRole() should return true for matching role', (done) => {
+    it('hasRole() deve retornar true for matching role', (done) => {
       const adminResponse: LoginResponse = {
         id: 1,
         nome: 'Admin',
@@ -261,7 +261,7 @@ describe('AuthService', () => {
       req.flush(adminResponse);
     });
 
-    it('hasRole() should handle array of roles', (done) => {
+    it('hasRole() deve handle array of roles', (done) => {
       const funcResponse: LoginResponse = {
         id: 1,
         nome: 'Funcionario',

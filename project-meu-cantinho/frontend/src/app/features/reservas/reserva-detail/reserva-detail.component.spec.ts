@@ -78,12 +78,12 @@ describe('ReservaDetailComponent', () => {
     router = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should load reserva and pagamentos on init', () => {
+    it('deve carregar reserva and pagamentos on init', () => {
       reservaService.getById.mockReturnValue(of(mockReserva));
       pagamentoService.getByReservaId.mockReturnValue(of(mockPagamentos));
 
@@ -95,7 +95,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('loadReserva', () => {
-    it('should load reserva successfully', () => {
+    it('deve carregar reserva successfully', () => {
       reservaService.getById.mockReturnValue(of(mockReserva));
 
       component.loadReserva(1);
@@ -105,7 +105,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should handle error when loading reserva', () => {
+    it('deve tratar erro when loading reserva', () => {
       reservaService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadReserva(1);
@@ -116,7 +116,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('loadPagamentos', () => {
-    it('should load pagamentos successfully', () => {
+    it('deve carregar pagamentos successfully', () => {
       pagamentoService.getByReservaId.mockReturnValue(of(mockPagamentos));
 
       component.loadPagamentos(1);
@@ -126,7 +126,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('getStatusLabel', () => {
-    it('should return correct label for each status', () => {
+    it('deve retornar corretamente label for each status', () => {
       expect(component.getStatusLabel(StatusReserva.AGUARDANDO_SINAL)).toBe('Aguardando Sinal');
       expect(component.getStatusLabel(StatusReserva.CONFIRMADA)).toBe('Confirmada');
       expect(component.getStatusLabel(StatusReserva.QUITADA)).toBe('Quitada');
@@ -136,7 +136,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('getTipoPagamentoLabel', () => {
-    it('should return correct label for each tipo', () => {
+    it('deve retornar corretamente label for each tipo', () => {
       expect(component.getTipoPagamentoLabel(TipoPagamento.SINAL)).toBe('Sinal');
       expect(component.getTipoPagamentoLabel(TipoPagamento.QUITACAO)).toBe('Quitação');
       expect(component.getTipoPagamentoLabel(TipoPagamento.TOTAL)).toBe('Total');
@@ -144,7 +144,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('togglePagamentoForm', () => {
-    it('should toggle form visibility and set valores', () => {
+    it('deve toggle form visibility and set valores', () => {
       component.reserva = mockReserva;
       component.pagamentos = mockPagamentos;
 
@@ -155,7 +155,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('calcularProximoPagamento', () => {
-    it('should return SINAL when no pagamentos exist', () => {
+    it('deve retornar SINAL when no pagamentos exist', () => {
       component.reserva = mockReserva;
       component.pagamentos = [];
 
@@ -165,7 +165,7 @@ describe('ReservaDetailComponent', () => {
       expect(result.valor).toBe(500);
     });
 
-    it('should return QUITACAO after SINAL payment', () => {
+    it('deve retornar QUITACAO after SINAL payment', () => {
       component.reserva = mockReserva;
       component.pagamentos = mockPagamentos;
 
@@ -185,7 +185,7 @@ describe('ReservaDetailComponent', () => {
       });
     });
 
-    it('should create pagamento successfully', fakeAsync(() => {
+    it('deve criar pagamento successfully', fakeAsync(() => {
       reservaService.getById.mockReturnValue(of(mockReserva));
       pagamentoService.getByReservaId.mockReturnValue(of([]));
       pagamentoService.create.mockReturnValue(of({
@@ -205,7 +205,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.showPagamentoForm).toBe(false);
     }));
 
-    it('should handle error when creating pagamento', () => {
+    it('deve tratar erro when creating pagamento', () => {
       pagamentoService.create.mockReturnValue(throwError(() => ({ error: { message: 'Erro ao processar' } })));
 
       component.onSubmitPagamento();
@@ -213,7 +213,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.error).toBe('Erro ao processar');
     });
 
-    it('should show error if forma pagamento is empty', () => {
+    it('deve show error if forma pagamento is empty', () => {
       component.pagamentoForm.patchValue({ formaPagamento: '' });
 
       component.onSubmitPagamento();
@@ -228,7 +228,7 @@ describe('ReservaDetailComponent', () => {
       global.confirm = jest.fn(() => true);
     });
 
-    it('should cancel reserva successfully', fakeAsync(() => {
+    it('deve cancel reserva successfully', fakeAsync(() => {
       reservaService.updateStatus.mockReturnValue(of({ ...mockReserva, status: StatusReserva.CANCELADA }));
 
       component.cancelarReserva();
@@ -238,7 +238,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.successMessage).toBe('Reserva cancelada com sucesso!');
     }));
 
-    it('should not cancel if user cancels confirmation', () => {
+    it('não deve cancel if user cancels confirmation', () => {
       global.confirm = jest.fn(() => false);
 
       component.cancelarReserva();
@@ -246,7 +246,7 @@ describe('ReservaDetailComponent', () => {
       expect(reservaService.updateStatus).not.toHaveBeenCalled();
     });
 
-    it('should handle error when canceling reserva', () => {
+    it('deve tratar erro when canceling reserva', () => {
       reservaService.updateStatus.mockReturnValue(throwError(() => new Error('Error')));
 
       component.cancelarReserva();
@@ -256,19 +256,19 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('canCancelar', () => {
-    it('should return true for active reservas', () => {
+    it('deve retornar true for active reservas', () => {
       component.reserva = mockReserva;
 
       expect(component.canCancelar()).toBe(true);
     });
 
-    it('should return false for cancelada reservas', () => {
+    it('deve retornar false for cancelada reservas', () => {
       component.reserva = { ...mockReserva, status: StatusReserva.CANCELADA };
 
       expect(component.canCancelar()).toBe(false);
     });
 
-    it('should return false for finalizada reservas', () => {
+    it('deve retornar false for finalizada reservas', () => {
       component.reserva = { ...mockReserva, status: StatusReserva.FINALIZADA };
 
       expect(component.canCancelar()).toBe(false);
@@ -276,19 +276,19 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('canPagar', () => {
-    it('should return true when has saldo', () => {
+    it('deve retornar true when has saldo', () => {
       component.reserva = mockReserva;
 
       expect(component.canPagar()).toBe(true);
     });
 
-    it('should return false when saldo is zero', () => {
+    it('deve retornar false when saldo is zero', () => {
       component.reserva = { ...mockReserva, saldo: 0 };
 
       expect(component.canPagar()).toBe(false);
     });
 
-    it('should return false for cancelada reservas', () => {
+    it('deve retornar false for cancelada reservas', () => {
       component.reserva = { ...mockReserva, status: StatusReserva.CANCELADA };
 
       expect(component.canPagar()).toBe(false);
@@ -296,7 +296,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('goBack', () => {
-    it('should navigate to reservas list', () => {
+    it('deve navegar to reservas list', () => {
       component.goBack();
 
       expect(router.navigate).toHaveBeenCalledWith(['/reservas']);

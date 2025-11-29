@@ -38,12 +38,12 @@ describe('ClienteService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('deve ser created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getAll', () => {
-    it('should fetch all clientes', () => {
+    it('deve fetch all clientes', () => {
       const mockClientes = [mockClienteResponse];
 
       service.getAll().subscribe(clientes => {
@@ -56,7 +56,7 @@ describe('ClienteService', () => {
       req.flush(mockClientes);
     });
 
-    it('should return empty array when no clientes', () => {
+    it('deve retornar empty array when no clientes', () => {
       service.getAll().subscribe(clientes => {
         expect(clientes).toEqual([]);
         expect(clientes.length).toBe(0);
@@ -68,7 +68,7 @@ describe('ClienteService', () => {
   });
 
   describe('getById', () => {
-    it('should fetch cliente by id', () => {
+    it('deve fetch cliente by id', () => {
       const id = 1;
 
       service.getById(id).subscribe(cliente => {
@@ -81,7 +81,7 @@ describe('ClienteService', () => {
       req.flush(mockClienteResponse);
     });
 
-    it('should handle error when cliente not found', () => {
+    it('deve tratar erro when cliente not found', () => {
       const id = 999;
 
       service.getById(id).subscribe(
@@ -97,7 +97,7 @@ describe('ClienteService', () => {
   });
 
   describe('create', () => {
-    it('should create a new cliente', () => {
+    it('deve criar a new cliente', () => {
       service.create(mockClienteRequest).subscribe(cliente => {
         expect(cliente).toEqual(mockClienteResponse);
         expect(cliente.nome).toBe(mockClienteRequest.nome);
@@ -109,7 +109,7 @@ describe('ClienteService', () => {
       req.flush(mockClienteResponse);
     });
 
-    it('should handle validation errors', () => {
+    it('deve handle validation errors', () => {
       service.create(mockClienteRequest).subscribe(
         () => fail('should have failed'),
         error => {
@@ -123,7 +123,7 @@ describe('ClienteService', () => {
   });
 
   describe('update', () => {
-    it('should update an existing cliente', () => {
+    it('deve atualizar an existing cliente', () => {
       const id = 1;
       const updatedCliente = { ...mockClienteResponse, nome: 'João Updated' };
 
@@ -137,7 +137,7 @@ describe('ClienteService', () => {
       req.flush(updatedCliente);
     });
 
-    it('should handle error when updating non-existent cliente', () => {
+    it('deve tratar erro when updating non-existent cliente', () => {
       const id = 999;
 
       service.update(id, mockClienteRequest).subscribe(
@@ -153,7 +153,7 @@ describe('ClienteService', () => {
   });
 
   describe('delete', () => {
-    it('should delete a cliente', () => {
+    it('deve delete a cliente', () => {
       const id = 1;
 
       service.delete(id).subscribe(response => {
@@ -165,7 +165,7 @@ describe('ClienteService', () => {
       req.flush(null);
     });
 
-    it('should handle error when deleting non-existent cliente', () => {
+    it('deve tratar erro when deleting non-existent cliente', () => {
       const id = 999;
 
       service.delete(id).subscribe(

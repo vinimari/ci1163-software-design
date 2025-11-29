@@ -96,12 +96,12 @@ describe('EspacosAdminComponent', () => {
     filialService = TestBed.inject(FilialService) as jest.Mocked<FilialService>;
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit()', () => {
-    it('should load espacos for admin user', () => {
+    it('deve carregar espacos for admin user', () => {
       authService.getCurrentUser.mockReturnValue(mockAdminUser);
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
@@ -115,7 +115,7 @@ describe('EspacosAdminComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should load espacos for funcionario user', () => {
+    it('deve carregar espacos for funcionario user', () => {
       authService.getCurrentUser.mockReturnValue(mockFuncionarioUser);
       authService.isFuncionario.mockReturnValue(true);
       espacoService.getByFilialId.mockReturnValue(of([mockEspacoResponse]));
@@ -127,7 +127,7 @@ describe('EspacosAdminComponent', () => {
       expect(espacoService.getByFilialId).toHaveBeenCalledWith(1);
     });
 
-    it('should handle error when loading espacos', () => {
+    it('deve tratar erro when loading espacos', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
       espacoService.getAll.mockReturnValue(throwError(() => new Error('Server error')));
@@ -155,7 +155,7 @@ describe('EspacosAdminComponent', () => {
       ];
     });
 
-    it('should filter by search term', () => {
+    it('deve filter by search term', () => {
       component.searchTerm = 'Salão';
       component.aplicarFiltros();
 
@@ -163,7 +163,7 @@ describe('EspacosAdminComponent', () => {
       expect(component.espacosFiltrados[0].nome).toBe('Salão Principal');
     });
 
-    it('should filter by filial name', () => {
+    it('deve filter by filial name', () => {
       component.searchTerm = 'Norte';
       component.aplicarFiltros();
 
@@ -171,7 +171,7 @@ describe('EspacosAdminComponent', () => {
       expect(component.espacosFiltrados[0].filial.nome).toBe('Filial Norte');
     });
 
-    it('should filter by status ativo', () => {
+    it('deve filter by status ativo', () => {
       component.filtroStatus = 'ativo';
       component.aplicarFiltros();
 
@@ -179,7 +179,7 @@ describe('EspacosAdminComponent', () => {
       expect(component.espacosFiltrados[0].ativo).toBe(true);
     });
 
-    it('should filter by status inativo', () => {
+    it('deve filter by status inativo', () => {
       component.filtroStatus = 'inativo';
       component.aplicarFiltros();
 
@@ -187,7 +187,7 @@ describe('EspacosAdminComponent', () => {
       expect(component.espacosFiltrados[0].ativo).toBe(false);
     });
 
-    it('should show all when no filters applied', () => {
+    it('deve show all when no filters applied', () => {
       component.searchTerm = '';
       component.filtroStatus = '';
       component.aplicarFiltros();
@@ -197,7 +197,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('novoEspaco()', () => {
-    it('should set showForm to true and clear espacoSelecionado', () => {
+    it('deve definir showForm to true and clear espacoSelecionado', () => {
       component.espacoSelecionado = mockEspacoResponse;
 
       component.novoEspaco();
@@ -208,7 +208,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('editarEspaco()', () => {
-    it('should set espacoSelecionado and show form', () => {
+    it('deve definir espacoSelecionado and show form', () => {
       component.editarEspaco(mockEspacoResponse);
 
       expect(component.showForm).toBe(true);
@@ -227,7 +227,7 @@ describe('EspacosAdminComponent', () => {
       filialId: 1
     };
 
-    it('should create new espaco when espacoSelecionado is undefined', () => {
+    it('deve criar new espaco when espacoSelecionado is undefined', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
       espacoService.create.mockReturnValue(of(mockEspacoResponse));
@@ -243,7 +243,7 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should update existing espaco when espacoSelecionado is set', () => {
+    it('deve atualizar existing espaco when espacoSelecionado is set', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
       espacoService.update.mockReturnValue(of(mockEspacoResponse));
@@ -259,7 +259,7 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should handle create error with backend message', () => {
+    it('deve handle create error with backend message', () => {
       const errorResponse = {
         error: {
           message: 'Capacidade não pode exceder 1000 pessoas por questões de segurança'
@@ -277,7 +277,7 @@ describe('EspacosAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle create error without backend message', () => {
+    it('deve handle create error without backend message', () => {
       espacoService.create.mockReturnValue(throwError(() => new Error('Create error')));
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -290,7 +290,7 @@ describe('EspacosAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle update error with backend message', () => {
+    it('deve handle update error with backend message', () => {
       const errorResponse = {
         error: {
           message: 'Capacidade não pode exceder 1000 pessoas por questões de segurança'
@@ -308,7 +308,7 @@ describe('EspacosAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle update error without backend message', () => {
+    it('deve handle update error without backend message', () => {
       espacoService.update.mockReturnValue(throwError(() => new Error('Update error')));
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -323,7 +323,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('onCancelForm()', () => {
-    it('should hide form and clear espacoSelecionado', () => {
+    it('deve hide form and clear espacoSelecionado', () => {
       component.showForm = true;
       component.espacoSelecionado = mockEspacoResponse;
 
@@ -335,7 +335,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('toggleAtivo()', () => {
-    it('should toggle espaco status to inactive', () => {
+    it('deve toggle espaco status to inactive', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
       const inactiveEspaco = { ...mockEspacoResponse, ativo: false };
@@ -353,7 +353,7 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should toggle espaco status to active', () => {
+    it('deve toggle espaco status to active', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
       const inactiveEspaco = { ...mockEspacoResponse, ativo: false };
@@ -372,7 +372,7 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should handle toggle error with backend message', () => {
+    it('deve handle toggle error with backend message', () => {
       const errorResponse = {
         error: {
           message: 'Não é possível desativar espaço com reservas ativas'
@@ -389,7 +389,7 @@ describe('EspacosAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle toggle error without backend message', () => {
+    it('deve handle toggle error without backend message', () => {
       espacoService.update.mockReturnValue(throwError(() => new Error('Toggle error')));
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
@@ -403,7 +403,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('excluirEspaco()', () => {
-    it('should delete espaco when confirmed', () => {
+    it('deve delete espaco when confirmed', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
       espacoService.delete.mockReturnValue(of(null));
@@ -420,7 +420,7 @@ describe('EspacosAdminComponent', () => {
       alertSpy.mockRestore();
     });
 
-    it('should not delete espaco when cancelled', () => {
+    it('não deve delete espaco when cancelled', () => {
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
 
       component.excluirEspaco(mockEspacoResponse);
@@ -430,7 +430,7 @@ describe('EspacosAdminComponent', () => {
       confirmSpy.mockRestore();
     });
 
-    it('should handle delete error with backend message', () => {
+    it('deve handle delete error with backend message', () => {
       const errorResponse = {
         error: {
           message: 'Espaço não pode ser excluído pois possui reservas vinculadas'
@@ -449,7 +449,7 @@ describe('EspacosAdminComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle delete error without backend message', () => {
+    it('deve handle delete error without backend message', () => {
       espacoService.delete.mockReturnValue(throwError(() => new Error('Delete error')));
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
       const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
@@ -465,7 +465,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('onSearchChange()', () => {
-    it('should update searchTerm and apply filters', () => {
+    it('deve atualizar searchTerm and apply filters', () => {
       component.espacos = [mockEspacoResponse];
       const applySpy = jest.spyOn(component, 'aplicarFiltros');
 
@@ -477,7 +477,7 @@ describe('EspacosAdminComponent', () => {
   });
 
   describe('onStatusFilterChange()', () => {
-    it('should update filtroStatus and apply filters', () => {
+    it('deve atualizar filtroStatus and apply filters', () => {
       component.espacos = [mockEspacoResponse];
       const applySpy = jest.spyOn(component, 'aplicarFiltros');
 

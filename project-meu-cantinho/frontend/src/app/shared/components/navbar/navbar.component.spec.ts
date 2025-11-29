@@ -51,29 +51,29 @@ describe('NavbarComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize with null currentUser', () => {
+    it('deve inicializar with null currentUser', () => {
       expect(component.currentUser).toBeNull();
     });
 
-    it('should initialize isAdmin as false', () => {
+    it('deve inicializar isAdmin as false', () => {
       expect(component.isAdmin).toBe(false);
     });
 
-    it('should initialize isFuncionario as false', () => {
+    it('deve inicializar isFuncionario as false', () => {
       expect(component.isFuncionario).toBe(false);
     });
 
-    it('should initialize isCliente as false', () => {
+    it('deve inicializar isCliente as false', () => {
       expect(component.isCliente).toBe(false);
     });
   });
 
   describe('ngOnInit', () => {
-    it('should subscribe to currentUser$', () => {
+    it('deve subscribe to currentUser$', () => {
       authService.currentUser$ = of(mockUser);
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
@@ -85,7 +85,7 @@ describe('NavbarComponent', () => {
       expect(component.isAdmin).toBe(true);
     });
 
-    it('should update user roles when user changes', () => {
+    it('deve atualizar user roles when user changes', () => {
       authService.currentUser$ = of(mockUser);
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
@@ -98,7 +98,7 @@ describe('NavbarComponent', () => {
       expect(authService.isCliente).toHaveBeenCalled();
     });
 
-    it('should set isFuncionario when user is funcionario', () => {
+    it('deve definir isFuncionario when user is funcionario', () => {
       const funcionarioUser = { ...mockUser, perfil: PerfilUsuario.FUNCIONARIO };
       authService.currentUser$ = of(funcionarioUser);
       authService.isAdmin.mockReturnValue(false);
@@ -111,7 +111,7 @@ describe('NavbarComponent', () => {
       expect(component.isAdmin).toBe(false);
     });
 
-    it('should set isCliente when user is cliente', () => {
+    it('deve definir isCliente when user is cliente', () => {
       const clienteUser = { ...mockUser, perfil: PerfilUsuario.CLIENTE };
       authService.currentUser$ = of(clienteUser);
       authService.isAdmin.mockReturnValue(false);
@@ -124,7 +124,7 @@ describe('NavbarComponent', () => {
       expect(component.isAdmin).toBe(false);
     });
 
-    it('should handle null user', () => {
+    it('deve handle null user', () => {
       authService.currentUser$ = of(null);
       authService.isAdmin.mockReturnValue(false);
       authService.isFuncionario.mockReturnValue(false);
@@ -138,7 +138,7 @@ describe('NavbarComponent', () => {
   });
 
   describe('ngOnDestroy', () => {
-    it('should complete destroy$ subject', () => {
+    it('deve complete destroy$ subject', () => {
       const nextSpy = jest.spyOn(component['destroy$'], 'next');
       const completeSpy = jest.spyOn(component['destroy$'], 'complete');
 
@@ -148,7 +148,7 @@ describe('NavbarComponent', () => {
       expect(completeSpy).toHaveBeenCalled();
     });
 
-    it('should unsubscribe from currentUser$', () => {
+    it('deve unsubscribe from currentUser$', () => {
       component.ngOnInit();
       const destroySpy = jest.spyOn(component['destroy$'], 'next');
 
@@ -159,13 +159,13 @@ describe('NavbarComponent', () => {
   });
 
   describe('logout', () => {
-    it('should call authService.logout', () => {
+    it('deve call authService.logout', () => {
       component.logout();
 
       expect(authService.logout).toHaveBeenCalled();
     });
 
-    it('should navigate to login page', () => {
+    it('deve navegar to login page', () => {
       const navigateSpy = jest.spyOn(component['router'], 'navigate');
 
       component.logout();
@@ -173,7 +173,7 @@ describe('NavbarComponent', () => {
       expect(navigateSpy).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should call logout and navigate in sequence', () => {
+    it('deve call logout and navigate in sequence', () => {
       const callOrder: string[] = [];
       
       authService.logout.mockImplementation(() => {
@@ -193,7 +193,7 @@ describe('NavbarComponent', () => {
   });
 
   describe('Integration', () => {
-    it('should update state when user logs in', () => {
+    it('deve atualizar state when user logs in', () => {
       authService.currentUser$ = of(mockUser);
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
@@ -206,7 +206,7 @@ describe('NavbarComponent', () => {
       expect(component.isAdmin).toBe(true);
     });
 
-    it('should update state when user logs out', () => {
+    it('deve atualizar state when user logs out', () => {
       authService.currentUser$ = of(null);
       authService.isAdmin.mockReturnValue(false);
       authService.isFuncionario.mockReturnValue(false);

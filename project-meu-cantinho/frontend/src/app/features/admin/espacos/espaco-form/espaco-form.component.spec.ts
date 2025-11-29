@@ -50,11 +50,11 @@ describe('EspacoFormComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize in create mode when no espaco is provided', () => {
+    it('deve inicializar in create mode when no espaco is provided', () => {
       filialService.getAll.mockReturnValue(of(mockFiliais));
 
       fixture.detectChanges();
@@ -63,7 +63,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm).toBeDefined();
     });
 
-    it('should initialize in edit mode when espaco is provided', () => {
+    it('deve inicializar in edit mode when espaco is provided', () => {
       component.espaco = mockEspaco;
       filialService.getAll.mockReturnValue(of(mockFiliais));
 
@@ -72,7 +72,7 @@ describe('EspacoFormComponent', () => {
       expect(component.isEditMode).toBe(true);
     });
 
-    it('should load all filiais for admin (no filialIdFuncionario)', () => {
+    it('deve carregar all filiais for admin (no filialIdFuncionario)', () => {
       filialService.getAll.mockReturnValue(of(mockFiliais));
 
       fixture.detectChanges();
@@ -81,7 +81,7 @@ describe('EspacoFormComponent', () => {
       expect(component.filiais).toEqual(mockFiliais);
     });
 
-    it('should load only funcionario filial when filialIdFuncionario is provided', () => {
+    it('deve carregar only funcionario filial when filialIdFuncionario is provided', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
 
@@ -91,7 +91,7 @@ describe('EspacoFormComponent', () => {
       expect(component.filiais).toEqual([mockFiliais[0]]);
     });
 
-    it('should handle error when loading filiais', () => {
+    it('deve tratar erro when loading filiais', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
       filialService.getAll.mockReturnValue(throwError(() => error));
@@ -102,7 +102,7 @@ describe('EspacoFormComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should handle error when loading filial by id', () => {
+    it('deve tratar erro when loading filial by id', () => {
       component.filialIdFuncionario = 1;
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
@@ -120,7 +120,7 @@ describe('EspacoFormComponent', () => {
       filialService.getAll.mockReturnValue(of(mockFiliais));
     });
 
-    it('should initialize form with empty values in create mode', () => {
+    it('deve inicializar form with empty values in create mode', () => {
       fixture.detectChanges();
 
       expect(component.espacoForm.get('nome')?.value).toBe('');
@@ -132,7 +132,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('filialId')?.value).toBe('');
     });
 
-    it('should initialize form with espaco values in edit mode', () => {
+    it('deve inicializar form with espaco values in edit mode', () => {
       component.espaco = mockEspaco;
 
       fixture.detectChanges();
@@ -146,7 +146,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('filialId')?.value).toBe(mockEspaco.filial.id);
     });
 
-    it('should disable filialId field when filialIdFuncionario is provided', () => {
+    it('deve disable filialId field when filialIdFuncionario is provided', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
 
@@ -155,13 +155,13 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('filialId')?.disabled).toBe(true);
     });
 
-    it('should enable filialId field when filialIdFuncionario is not provided', () => {
+    it('deve enable filialId field when filialIdFuncionario is not provided', () => {
       fixture.detectChanges();
 
       expect(component.espacoForm.get('filialId')?.disabled).toBe(false);
     });
 
-    it('should set filialId to filialIdFuncionario when provided', () => {
+    it('deve definir filialId to filialIdFuncionario when provided', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
 
@@ -177,96 +177,96 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should mark form as invalid when empty', () => {
+    it('deve mark form as invalid when empty', () => {
       expect(component.espacoForm.valid).toBe(false);
     });
 
-    it('should require nome field', () => {
+    it('deve require nome field', () => {
       const nomeControl = component.espacoForm.get('nome');
       expect(nomeControl?.hasError('required')).toBe(true);
     });
 
-    it('should validate nome maxLength', () => {
+    it('deve validar nome maxLength', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('a'.repeat(151));
       expect(nomeControl?.hasError('maxlength')).toBe(true);
     });
 
-    it('should accept valid nome', () => {
+    it('deve accept valid nome', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('Sala de Reunião');
       expect(nomeControl?.valid).toBe(true);
     });
 
-    it('should not require descricao field', () => {
+    it('não deve require descricao field', () => {
       const descricaoControl = component.espacoForm.get('descricao');
       expect(descricaoControl?.hasError('required')).toBe(false);
     });
 
-    it('should require capacidade field', () => {
+    it('deve require capacidade field', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       expect(capacidadeControl?.hasError('required')).toBe(true);
     });
 
-    it('should validate capacidade minimum value', () => {
+    it('deve validar capacidade minimum value', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(0);
       expect(capacidadeControl?.hasError('min')).toBe(true);
     });
 
-    it('should accept valid capacidade', () => {
+    it('deve accept valid capacidade', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(10);
       expect(capacidadeControl?.valid).toBe(true);
     });
 
-    it('should require precoDiaria field', () => {
+    it('deve require precoDiaria field', () => {
       const precoDiariaControl = component.espacoForm.get('precoDiaria');
       expect(precoDiariaControl?.hasError('required')).toBe(true);
     });
 
-    it('should validate precoDiaria minimum value', () => {
+    it('deve validar precoDiaria minimum value', () => {
       const precoDiariaControl = component.espacoForm.get('precoDiaria');
       precoDiariaControl?.setValue(-1);
       expect(precoDiariaControl?.hasError('min')).toBe(true);
     });
 
-    it('should accept zero as valid precoDiaria', () => {
+    it('deve accept zero as valid precoDiaria', () => {
       const precoDiariaControl = component.espacoForm.get('precoDiaria');
       precoDiariaControl?.setValue(0);
       expect(precoDiariaControl?.hasError('min')).toBe(false);
     });
 
-    it('should validate urlFotoPrincipal pattern', () => {
+    it('deve validar urlFotoPrincipal pattern', () => {
       const urlControl = component.espacoForm.get('urlFotoPrincipal');
       urlControl?.setValue('invalid-url');
       expect(urlControl?.hasError('pattern')).toBe(true);
     });
 
-    it('should accept valid http URL', () => {
+    it('deve accept valid http URL', () => {
       const urlControl = component.espacoForm.get('urlFotoPrincipal');
       urlControl?.setValue('http://example.com/photo.jpg');
       expect(urlControl?.valid).toBe(true);
     });
 
-    it('should accept valid https URL', () => {
+    it('deve accept valid https URL', () => {
       const urlControl = component.espacoForm.get('urlFotoPrincipal');
       urlControl?.setValue('https://example.com/photo.jpg');
       expect(urlControl?.valid).toBe(true);
     });
 
-    it('should accept empty urlFotoPrincipal', () => {
+    it('deve accept empty urlFotoPrincipal', () => {
       const urlControl = component.espacoForm.get('urlFotoPrincipal');
       urlControl?.setValue('');
       expect(urlControl?.valid).toBe(true);
     });
 
-    it('should require filialId field', () => {
+    it('deve require filialId field', () => {
       const filialIdControl = component.espacoForm.get('filialId');
       expect(filialIdControl?.hasError('required')).toBe(true);
     });
 
-    it('should mark form as valid when all required fields are filled', () => {
+    it('deve mark form as valid when all required fields are filled', () => {
       component.espacoForm.patchValue({
         nome: 'Sala de Reunião',
         descricao: 'Sala ampla',
@@ -287,7 +287,7 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should emit submitForm when form is valid', () => {
+    it('deve emit submitForm when form is valid', () => {
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
 
       component.espacoForm.patchValue({
@@ -313,7 +313,7 @@ describe('EspacoFormComponent', () => {
       });
     });
 
-    it('should set loading to true when submitting', () => {
+    it('deve definir loading to true when submitting', () => {
       component.espacoForm.patchValue({
         nome: 'Sala de Reunião',
         capacidade: 10,
@@ -326,7 +326,7 @@ describe('EspacoFormComponent', () => {
       expect(component.loading).toBe(true);
     });
 
-    it('should not emit submitForm when form is invalid', () => {
+    it('não deve emit submitForm when form is invalid', () => {
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
 
       component.espacoForm.patchValue({
@@ -341,7 +341,7 @@ describe('EspacoFormComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should mark all fields as touched when form is invalid', () => {
+    it('deve mark all fields as touched when form is invalid', () => {
       component.onSubmit();
 
       expect(component.espacoForm.get('nome')?.touched).toBe(true);
@@ -350,7 +350,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('filialId')?.touched).toBe(true);
     });
 
-    it('should include disabled fields in submission using getRawValue', () => {
+    it('deve include disabled fields in submission using getRawValue', () => {
       component.filialIdFuncionario = 1;
       filialService.getById.mockReturnValue(of(mockFiliais[0]));
 
@@ -384,7 +384,7 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should emit cancel event', () => {
+    it('deve emit cancel event', () => {
       const cancelSpy = jest.spyOn(component.cancel, 'emit');
 
       component.onCancel();
@@ -399,25 +399,25 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should return false for untouched invalid field', () => {
+    it('deve retornar false for untouched invalid field', () => {
       expect(component.isFieldInvalid('nome')).toBe(false);
     });
 
-    it('should return true for touched invalid field', () => {
+    it('deve retornar true for touched invalid field', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.markAsTouched();
 
       expect(component.isFieldInvalid('nome')).toBe(true);
     });
 
-    it('should return true for dirty invalid field', () => {
+    it('deve retornar true for dirty invalid field', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.markAsDirty();
 
       expect(component.isFieldInvalid('nome')).toBe(true);
     });
 
-    it('should return false for valid field', () => {
+    it('deve retornar false for valid field', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('Sala de Reunião');
       nomeControl?.markAsTouched();
@@ -425,7 +425,7 @@ describe('EspacoFormComponent', () => {
       expect(component.isFieldInvalid('nome')).toBe(false);
     });
 
-    it('should return false for non-existent field', () => {
+    it('deve retornar false for non-existent field', () => {
       expect(component.isFieldInvalid('nonExistent')).toBe(false);
     });
   });
@@ -436,14 +436,14 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should return required error message', () => {
+    it('deve retornar required error message', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.markAsTouched();
 
       expect(component.getErrorMessage('nome')).toBe('Campo obrigatório');
     });
 
-    it('should return min error message', () => {
+    it('deve retornar min error message', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(0);
       capacidadeControl?.markAsTouched();
@@ -451,7 +451,7 @@ describe('EspacoFormComponent', () => {
       expect(component.getErrorMessage('capacidade')).toBe('Valor mínimo: 1');
     });
 
-    it('should return maxlength error message', () => {
+    it('deve retornar maxlength error message', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('a'.repeat(151));
       nomeControl?.markAsTouched();
@@ -459,7 +459,7 @@ describe('EspacoFormComponent', () => {
       expect(component.getErrorMessage('nome')).toBe('Máximo 150 caracteres');
     });
 
-    it('should return pattern error message for invalid URL', () => {
+    it('deve retornar pattern error message for invalid URL', () => {
       const urlControl = component.espacoForm.get('urlFotoPrincipal');
       urlControl?.setValue('invalid-url');
       urlControl?.markAsTouched();
@@ -467,7 +467,7 @@ describe('EspacoFormComponent', () => {
       expect(component.getErrorMessage('urlFotoPrincipal')).toBe('URL inválida');
     });
 
-    it('should return empty string for valid field', () => {
+    it('deve retornar empty string for valid field', () => {
       const nomeControl = component.espacoForm.get('nome');
       nomeControl?.setValue('Sala de Reunião');
       nomeControl?.markAsTouched();
@@ -475,11 +475,11 @@ describe('EspacoFormComponent', () => {
       expect(component.getErrorMessage('nome')).toBe('');
     });
 
-    it('should return empty string for non-existent field', () => {
+    it('deve retornar empty string for non-existent field', () => {
       expect(component.getErrorMessage('nonExistent')).toBe('');
     });
 
-    it('should return empty string for field without errors', () => {
+    it('deve retornar empty string for field without errors', () => {
       expect(component.getErrorMessage('descricao')).toBe('');
     });
   });
@@ -491,13 +491,13 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should populate form with existing espaco data', () => {
+    it('deve populate form with existing espaco data', () => {
       expect(component.espacoForm.get('nome')?.value).toBe(mockEspaco.nome);
       expect(component.espacoForm.get('capacidade')?.value).toBe(mockEspaco.capacidade);
       expect(component.espacoForm.get('precoDiaria')?.value).toBe(mockEspaco.precoDiaria);
     });
 
-    it('should handle espaco with ativo = false', () => {
+    it('deve handle espaco with ativo = false', () => {
       const inactiveEspaco = { ...mockEspaco, ativo: false };
       component.espaco = inactiveEspaco;
       component.ngOnInit();
@@ -505,7 +505,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('ativo')?.value).toBe(false);
     });
 
-    it('should submit updated values', () => {
+    it('deve submit updated values', () => {
       const submitSpy = jest.spyOn(component.submitForm, 'emit');
 
       component.espacoForm.patchValue({
@@ -531,7 +531,7 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should handle espaco without urlFotoPrincipal', () => {
+    it('deve handle espaco without urlFotoPrincipal', () => {
       const espacoWithoutUrl = { ...mockEspaco, urlFotoPrincipal: '' };
       component.espaco = espacoWithoutUrl;
       component.ngOnInit();
@@ -539,7 +539,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('urlFotoPrincipal')?.value).toBe('');
     });
 
-    it('should handle espaco without descricao', () => {
+    it('deve handle espaco without descricao', () => {
       const espacoWithoutDesc = { ...mockEspaco, descricao: '' };
       component.espaco = espacoWithoutDesc;
       component.ngOnInit();
@@ -547,7 +547,7 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.get('descricao')?.value).toBe('');
     });
 
-    it('should handle form with all optional fields empty', () => {
+    it('deve handle form with all optional fields empty', () => {
       component.espacoForm.patchValue({
         nome: 'Sala Mínima',
         descricao: '',
@@ -561,21 +561,21 @@ describe('EspacoFormComponent', () => {
       expect(component.espacoForm.valid).toBe(true);
     });
 
-    it('should handle large capacity values', () => {
+    it('deve handle large capacity values', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(1000);
 
       expect(capacidadeControl?.valid).toBe(true);
     });
 
-    it('should handle large price values', () => {
+    it('deve handle large price values', () => {
       const precoControl = component.espacoForm.get('precoDiaria');
       precoControl?.setValue(99999.99);
 
       expect(precoControl?.valid).toBe(true);
     });
 
-    it('should handle decimal capacity values', () => {
+    it('deve handle decimal capacity values', () => {
       const capacidadeControl = component.espacoForm.get('capacidade');
       capacidadeControl?.setValue(10.5);
 
@@ -590,17 +590,17 @@ describe('EspacoFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should only load funcionario filial', () => {
+    it('deve only load funcionario filial', () => {
       expect(filialService.getById).toHaveBeenCalledWith(1);
       expect(filialService.getAll).not.toHaveBeenCalled();
       expect(component.filiais.length).toBe(1);
     });
 
-    it('should disable filialId selection', () => {
+    it('deve disable filialId selection', () => {
       expect(component.espacoForm.get('filialId')?.disabled).toBe(true);
     });
 
-    it('should pre-select funcionario filial', () => {
+    it('deve pre-select funcionario filial', () => {
       expect(component.espacoForm.get('filialId')?.value).toBe(1);
     });
   });

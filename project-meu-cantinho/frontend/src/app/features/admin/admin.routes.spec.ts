@@ -18,7 +18,7 @@ describe('Admin Routes', () => {
     });
   });
 
-  it('should have correct number of routes', () => {
+  it('deve ter correct number of routes', () => {
     expect(ADMIN_ROUTES.length).toBe(4);
   });
 
@@ -29,39 +29,39 @@ describe('Admin Routes', () => {
       filiaisRoute = ADMIN_ROUTES.find(r => r.path === 'filiais');
     });
 
-    it('should have filiais route', () => {
+    it('deve ter filiais route', () => {
       expect(filiaisRoute).toBeDefined();
     });
 
-    it('should have roleGuard with ADMIN role', () => {
+    it('deve ter roleGuard with ADMIN role', () => {
       expect(filiaisRoute.canActivate).toBeDefined();
       expect(filiaisRoute.canActivate.length).toBe(1);
     });
 
-    it('should have children routes', () => {
+    it('deve ter children routes', () => {
       expect(filiaisRoute.children).toBeDefined();
       expect(filiaisRoute.children.length).toBe(4);
     });
 
-    it('should have list route', () => {
+    it('deve ter list route', () => {
       const listRoute = filiaisRoute.children.find((r: any) => r.path === '');
       expect(listRoute).toBeDefined();
       expect(listRoute.loadComponent).toBeDefined();
     });
 
-    it('should have new route', () => {
+    it('deve ter new route', () => {
       const newRoute = filiaisRoute.children.find((r: any) => r.path === 'new');
       expect(newRoute).toBeDefined();
       expect(newRoute.loadComponent).toBeDefined();
     });
 
-    it('should have detail route', () => {
+    it('deve ter detail route', () => {
       const detailRoute = filiaisRoute.children.find((r: any) => r.path === ':id');
       expect(detailRoute).toBeDefined();
       expect(detailRoute.loadComponent).toBeDefined();
     });
 
-    it('should have edit route', () => {
+    it('deve ter edit route', () => {
       const editRoute = filiaisRoute.children.find((r: any) => r.path === ':id/edit');
       expect(editRoute).toBeDefined();
       expect(editRoute.loadComponent).toBeDefined();
@@ -75,27 +75,27 @@ describe('Admin Routes', () => {
       clientesRoute = ADMIN_ROUTES.find(r => r.path === 'clientes');
     });
 
-    it('should have clientes route', () => {
+    it('deve ter clientes route', () => {
       expect(clientesRoute).toBeDefined();
     });
 
-    it('should have roleGuard with ADMIN and FUNCIONARIO roles', () => {
+    it('deve ter roleGuard with ADMIN and FUNCIONARIO roles', () => {
       expect(clientesRoute.canActivate).toBeDefined();
       expect(clientesRoute.canActivate.length).toBe(1);
     });
 
-    it('should have children routes', () => {
+    it('deve ter children routes', () => {
       expect(clientesRoute.children).toBeDefined();
       expect(clientesRoute.children.length).toBe(2);
     });
 
-    it('should have list route', () => {
+    it('deve ter list route', () => {
       const listRoute = clientesRoute.children.find((r: any) => r.path === '');
       expect(listRoute).toBeDefined();
       expect(listRoute.loadComponent).toBeDefined();
     });
 
-    it('should have detail route', () => {
+    it('deve ter detail route', () => {
       const detailRoute = clientesRoute.children.find((r: any) => r.path === ':id');
       expect(detailRoute).toBeDefined();
       expect(detailRoute.loadComponent).toBeDefined();
@@ -109,20 +109,20 @@ describe('Admin Routes', () => {
       espacosRoute = ADMIN_ROUTES.find(r => r.path === 'espacos');
     });
 
-    it('should have espacos route', () => {
+    it('deve ter espacos route', () => {
       expect(espacosRoute).toBeDefined();
     });
 
-    it('should have roleGuard with ADMIN and FUNCIONARIO roles', () => {
+    it('deve ter roleGuard with ADMIN and FUNCIONARIO roles', () => {
       expect(espacosRoute.canActivate).toBeDefined();
       expect(espacosRoute.canActivate.length).toBe(1);
     });
 
-    it('should have loadComponent', () => {
+    it('deve ter loadComponent', () => {
       expect(espacosRoute.loadComponent).toBeDefined();
     });
 
-    it('should not have children', () => {
+    it('não deve have children', () => {
       expect(espacosRoute.children).toBeUndefined();
     });
   });
@@ -134,33 +134,33 @@ describe('Admin Routes', () => {
       reservasRoute = ADMIN_ROUTES.find(r => r.path === 'reservas');
     });
 
-    it('should have reservas route', () => {
+    it('deve ter reservas route', () => {
       expect(reservasRoute).toBeDefined();
     });
 
-    it('should have roleGuard with ADMIN and FUNCIONARIO roles', () => {
+    it('deve ter roleGuard with ADMIN and FUNCIONARIO roles', () => {
       expect(reservasRoute.canActivate).toBeDefined();
       expect(reservasRoute.canActivate.length).toBe(1);
     });
 
-    it('should have loadComponent', () => {
+    it('deve ter loadComponent', () => {
       expect(reservasRoute.loadComponent).toBeDefined();
     });
 
-    it('should not have children', () => {
+    it('não deve have children', () => {
       expect(reservasRoute.children).toBeUndefined();
     });
   });
 
   describe('Route Structure', () => {
-    it('should have all routes with guards', () => {
+    it('deve ter all routes with guards', () => {
       ADMIN_ROUTES.forEach(route => {
         expect(route.canActivate).toBeDefined();
         expect(route.canActivate?.length).toBeGreaterThan(0);
       });
     });
 
-    it('should have unique paths', () => {
+    it('deve ter unique paths', () => {
       const paths = ADMIN_ROUTES.map(r => r.path);
       const uniquePaths = new Set(paths);
       expect(uniquePaths.size).toBe(paths.length);

@@ -59,18 +59,18 @@ describe('FiliaisListComponent', () => {
     router = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load filiais on init', () => {
+  it('deve carregar filiais on init', () => {
     fixture.detectChanges();
     expect(filialService.getAll).toHaveBeenCalled();
     expect(component.filiais).toEqual(mockFiliais);
     expect(component.loading).toBe(false);
   });
 
-  it('should handle error when loading filiais fails', () => {
+  it('deve tratar erro when loading filiais fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     filialService.getAll.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -81,22 +81,22 @@ describe('FiliaisListComponent', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should navigate to filial detail when viewFilial is called', () => {
+  it('deve navegar to filial detail when viewFilial is called', () => {
     component.viewFilial(1);
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais', 1]);
   });
 
-  it('should navigate to filial edit when editFilial is called', () => {
+  it('deve navegar to filial edit when editFilial is called', () => {
     component.editFilial(1);
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais', 1, 'edit']);
   });
 
-  it('should navigate to create filial when createFilial is called', () => {
+  it('deve navegar to create filial when createFilial is called', () => {
     component.createFilial();
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais/new']);
   });
 
-  it('should delete filial when confirmed', () => {
+  it('deve delete filial when confirmed', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     filialService.delete.mockReturnValue(of(undefined));
 
@@ -108,7 +108,7 @@ describe('FiliaisListComponent', () => {
     confirmSpy.mockRestore();
   });
 
-  it('should not delete filial when not confirmed', () => {
+  it('não deve delete filial when not confirmed', () => {
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
 
     component.deleteFilial(1);
@@ -117,7 +117,7 @@ describe('FiliaisListComponent', () => {
     confirmSpy.mockRestore();
   });
 
-  it('should handle error when delete fails', () => {
+  it('deve tratar erro when delete fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     filialService.delete.mockReturnValue(throwError(() => new Error('Error')));
@@ -130,7 +130,7 @@ describe('FiliaisListComponent', () => {
     confirmSpy.mockRestore();
   });
 
-  it('should display error message when error is set', () => {
+  it('deve display error message when error is set', () => {
     filialService.getAll.mockReturnValue(throwError(() => new Error('Test error')));
     component.loadFiliais();
     fixture.detectChanges();
@@ -139,7 +139,7 @@ describe('FiliaisListComponent', () => {
     expect(compiled.textContent).toContain('Erro ao carregar filiais');
   });
 
-  it('should display empty state when no filiais', () => {
+  it('deve display empty state when no filiais', () => {
     filialService.getAll.mockReturnValue(of([]));
     component.loadFiliais();
     fixture.detectChanges();
@@ -148,7 +148,7 @@ describe('FiliaisListComponent', () => {
     expect(emptyState).toBeTruthy();
   });
 
-  it('should display filiais in grid', () => {
+  it('deve display filiais in grid', () => {
     component.filiais = mockFiliais;
     component.loading = false;
     fixture.detectChanges();

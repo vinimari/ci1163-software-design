@@ -80,12 +80,12 @@ describe('ReservaDetailComponent', () => {
     router = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should load reserva and pagamentos on init', () => {
+    it('deve carregar reserva and pagamentos on init', () => {
       reservaService.getById.mockReturnValue(of(mockReserva as any));
       pagamentoService.getByReservaId.mockReturnValue(of(mockPagamentos as any));
 
@@ -97,7 +97,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('loadReserva', () => {
-    it('should load reserva successfully', () => {
+    it('deve carregar reserva successfully', () => {
       reservaService.getById.mockReturnValue(of(mockReserva as any));
 
       component.loadReserva(1);
@@ -106,7 +106,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should handle error when loading reserva', () => {
+    it('deve tratar erro when loading reserva', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       reservaService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -119,7 +119,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('loadPagamentos', () => {
-    it('should load and sort pagamentos', () => {
+    it('deve carregar and sort pagamentos', () => {
       const unsortedPagamentos = [
         { ...mockPagamentos[0], dataPagamento: '2024-01-10' },
         { ...mockPagamentos[0], id: 2, dataPagamento: '2024-01-20' }
@@ -132,7 +132,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.loadingPagamentos).toBe(false);
     });
 
-    it('should handle error when loading pagamentos', () => {
+    it('deve tratar erro when loading pagamentos', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       pagamentoService.getByReservaId.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -144,7 +144,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('goBack', () => {
-    it('should navigate to admin reservas', () => {
+    it('deve navegar to admin reservas', () => {
       component.goBack();
 
       expect(router.navigate).toHaveBeenCalledWith(['/admin/reservas']);
@@ -152,7 +152,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('openPagamentoModal', () => {
-    it('should open modal with calculated payment', () => {
+    it('deve abrir modal with calculated payment', () => {
       component.reserva = mockReserva as any;
       component.pagamentos = [];
 
@@ -165,7 +165,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('calcularProximoPagamento', () => {
-    it('should return SINAL when no pagamentos exist', () => {
+    it('deve retornar SINAL when no pagamentos exist', () => {
       component.reserva = mockReserva as any;
       component.pagamentos = [];
 
@@ -175,7 +175,7 @@ describe('ReservaDetailComponent', () => {
       expect(result.valor).toBe(500);
     });
 
-    it('should return QUITACAO when SINAL exists', () => {
+    it('deve retornar QUITACAO when SINAL exists', () => {
       component.reserva = mockReserva as any;
       component.pagamentos = mockPagamentos as any;
 
@@ -185,7 +185,7 @@ describe('ReservaDetailComponent', () => {
       expect(result.valor).toBe(500);
     });
 
-    it('should return zero valor when QUITACAO already exists', () => {
+    it('deve retornar zero valor when QUITACAO already exists', () => {
       component.reserva = mockReserva as any;
       component.pagamentos = [{ ...mockPagamentos[0], tipo: TipoPagamento.QUITACAO }] as any;
 
@@ -196,13 +196,13 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('permitirTrocarTipoPagamento', () => {
-    it('should return true when no pagamentos', () => {
+    it('deve retornar true when no pagamentos', () => {
       component.pagamentos = [];
 
       expect(component.permitirTrocarTipoPagamento()).toBe(true);
     });
 
-    it('should return false when pagamentos exist', () => {
+    it('deve retornar false when pagamentos exist', () => {
       component.pagamentos = mockPagamentos as any;
 
       expect(component.permitirTrocarTipoPagamento()).toBe(false);
@@ -215,7 +215,7 @@ describe('ReservaDetailComponent', () => {
       component.pagamentos = [];
     });
 
-    it('should switch from SINAL to TOTAL', () => {
+    it('deve alternar from SINAL to TOTAL', () => {
       component.novoPagamento.tipo = TipoPagamento.SINAL;
       component.novoPagamento.valor = 500;
 
@@ -225,7 +225,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.novoPagamento.valor).toBe(1000);
     });
 
-    it('should switch from TOTAL to SINAL', () => {
+    it('deve alternar from TOTAL to SINAL', () => {
       component.novoPagamento.tipo = TipoPagamento.TOTAL;
       component.novoPagamento.valor = 1000;
 
@@ -235,7 +235,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.novoPagamento.valor).toBe(500);
     });
 
-    it('should not switch when pagamentos exist', () => {
+    it('não deve switch when pagamentos exist', () => {
       component.pagamentos = mockPagamentos as any;
       component.novoPagamento.tipo = TipoPagamento.SINAL;
 
@@ -246,7 +246,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('closePagamentoModal', () => {
-    it('should close modal', () => {
+    it('deve fechar modal', () => {
       component.showPagamentoModal = true;
 
       component.closePagamentoModal();
@@ -267,7 +267,7 @@ describe('ReservaDetailComponent', () => {
       };
     });
 
-    it('should save pagamento successfully', () => {
+    it('deve save pagamento successfully', () => {
       pagamentoService.create.mockReturnValue(of({} as any));
       reservaService.getById.mockReturnValue(of(mockReserva as any));
       pagamentoService.getByReservaId.mockReturnValue(of(mockPagamentos as any));
@@ -278,7 +278,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.showPagamentoModal).toBe(false);
     });
 
-    it('should handle error when saving pagamento', () => {
+    it('deve tratar erro when saving pagamento', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       pagamentoService.create.mockReturnValue(throwError(() => ({ error: { message: 'Erro' } })));
 
@@ -289,7 +289,7 @@ describe('ReservaDetailComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should not save if validation fails', () => {
+    it('não deve save if validation fails', () => {
       component.novoPagamento.valor = 0;
 
       component.salvarPagamento();
@@ -299,7 +299,7 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('validarPagamento', () => {
-    it('should validate successfully', () => {
+    it('deve validar successfully', () => {
       component.novoPagamento = {
         valor: 500,
         tipo: TipoPagamento.SINAL,
@@ -311,7 +311,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.validarPagamento()).toBe(true);
     });
 
-    it('should fail if valor is zero', () => {
+    it('deve fail if valor is zero', () => {
       component.novoPagamento = {
         valor: 0,
         tipo: TipoPagamento.SINAL,
@@ -324,7 +324,7 @@ describe('ReservaDetailComponent', () => {
       expect(component.error).toBe('Valor deve ser maior que zero');
     });
 
-    it('should fail if formaPagamento is empty', () => {
+    it('deve fail if formaPagamento is empty', () => {
       component.novoPagamento = {
         valor: 500,
         tipo: TipoPagamento.SINAL,
@@ -344,7 +344,7 @@ describe('ReservaDetailComponent', () => {
       global.confirm = jest.fn(() => true);
     });
 
-    it('should delete pagamento when confirmed', () => {
+    it('deve delete pagamento when confirmed', () => {
       pagamentoService.delete.mockReturnValue(of({} as any));
       reservaService.getById.mockReturnValue(of(mockReserva as any));
       pagamentoService.getByReservaId.mockReturnValue(of(mockPagamentos as any));
@@ -354,7 +354,7 @@ describe('ReservaDetailComponent', () => {
       expect(pagamentoService.delete).toHaveBeenCalledWith(1);
     });
 
-    it('should handle error when deleting', () => {
+    it('deve tratar erro when deleting', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       pagamentoService.delete.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -364,7 +364,7 @@ describe('ReservaDetailComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should not delete if not confirmed', () => {
+    it('não deve delete if not confirmed', () => {
       global.confirm = jest.fn(() => false);
 
       component.excluirPagamento(1);
@@ -379,7 +379,7 @@ describe('ReservaDetailComponent', () => {
       global.confirm = jest.fn(() => true);
     });
 
-    it('should update status when confirmed', () => {
+    it('deve atualizar status when confirmed', () => {
       reservaService.updateStatus.mockReturnValue(of({} as any));
       reservaService.getById.mockReturnValue(of(mockReserva as any));
 
@@ -388,7 +388,7 @@ describe('ReservaDetailComponent', () => {
       expect(reservaService.updateStatus).toHaveBeenCalledWith(1, StatusReserva.QUITADA);
     });
 
-    it('should handle error when updating status', () => {
+    it('deve tratar erro when updating status', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       reservaService.updateStatus.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -398,7 +398,7 @@ describe('ReservaDetailComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should not update if not confirmed', () => {
+    it('não deve update if not confirmed', () => {
       global.confirm = jest.fn(() => false);
 
       component.updateStatus(StatusReserva.QUITADA);
@@ -408,39 +408,39 @@ describe('ReservaDetailComponent', () => {
   });
 
   describe('helper methods', () => {
-    it('should return correct status class', () => {
+    it('deve retornar corretamente status class', () => {
       expect(component.getStatusClass(StatusReserva.CONFIRMADA)).toBe('status-confirmada');
     });
 
-    it('should return correct status icon', () => {
+    it('deve retornar corretamente status icon', () => {
       expect(component.getStatusIcon(StatusReserva.CONFIRMADA)).toBe('✅');
     });
 
-    it('should return correct tipo pagamento icon', () => {
+    it('deve retornar corretamente tipo pagamento icon', () => {
       expect(component.getTipoPagamentoIcon(TipoPagamento.SINAL)).toBe('💰');
     });
 
-    it('should calculate total pago', () => {
+    it('deve calcular total pago', () => {
       component.pagamentos = mockPagamentos as any;
 
       expect(component.getTotalPago()).toBe(500);
     });
 
-    it('should calculate saldo pendente', () => {
+    it('deve calcular saldo pendente', () => {
       component.reserva = mockReserva as any;
       component.pagamentos = mockPagamentos as any;
 
       expect(component.getSaldoPendente()).toBe(500);
     });
 
-    it('should check if pagamento is quitado', () => {
+    it('deve check if pagamento is quitado', () => {
       component.reserva = mockReserva as any;
       component.pagamentos = mockPagamentos as any;
 
       expect(component.isPagamentoQuitado()).toBe(false);
     });
 
-    it('should return correct data class for past date', () => {
+    it('deve retornar corretamente data class for past date', () => {
       expect(component.getDataClass('2020-01-01')).toBe('data-passada');
     });
   });

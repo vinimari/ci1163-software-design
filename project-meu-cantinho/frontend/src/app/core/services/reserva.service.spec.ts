@@ -43,12 +43,12 @@ describe('ReservaService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('deve ser created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getAll', () => {
-    it('should fetch all reservas', () => {
+    it('deve fetch all reservas', () => {
       const mockReservas = [mockReservaResponse];
 
       service.getAll().subscribe(reservas => {
@@ -61,7 +61,7 @@ describe('ReservaService', () => {
       req.flush(mockReservas);
     });
 
-    it('should return empty array when no reservas', () => {
+    it('deve retornar empty array when no reservas', () => {
       service.getAll().subscribe(reservas => {
         expect(reservas).toEqual([]);
         expect(reservas.length).toBe(0);
@@ -73,7 +73,7 @@ describe('ReservaService', () => {
   });
 
   describe('getById', () => {
-    it('should fetch reserva by id', () => {
+    it('deve fetch reserva by id', () => {
       const id = 1;
 
       service.getById(id).subscribe(reserva => {
@@ -86,7 +86,7 @@ describe('ReservaService', () => {
       req.flush(mockReservaResponse);
     });
 
-    it('should handle error when reserva not found', () => {
+    it('deve tratar erro when reserva not found', () => {
       const id = 999;
 
       service.getById(id).subscribe(
@@ -102,7 +102,7 @@ describe('ReservaService', () => {
   });
 
   describe('getByUsuarioId', () => {
-    it('should fetch reservas by usuario id', () => {
+    it('deve fetch reservas by usuario id', () => {
       const usuarioId = 1;
       const mockReservas = [mockReservaResponse];
 
@@ -116,7 +116,7 @@ describe('ReservaService', () => {
       req.flush(mockReservas);
     });
 
-    it('should return empty array when no reservas for usuario', () => {
+    it('deve retornar empty array when no reservas for usuario', () => {
       const usuarioId = 999;
 
       service.getByUsuarioId(usuarioId).subscribe(reservas => {
@@ -129,7 +129,7 @@ describe('ReservaService', () => {
   });
 
   describe('getByEspacoId', () => {
-    it('should fetch reservas by espaco id', () => {
+    it('deve fetch reservas by espaco id', () => {
       const espacoId = 1;
       const mockReservas = [mockReservaResponse];
 
@@ -143,7 +143,7 @@ describe('ReservaService', () => {
       req.flush(mockReservas);
     });
 
-    it('should return empty array when no reservas for espaco', () => {
+    it('deve retornar empty array when no reservas for espaco', () => {
       const espacoId = 999;
 
       service.getByEspacoId(espacoId).subscribe(reservas => {
@@ -156,7 +156,7 @@ describe('ReservaService', () => {
   });
 
   describe('create', () => {
-    it('should create a new reserva', () => {
+    it('deve criar a new reserva', () => {
       service.create(mockReservaRequest).subscribe(reserva => {
         expect(reserva).toEqual(mockReservaResponse);
         expect(reserva.valorTotal).toBe(mockReservaRequest.valorTotal);
@@ -168,7 +168,7 @@ describe('ReservaService', () => {
       req.flush(mockReservaResponse);
     });
 
-    it('should handle validation errors', () => {
+    it('deve handle validation errors', () => {
       service.create(mockReservaRequest).subscribe(
         () => fail('should have failed'),
         error => {
@@ -182,7 +182,7 @@ describe('ReservaService', () => {
   });
 
   describe('update', () => {
-    it('should update an existing reserva', () => {
+    it('deve atualizar an existing reserva', () => {
       const id = 1;
       const updatedReserva = { ...mockReservaResponse, valorTotal: 600.00 };
 
@@ -196,7 +196,7 @@ describe('ReservaService', () => {
       req.flush(updatedReserva);
     });
 
-    it('should handle error when updating non-existent reserva', () => {
+    it('deve tratar erro when updating non-existent reserva', () => {
       const id = 999;
 
       service.update(id, mockReservaRequest).subscribe(
@@ -212,7 +212,7 @@ describe('ReservaService', () => {
   });
 
   describe('updateStatus', () => {
-    it('should update reserva status', () => {
+    it('deve atualizar reserva status', () => {
       const id = 1;
       const newStatus = StatusReserva.CANCELADA;
       const updatedReserva = { ...mockReservaResponse, status: newStatus };
@@ -227,7 +227,7 @@ describe('ReservaService', () => {
       req.flush(updatedReserva);
     });
 
-    it('should handle error when updating status of non-existent reserva', () => {
+    it('deve tratar erro when updating status of non-existent reserva', () => {
       const id = 999;
       const newStatus = StatusReserva.CANCELADA;
 
@@ -244,7 +244,7 @@ describe('ReservaService', () => {
   });
 
   describe('delete', () => {
-    it('should delete a reserva', () => {
+    it('deve delete a reserva', () => {
       const id = 1;
 
       service.delete(id).subscribe(response => {
@@ -256,7 +256,7 @@ describe('ReservaService', () => {
       req.flush(null);
     });
 
-    it('should handle error when deleting non-existent reserva', () => {
+    it('deve tratar erro when deleting non-existent reserva', () => {
       const id = 999;
 
       service.delete(id).subscribe(

@@ -134,25 +134,25 @@ describe('ReservaFormComponent', () => {
     espacoService.getAll.mockReturnValue(of(mockEspacos));
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
-    it('should initialize with user permissions', () => {
+    it('deve inicializar with user permissions', () => {
       component.ngOnInit();
 
       expect(component.isCliente).toBe(true);
       expect(component.reserva.usuarioId).toBe(1);
     });
 
-    it('should load espacos on init', () => {
+    it('deve carregar espacos on init', () => {
       component.ngOnInit();
 
       expect(espacoService.getAll).toHaveBeenCalled();
     });
 
-    it('should set espacoId from query params', () => {
+    it('deve definir espacoId from query params', () => {
       const route = TestBed.inject(ActivatedRoute);
       (route.snapshot.queryParamMap.get as jest.Mock).mockReturnValue('2');
 
@@ -161,7 +161,7 @@ describe('ReservaFormComponent', () => {
       expect(component.reserva.espacoId).toBe(2);
     });
 
-    it('should load clientes for admin users', () => {
+    it('deve carregar clientes for admin users', () => {
       authService.isAdmin.mockReturnValue(true);
       authService.isCliente.mockReturnValue(false);
       clienteService.getAll.mockReturnValue(of(mockClientes));
@@ -173,7 +173,7 @@ describe('ReservaFormComponent', () => {
   });
 
   describe('checkUserPermissions', () => {
-    it('should redirect to login if no user', () => {
+    it('deve redirect to login if no user', () => {
       authService.getCurrentUser.mockReturnValue(null);
 
       component.checkUserPermissions();
@@ -181,7 +181,7 @@ describe('ReservaFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should set cliente usuario id automatically', () => {
+    it('deve definir cliente usuario id automatically', () => {
       component.checkUserPermissions();
 
       expect(component.reserva.usuarioId).toBe(1);
@@ -189,14 +189,14 @@ describe('ReservaFormComponent', () => {
   });
 
   describe('loadInitialData', () => {
-    it('should load espacos successfully', () => {
+    it('deve carregar espacos successfully', () => {
       component.loadInitialData();
 
       expect(component.loading).toBe(false);
       expect(component.espacos.length).toBe(2);
     });
 
-    it('should handle error when loading espacos', () => {
+    it('deve tratar erro when loading espacos', () => {
       espacoService.getAll.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadInitialData();
@@ -204,7 +204,7 @@ describe('ReservaFormComponent', () => {
       expect(component.error).toBe('Erro ao carregar espaços');
     });
 
-    it('should set valorTotal if espacoId is preset', () => {
+    it('deve definir valorTotal if espacoId is preset', () => {
       component.reserva.espacoId = 1;
 
       component.loadInitialData();
@@ -218,7 +218,7 @@ describe('ReservaFormComponent', () => {
       component.espacos = mockEspacos;
     });
 
-    it('should update valorTotal when espaco changes', () => {
+    it('deve atualizar valorTotal when espaco changes', () => {
       component.reserva.espacoId = 1;
 
       component.onEspacoChange();
@@ -226,7 +226,7 @@ describe('ReservaFormComponent', () => {
       expect(component.reserva.valorTotal).toBe(1000);
     });
 
-    it('should handle string espacoId', () => {
+    it('deve handle string espacoId', () => {
       component.reserva.espacoId = '2' as any;
 
       component.onEspacoChange();
@@ -250,32 +250,32 @@ describe('ReservaFormComponent', () => {
       component.formaPagamento = 'PIX';
     });
 
-    it('should validate successfully with valid data', () => {
+    it('deve validar successfully with valid data', () => {
       expect(component.validateForm()).toBe(true);
     });
 
-    it('should fail if usuarioId is missing', () => {
+    it('deve fail if usuarioId is missing', () => {
       component.reserva.usuarioId = 0;
 
       expect(component.validateForm()).toBe(false);
       expect(component.error).toBe('Selecione um cliente');
     });
 
-    it('should fail if espacoId is missing', () => {
+    it('deve fail if espacoId is missing', () => {
       component.reserva.espacoId = 0;
 
       expect(component.validateForm()).toBe(false);
       expect(component.error).toBe('Selecione um espaço');
     });
 
-    it('should fail if dataEvento is missing', () => {
+    it('deve fail if dataEvento is missing', () => {
       component.reserva.dataEvento = '';
 
       expect(component.validateForm()).toBe(false);
       expect(component.error).toBe('Selecione a data do evento');
     });
 
-    it('should fail if dataEvento is in the past', () => {
+    it('deve fail if dataEvento is in the past', () => {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       component.reserva.dataEvento = yesterday.toISOString().split('T')[0];
@@ -284,14 +284,14 @@ describe('ReservaFormComponent', () => {
       expect(component.error).toBe('A data do evento não pode ser no passado');
     });
 
-    it('should fail if valorTotal is zero', () => {
+    it('deve fail if valorTotal is zero', () => {
       component.reserva.valorTotal = 0;
 
       expect(component.validateForm()).toBe(false);
       expect(component.error).toBe('Valor total deve ser maior que zero');
     });
 
-    it('should fail if formaPagamento is missing', () => {
+    it('deve fail if formaPagamento is missing', () => {
       component.formaPagamento = '';
 
       expect(component.validateForm()).toBe(false);
@@ -315,7 +315,7 @@ describe('ReservaFormComponent', () => {
       component.isCliente = true;
     });
 
-    it('should create reserva and pagamento successfully for cliente', () => {
+    it('deve criar reserva and pagamento successfully for cliente', () => {
       const mockReserva = { ...component.reserva, id: 1, status: 'AGUARDANDO_SINAL' };
       reservaService.create.mockReturnValue(of(mockReserva as any));
       pagamentoService.create.mockReturnValue(of({} as any));
@@ -327,7 +327,7 @@ describe('ReservaFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/reservas']);
     });
 
-    it('should navigate to admin/reservas for admin users', () => {
+    it('deve navegar to admin/reservas for admin users', () => {
       component.isCliente = false;
       const mockReserva = { ...component.reserva, id: 1, status: 'AGUARDANDO_SINAL' };
       reservaService.create.mockReturnValue(of(mockReserva as any));
@@ -338,7 +338,7 @@ describe('ReservaFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/admin/reservas']);
     });
 
-    it('should calculate 50% for SINAL payment', () => {
+    it('deve calcular 50% for SINAL payment', () => {
       const mockReserva = { ...component.reserva, id: 1, status: 'AGUARDANDO_SINAL' };
       reservaService.create.mockReturnValue(of(mockReserva as any));
       pagamentoService.create.mockReturnValue(of({} as any));
@@ -351,7 +351,7 @@ describe('ReservaFormComponent', () => {
       }));
     });
 
-    it('should calculate 100% for TOTAL payment', () => {
+    it('deve calcular 100% for TOTAL payment', () => {
       component.tipoPagamento = TipoPagamento.TOTAL;
       const mockReserva = { ...component.reserva, id: 1, status: 'AGUARDANDO_SINAL' };
       reservaService.create.mockReturnValue(of(mockReserva as any));
@@ -365,7 +365,7 @@ describe('ReservaFormComponent', () => {
       }));
     });
 
-    it('should handle error when creating reserva', () => {
+    it('deve tratar erro when creating reserva', () => {
       reservaService.create.mockReturnValue(throwError(() => ({ error: { message: 'Erro ao criar' } })));
 
       component.onSubmit();
@@ -374,7 +374,7 @@ describe('ReservaFormComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should handle error when creating pagamento', () => {
+    it('deve tratar erro when creating pagamento', () => {
       const mockReserva = { ...component.reserva, id: 1, status: 'AGUARDANDO_SINAL' };
       reservaService.create.mockReturnValue(of(mockReserva as any));
       pagamentoService.create.mockReturnValue(throwError(() => ({ error: { message: 'Erro pagamento' } })));
@@ -384,7 +384,7 @@ describe('ReservaFormComponent', () => {
       expect(component.error).toContain('Reserva criada mas erro ao registrar pagamento:');
     });
 
-    it('should not submit if validation fails', () => {
+    it('não deve submit if validation fails', () => {
       component.reserva.usuarioId = 0;
 
       component.onSubmit();
@@ -398,13 +398,13 @@ describe('ReservaFormComponent', () => {
       component.reserva.valorTotal = 1000;
     });
 
-    it('should return 50% for SINAL', () => {
+    it('deve retornar 50% for SINAL', () => {
       component.tipoPagamento = TipoPagamento.SINAL;
 
       expect(component.getValorPagamento()).toBe(500);
     });
 
-    it('should return 100% for TOTAL', () => {
+    it('deve retornar 100% for TOTAL', () => {
       component.tipoPagamento = TipoPagamento.TOTAL;
 
       expect(component.getValorPagamento()).toBe(1000);
@@ -412,7 +412,7 @@ describe('ReservaFormComponent', () => {
   });
 
   describe('cancel', () => {
-    it('should navigate to espacos for cliente', () => {
+    it('deve navegar to espacos for cliente', () => {
       component.isCliente = true;
 
       component.cancel();
@@ -420,7 +420,7 @@ describe('ReservaFormComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/espacos']);
     });
 
-    it('should navigate to admin/reservas for admin', () => {
+    it('deve navegar to admin/reservas for admin', () => {
       component.isCliente = false;
 
       component.cancel();
@@ -434,11 +434,11 @@ describe('ReservaFormComponent', () => {
       component.clientes = mockClientes;
     });
 
-    it('should return cliente nome', () => {
+    it('deve retornar cliente nome', () => {
       expect(component.getClienteNome(1)).toBe('Cliente 1');
     });
 
-    it('should return empty string for non-existent cliente', () => {
+    it('deve retornar empty string for non-existent cliente', () => {
       expect(component.getClienteNome(999)).toBe('');
     });
   });
@@ -448,7 +448,7 @@ describe('ReservaFormComponent', () => {
       component.espacos = mockEspacos;
     });
 
-    it('should return espaco info', () => {
+    it('deve retornar espaco info', () => {
       const info = component.getEspacoInfo(1);
 
       expect(info).toEqual({
@@ -459,13 +459,13 @@ describe('ReservaFormComponent', () => {
       });
     });
 
-    it('should return null for non-existent espaco', () => {
+    it('deve retornar null for non-existent espaco', () => {
       expect(component.getEspacoInfo(999)).toBeNull();
     });
   });
 
   describe('getMinDate', () => {
-    it('should return today date in YYYY-MM-DD format', () => {
+    it('deve retornar today date in YYYY-MM-DD format', () => {
       const minDate = component.getMinDate();
       const today = new Date().toISOString().split('T')[0];
 

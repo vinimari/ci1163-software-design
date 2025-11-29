@@ -15,31 +15,31 @@ describe('ButtonComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default variant as primary', () => {
+  it('deve ter default variant as primary', () => {
     expect(component.variant).toBe('primary');
   });
 
-  it('should have default size as medium', () => {
+  it('deve ter default size as medium', () => {
     expect(component.size).toBe('medium');
   });
 
-  it('should have default type as button', () => {
+  it('deve ter default type as button', () => {
     expect(component.type).toBe('button');
   });
 
-  it('should not be disabled by default', () => {
+  it('não deve be disabled by default', () => {
     expect(component.disabled).toBe(false);
   });
 
-  it('should not be full width by default', () => {
+  it('não deve be full width by default', () => {
     expect(component.fullWidth).toBe(false);
   });
 
-  it('should emit clicked event when not disabled', () => {
+  it('deve emit clicked event when not disabled', () => {
     const event = new Event('click');
     jest.spyOn(component.clicked, 'emit');
 
@@ -48,7 +48,7 @@ describe('ButtonComponent', () => {
     expect(component.clicked.emit).toHaveBeenCalledWith(event);
   });
 
-  it('should not emit clicked event when disabled', () => {
+  it('não deve emit clicked event when disabled', () => {
     const event = new Event('click');
     component.disabled = true;
     jest.spyOn(component.clicked, 'emit');
@@ -58,14 +58,14 @@ describe('ButtonComponent', () => {
     expect(component.clicked.emit).not.toHaveBeenCalled();
   });
 
-  it('should accept icon input', () => {
+  it('deve accept icon input', () => {
     component.icon = '🏠';
     fixture.detectChanges();
 
     expect(component.icon).toBe('🏠');
   });
 
-  it('should apply correct CSS classes', () => {
+  it('deve apply correct CSS classes', () => {
     component.variant = 'success';
     component.size = 'large';
     component.fullWidth = true;
@@ -78,7 +78,7 @@ describe('ButtonComponent', () => {
     expect(button.classList.contains('btn-full-width')).toBe(true);
   });
 
-  it('should render icon when provided', () => {
+  it('deve render icon when provided', () => {
     component.icon = '✨';
     fixture.detectChanges();
 
@@ -87,14 +87,14 @@ describe('ButtonComponent', () => {
     expect(icon.textContent).toBe('✨');
   });
 
-  it('should not render icon span when not provided', () => {
+  it('não deve render icon span when not provided', () => {
     fixture.detectChanges();
 
     const icon = fixture.nativeElement.querySelector('.btn-icon');
     expect(icon).toBeFalsy();
   });
 
-  it('should disable button when disabled is true', () => {
+  it('deve disable button when disabled is true', () => {
     component.disabled = true;
     fixture.detectChanges();
 

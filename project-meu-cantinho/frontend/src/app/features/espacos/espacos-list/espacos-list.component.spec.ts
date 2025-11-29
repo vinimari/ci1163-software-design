@@ -60,25 +60,25 @@ describe('EspacosListComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize with empty espacos array', () => {
+    it('deve inicializar with empty espacos array', () => {
       expect(component.espacos).toEqual([]);
     });
 
-    it('should initialize with loading false', () => {
+    it('deve inicializar with loading false', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should initialize with empty error', () => {
+    it('deve inicializar with empty error', () => {
       expect(component.error).toBe('');
     });
   });
 
   describe('ngOnInit', () => {
-    it('should call loadEspacos on initialization', () => {
+    it('deve call loadEspacos on initialization', () => {
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
       const loadSpy = jest.spyOn(component, 'loadEspacos');
 
@@ -87,7 +87,7 @@ describe('EspacosListComponent', () => {
       expect(loadSpy).toHaveBeenCalled();
     });
 
-    it('should load espacos on initialization', () => {
+    it('deve carregar espacos on initialization', () => {
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
       fixture.detectChanges();
@@ -98,7 +98,7 @@ describe('EspacosListComponent', () => {
   });
 
   describe('loadEspacos', () => {
-    it('should clear error when loading', () => {
+    it('deve clear error when loading', () => {
       component.error = 'Previous error';
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
@@ -107,7 +107,7 @@ describe('EspacosListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should load espacos successfully', () => {
+    it('deve carregar espacos successfully', () => {
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
       component.loadEspacos();
@@ -117,7 +117,7 @@ describe('EspacosListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should call espacoService.getAtivos', () => {
+    it('deve call espacoService.getAtivos', () => {
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
       component.loadEspacos();
@@ -125,7 +125,7 @@ describe('EspacosListComponent', () => {
       expect(espacoService.getAtivos).toHaveBeenCalled();
     });
 
-    it('should set loading to false after success', () => {
+    it('deve definir loading to false after success', () => {
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
       component.loadEspacos();
@@ -133,7 +133,7 @@ describe('EspacosListComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should handle empty espacos list', () => {
+    it('deve handle empty espacos list', () => {
       espacoService.getAtivos.mockReturnValue(of([]));
 
       component.loadEspacos();
@@ -143,7 +143,7 @@ describe('EspacosListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should handle error when loading fails', () => {
+    it('deve tratar erro when loading fails', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
       espacoService.getAtivos.mockReturnValue(throwError(() => error));
@@ -157,7 +157,7 @@ describe('EspacosListComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should set loading to false after error', () => {
+    it('deve definir loading to false after error', () => {
       espacoService.getAtivos.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadEspacos();
@@ -165,7 +165,7 @@ describe('EspacosListComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should set error message on failure', () => {
+    it('deve definir error message on failure', () => {
       espacoService.getAtivos.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadEspacos();
@@ -173,7 +173,7 @@ describe('EspacosListComponent', () => {
       expect(component.error).toBe('Erro ao carregar espaços.');
     });
 
-    it('should not modify espacos on error', () => {
+    it('não deve modify espacos on error', () => {
       component.espacos = mockEspacos;
       espacoService.getAtivos.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -184,7 +184,7 @@ describe('EspacosListComponent', () => {
   });
 
   describe('Integration', () => {
-    it('should load espacos on initialization', () => {
+    it('deve carregar espacos on initialization', () => {
       espacoService.getAtivos.mockReturnValue(of(mockEspacos));
 
       fixture.detectChanges();
@@ -194,7 +194,7 @@ describe('EspacosListComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should handle error on initialization', () => {
+    it('deve tratar erro on initialization', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       espacoService.getAtivos.mockReturnValue(throwError(() => new Error('Failed')));
 

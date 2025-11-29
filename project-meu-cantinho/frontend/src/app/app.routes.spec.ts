@@ -45,19 +45,19 @@ describe('App Routes', () => {
   });
 
   describe('Public Routes', () => {
-    it('should have login route', () => {
+    it('deve ter login route', () => {
       const route = routes.find(r => r.path === 'login');
       expect(route).toBeDefined();
       expect(route?.component?.name).toBe('LoginComponent');
     });
 
-    it('should have unauthorized route', () => {
+    it('deve ter unauthorized route', () => {
       const route = routes.find(r => r.path === 'unauthorized');
       expect(route).toBeDefined();
       expect(route?.component?.name).toBe('UnauthorizedComponent');
     });
 
-    it('should redirect unknown routes to home', () => {
+    it('deve redirect unknown routes to home', () => {
       const route = routes.find(r => r.path === '**');
       expect(route).toBeDefined();
       expect(route?.redirectTo).toBe('');
@@ -65,7 +65,7 @@ describe('App Routes', () => {
   });
 
   describe('Protected Routes', () => {
-    it('should have layout component with auth guard', () => {
+    it('deve ter layout component with auth guard', () => {
       const route = routes.find(r => r.path === '' && r.component);
       expect(route).toBeDefined();
       expect(route?.component?.name).toBe('LayoutComponent');
@@ -73,21 +73,21 @@ describe('App Routes', () => {
       expect(route?.canActivate?.length).toBeGreaterThan(0);
     });
 
-    it('should have home route as child of layout', () => {
+    it('deve ter home route as child of layout', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const homeRoute = layoutRoute?.children?.find(r => r.path === '');
       expect(homeRoute).toBeDefined();
       expect(homeRoute?.component?.name).toBe('HomeComponent');
     });
 
-    it('should have espacos route with lazy loading', () => {
+    it('deve ter espacos route with lazy loading', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const espacosRoute = layoutRoute?.children?.find(r => r.path === 'espacos');
       expect(espacosRoute).toBeDefined();
       expect(espacosRoute?.loadChildren).toBeDefined();
     });
 
-    it('should have reservas route with role guard for CLIENTE', () => {
+    it('deve ter reservas route with role guard for CLIENTE', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const reservasRoute = layoutRoute?.children?.find(r => r.path === 'reservas');
       expect(reservasRoute).toBeDefined();
@@ -97,7 +97,7 @@ describe('App Routes', () => {
   });
 
   describe('Admin Routes', () => {
-    it('should have admin route with role guard', () => {
+    it('deve ter admin route with role guard', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const adminRoute = layoutRoute?.children?.find(r => r.path === 'admin');
       expect(adminRoute).toBeDefined();
@@ -107,7 +107,7 @@ describe('App Routes', () => {
   });
 
   describe('Funcionario Routes', () => {
-    it('should have funcionario route with role guard', () => {
+    it('deve ter funcionario route with role guard', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const funcRoute = layoutRoute?.children?.find(r => r.path === 'funcionario');
       expect(funcRoute).toBeDefined();
@@ -115,7 +115,7 @@ describe('App Routes', () => {
       expect(funcRoute?.children).toBeDefined();
     });
 
-    it('should have espacos as child of funcionario route', () => {
+    it('deve ter espacos as child of funcionario route', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const funcRoute = layoutRoute?.children?.find(r => r.path === 'funcionario');
       const espacosRoute = funcRoute?.children?.find(r => r.path === 'espacos');
@@ -123,7 +123,7 @@ describe('App Routes', () => {
       expect(espacosRoute?.loadComponent).toBeDefined();
     });
 
-    it('should have clientes as child of funcionario route', () => {
+    it('deve ter clientes as child of funcionario route', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const funcRoute = layoutRoute?.children?.find(r => r.path === 'funcionario');
       const clientesRoute = funcRoute?.children?.find(r => r.path === 'clientes');
@@ -131,7 +131,7 @@ describe('App Routes', () => {
       expect(clientesRoute?.loadComponent).toBeDefined();
     });
 
-    it('should have reservas as child of funcionario route', () => {
+    it('deve ter reservas as child of funcionario route', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const funcRoute = layoutRoute?.children?.find(r => r.path === 'funcionario');
       const reservasRoute = funcRoute?.children?.find(r => r.path === 'reservas');
@@ -139,7 +139,7 @@ describe('App Routes', () => {
       expect(reservasRoute?.loadComponent).toBeDefined();
     });
 
-    it('should have reservas as child of funcionario route', () => {
+    it('deve ter reservas as child of funcionario route', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const funcRoute = layoutRoute?.children?.find(r => r.path === 'funcionario');
       const reservasRoute = funcRoute?.children?.find(r => r.path === 'reservas');
@@ -149,11 +149,11 @@ describe('App Routes', () => {
   });
 
   describe('Route Structure', () => {
-    it('should have correct number of top-level routes', () => {
+    it('deve ter correct number of top-level routes', () => {
       expect(routes.length).toBe(4);
     });
 
-    it('should have layout route with children', () => {
+    it('deve ter layout route with children', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       expect(layoutRoute?.children).toBeDefined();
       expect(layoutRoute?.children?.length).toBeGreaterThan(0);

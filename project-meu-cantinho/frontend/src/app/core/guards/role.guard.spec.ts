@@ -30,7 +30,7 @@ describe('roleGuard', () => {
     router = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
-  it('should allow access when user has required role', () => {
+  it('deve allow access when user has required role', () => {
     authService.getCurrentUser.mockReturnValue({
       id: 1,
       nome: 'Admin',
@@ -49,7 +49,7 @@ describe('roleGuard', () => {
     expect(authService.getCurrentUser).toHaveBeenCalled();
   });
 
-  it('should redirect to unauthorized when user does not have required role', () => {
+  it('deve redirect to unauthorized when user does not have required role', () => {
     authService.getCurrentUser.mockReturnValue({
       id: 1,
       nome: 'Cliente',
@@ -70,7 +70,7 @@ describe('roleGuard', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/unauthorized']);
   });
 
-  it('should work with multiple roles', () => {
+  it('deve work with multiple roles', () => {
     authService.getCurrentUser.mockReturnValue({
       id: 1,
       nome: 'Funcionario',
@@ -89,7 +89,7 @@ describe('roleGuard', () => {
     expect(authService.getCurrentUser).toHaveBeenCalled();
   });
 
-  it('should redirect to login when user is not logged in', () => {
+  it('deve redirect to login when user is not logged in', () => {
     authService.getCurrentUser.mockReturnValue(null);
     router.navigate.mockReturnValue(Promise.resolve(true));
     const guard = roleGuard([PerfilUsuario.ADMIN]);

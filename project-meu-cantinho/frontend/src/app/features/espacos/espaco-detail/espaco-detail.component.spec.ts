@@ -54,25 +54,25 @@ describe('EspacoDetailComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize with null espaco', () => {
+    it('deve inicializar with null espaco', () => {
       expect(component.espaco).toBeNull();
     });
 
-    it('should initialize with loading false', () => {
+    it('deve inicializar with loading false', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should initialize with empty error', () => {
+    it('deve inicializar with empty error', () => {
       expect(component.error).toBe('');
     });
   });
 
   describe('ngOnInit', () => {
-    it('should load espaco when id is present in route', () => {
+    it('deve carregar espaco when id is present in route', () => {
       activatedRoute.snapshot.paramMap.get.mockReturnValue('1');
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
@@ -82,7 +82,7 @@ describe('EspacoDetailComponent', () => {
       expect(espacoService.getById).toHaveBeenCalledWith(1);
     });
 
-    it('should not load espaco when id is not present', () => {
+    it('não deve load espaco when id is not present', () => {
       activatedRoute.snapshot.paramMap.get.mockReturnValue(null);
 
       fixture.detectChanges();
@@ -90,7 +90,7 @@ describe('EspacoDetailComponent', () => {
       expect(espacoService.getById).not.toHaveBeenCalled();
     });
 
-    it('should convert string id to number', () => {
+    it('deve convert string id to number', () => {
       activatedRoute.snapshot.paramMap.get.mockReturnValue('42');
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
@@ -101,7 +101,7 @@ describe('EspacoDetailComponent', () => {
   });
 
   describe('loadEspaco', () => {
-    it('should set loading to true when loading', () => {
+    it('deve definir loading to true when loading', () => {
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
       component.loadEspaco(1);
@@ -109,7 +109,7 @@ describe('EspacoDetailComponent', () => {
       expect(component.loading).toBe(false); // já completou sincronamente
     });
 
-    it('should clear error when loading', () => {
+    it('deve clear error when loading', () => {
       component.error = 'Previous error';
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
@@ -118,7 +118,7 @@ describe('EspacoDetailComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should load espaco successfully', () => {
+    it('deve carregar espaco successfully', () => {
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
       component.loadEspaco(1);
@@ -128,7 +128,7 @@ describe('EspacoDetailComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should call espacoService.getById with correct id', () => {
+    it('deve call espacoService.getById with correct id', () => {
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
       component.loadEspaco(123);
@@ -136,7 +136,7 @@ describe('EspacoDetailComponent', () => {
       expect(espacoService.getById).toHaveBeenCalledWith(123);
     });
 
-    it('should handle error when loading fails', () => {
+    it('deve tratar erro when loading fails', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       const error = new Error('Network error');
       espacoService.getById.mockReturnValue(throwError(() => error));
@@ -150,7 +150,7 @@ describe('EspacoDetailComponent', () => {
       consoleError.mockRestore();
     });
 
-    it('should set loading to false after error', () => {
+    it('deve definir loading to false after error', () => {
       espacoService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadEspaco(1);
@@ -158,7 +158,7 @@ describe('EspacoDetailComponent', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should set error message on failure', () => {
+    it('deve definir error message on failure', () => {
       espacoService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
       component.loadEspaco(1);
@@ -168,7 +168,7 @@ describe('EspacoDetailComponent', () => {
   });
 
   describe('Integration', () => {
-    it('should load espaco on initialization with valid id', () => {
+    it('deve carregar espaco on initialization with valid id', () => {
       activatedRoute.snapshot.paramMap.get.mockReturnValue('1');
       espacoService.getById.mockReturnValue(of(mockEspaco));
 
@@ -179,7 +179,7 @@ describe('EspacoDetailComponent', () => {
       expect(component.error).toBe('');
     });
 
-    it('should handle error on initialization', () => {
+    it('deve tratar erro on initialization', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
       activatedRoute.snapshot.paramMap.get.mockReturnValue('999');
       espacoService.getById.mockReturnValue(throwError(() => new Error('Not found')));

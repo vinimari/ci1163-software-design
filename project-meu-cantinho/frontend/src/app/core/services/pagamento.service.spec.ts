@@ -38,12 +38,12 @@ describe('PagamentoService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('deve ser created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getAll', () => {
-    it('should fetch all pagamentos', () => {
+    it('deve fetch all pagamentos', () => {
       const mockPagamentos = [mockPagamentoResponse];
 
       service.getAll().subscribe(pagamentos => {
@@ -56,7 +56,7 @@ describe('PagamentoService', () => {
       req.flush(mockPagamentos);
     });
 
-    it('should return empty array when no pagamentos', () => {
+    it('deve retornar empty array when no pagamentos', () => {
       service.getAll().subscribe(pagamentos => {
         expect(pagamentos).toEqual([]);
         expect(pagamentos.length).toBe(0);
@@ -68,7 +68,7 @@ describe('PagamentoService', () => {
   });
 
   describe('getById', () => {
-    it('should fetch pagamento by id', () => {
+    it('deve fetch pagamento by id', () => {
       const id = 1;
 
       service.getById(id).subscribe(pagamento => {
@@ -81,7 +81,7 @@ describe('PagamentoService', () => {
       req.flush(mockPagamentoResponse);
     });
 
-    it('should handle error when pagamento not found', () => {
+    it('deve tratar erro when pagamento not found', () => {
       const id = 999;
 
       service.getById(id).subscribe(
@@ -97,7 +97,7 @@ describe('PagamentoService', () => {
   });
 
   describe('getByReservaId', () => {
-    it('should fetch pagamentos by reserva id', () => {
+    it('deve fetch pagamentos by reserva id', () => {
       const reservaId = 1;
       const mockPagamentos = [mockPagamentoResponse];
 
@@ -111,7 +111,7 @@ describe('PagamentoService', () => {
       req.flush(mockPagamentos);
     });
 
-    it('should return empty array when no pagamentos for reserva', () => {
+    it('deve retornar empty array when no pagamentos for reserva', () => {
       const reservaId = 999;
 
       service.getByReservaId(reservaId).subscribe(pagamentos => {
@@ -124,7 +124,7 @@ describe('PagamentoService', () => {
   });
 
   describe('create', () => {
-    it('should create a new pagamento', () => {
+    it('deve criar a new pagamento', () => {
       service.create(mockPagamentoRequest).subscribe(pagamento => {
         expect(pagamento).toEqual(mockPagamentoResponse);
         expect(pagamento.valor).toBe(mockPagamentoRequest.valor);
@@ -136,7 +136,7 @@ describe('PagamentoService', () => {
       req.flush(mockPagamentoResponse);
     });
 
-    it('should handle validation errors', () => {
+    it('deve handle validation errors', () => {
       service.create(mockPagamentoRequest).subscribe(
         () => fail('should have failed'),
         error => {
@@ -150,7 +150,7 @@ describe('PagamentoService', () => {
   });
 
   describe('update', () => {
-    it('should update an existing pagamento', () => {
+    it('deve atualizar an existing pagamento', () => {
       const id = 1;
       const updatedPagamento = { ...mockPagamentoResponse, valor: 600.00 };
 
@@ -164,7 +164,7 @@ describe('PagamentoService', () => {
       req.flush(updatedPagamento);
     });
 
-    it('should handle error when updating non-existent pagamento', () => {
+    it('deve tratar erro when updating non-existent pagamento', () => {
       const id = 999;
 
       service.update(id, mockPagamentoRequest).subscribe(
@@ -180,7 +180,7 @@ describe('PagamentoService', () => {
   });
 
   describe('delete', () => {
-    it('should delete a pagamento', () => {
+    it('deve delete a pagamento', () => {
       const id = 1;
 
       service.delete(id).subscribe(response => {
@@ -192,7 +192,7 @@ describe('PagamentoService', () => {
       req.flush(null);
     });
 
-    it('should handle error when deleting non-existent pagamento', () => {
+    it('deve tratar erro when deleting non-existent pagamento', () => {
       const id = 999;
 
       service.delete(id).subscribe(

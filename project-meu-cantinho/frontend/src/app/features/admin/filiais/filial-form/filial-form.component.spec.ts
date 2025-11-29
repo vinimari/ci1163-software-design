@@ -60,11 +60,11 @@ describe('FilialFormComponent', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
   });
 
-  it('should create', () => {
+  it('deve criar', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form with empty values in create mode', () => {
+  it('deve inicializar form with empty values in create mode', () => {
     fixture.detectChanges();
     expect(component.isEditMode).toBe(false);
     expect(component.filialForm.value).toEqual({
@@ -76,7 +76,7 @@ describe('FilialFormComponent', () => {
     });
   });
 
-  it('should load filial in edit mode', () => {
+  it('deve carregar filial in edit mode', () => {
     activatedRoute.snapshot.paramMap.get.mockReturnValue('1');
     fixture.detectChanges();
 
@@ -85,7 +85,7 @@ describe('FilialFormComponent', () => {
     expect(filialService.getById).toHaveBeenCalledWith(1);
   });
 
-  it('should patch form values when loading filial', () => {
+  it('deve patch form values when loading filial', () => {
     component.loadFilial(1);
 
     expect(component.filialForm.value).toEqual({
@@ -98,7 +98,7 @@ describe('FilialFormComponent', () => {
     expect(component.loading).toBe(false);
   });
 
-  it('should handle error when loading filial fails', () => {
+  it('deve tratar erro when loading filial fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     filialService.getById.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -109,7 +109,7 @@ describe('FilialFormComponent', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should validate required fields', () => {
+  it('deve validar required fields', () => {
     expect(component.filialForm.valid).toBe(false);
 
     component.filialForm.patchValue({
@@ -121,7 +121,7 @@ describe('FilialFormComponent', () => {
     expect(component.filialForm.valid).toBe(true);
   });
 
-  it('should validate nome minLength', () => {
+  it('deve validar nome minLength', () => {
     const nomeControl = component.filialForm.get('nome');
     nomeControl?.setValue('AB');
     expect(nomeControl?.hasError('minlength')).toBe(true);
@@ -130,7 +130,7 @@ describe('FilialFormComponent', () => {
     expect(nomeControl?.hasError('minlength')).toBe(false);
   });
 
-  it('should validate estado length', () => {
+  it('deve validar estado length', () => {
     const estadoControl = component.filialForm.get('estado');
     estadoControl?.setValue('S');
     expect(estadoControl?.valid).toBe(false);
@@ -142,7 +142,7 @@ describe('FilialFormComponent', () => {
     expect(estadoControl?.valid).toBe(false);
   });
 
-  it('should validate telefone pattern', () => {
+  it('deve validar telefone pattern', () => {
     const telefoneControl = component.filialForm.get('telefone');
     telefoneControl?.setValue('123456789');
     expect(telefoneControl?.hasError('pattern')).toBe(true);
@@ -154,7 +154,7 @@ describe('FilialFormComponent', () => {
     expect(telefoneControl?.hasError('pattern')).toBe(false);
   });
 
-  it('should create filial when form is valid in create mode', () => {
+  it('deve criar filial when form is valid in create mode', () => {
     component.filialForm.patchValue({
       nome: 'Nova Filial',
       cidade: 'Rio de Janeiro',
@@ -177,7 +177,7 @@ describe('FilialFormComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais']);
   });
 
-  it('should update filial when form is valid in edit mode', () => {
+  it('deve atualizar filial when form is valid in edit mode', () => {
     component.isEditMode = true;
     component.filialId = 1;
     component.filialForm.patchValue({
@@ -202,7 +202,7 @@ describe('FilialFormComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais']);
   });
 
-  it('should not submit when form is invalid', () => {
+  it('não deve submit when form is invalid', () => {
     component.onSubmit();
 
     expect(filialService.create).not.toHaveBeenCalled();
@@ -210,7 +210,7 @@ describe('FilialFormComponent', () => {
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
-  it('should mark all fields as touched when submitting invalid form', () => {
+  it('deve mark all fields as touched when submitting invalid form', () => {
     component.onSubmit();
 
     expect(component.filialForm.get('nome')?.touched).toBe(true);
@@ -218,7 +218,7 @@ describe('FilialFormComponent', () => {
     expect(component.filialForm.get('estado')?.touched).toBe(true);
   });
 
-  it('should handle error when create fails', () => {
+  it('deve tratar erro when create fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     filialService.create.mockReturnValue(throwError(() => new Error('Error')));
 
@@ -235,7 +235,7 @@ describe('FilialFormComponent', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should handle error when update fails', () => {
+  it('deve tratar erro when update fails', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     component.isEditMode = true;
     component.filialId = 1;
@@ -254,28 +254,28 @@ describe('FilialFormComponent', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should navigate back when cancel is called', () => {
+  it('deve navegar back when cancel is called', () => {
     component.cancel();
     expect(router.navigate).toHaveBeenCalledWith(['/admin/filiais']);
   });
 
-  it('should have nome getter', () => {
+  it('deve ter nome getter', () => {
     expect(component.nome).toBe(component.filialForm.get('nome'));
   });
 
-  it('should have cidade getter', () => {
+  it('deve ter cidade getter', () => {
     expect(component.cidade).toBe(component.filialForm.get('cidade'));
   });
 
-  it('should have estado getter', () => {
+  it('deve ter estado getter', () => {
     expect(component.estado).toBe(component.filialForm.get('estado'));
   });
 
-  it('should have telefone getter', () => {
+  it('deve ter telefone getter', () => {
     expect(component.telefone).toBe(component.filialForm.get('telefone'));
   });
 
-  it('should display error message when error is set', () => {
+  it('deve display error message when error is set', () => {
     component.error = 'Test error';
     fixture.detectChanges();
 
@@ -284,7 +284,7 @@ describe('FilialFormComponent', () => {
     expect(errorElement.textContent).toContain('Test error');
   });
 
-  it('should show correct title in edit mode', () => {
+  it('deve show correct title in edit mode', () => {
     component.isEditMode = true;
     fixture.detectChanges();
 
@@ -292,7 +292,7 @@ describe('FilialFormComponent', () => {
     expect(title.textContent).toContain('Editar Filial');
   });
 
-  it('should show correct title in create mode', () => {
+  it('deve show correct title in create mode', () => {
     component.isEditMode = false;
     fixture.detectChanges();
 
@@ -300,7 +300,7 @@ describe('FilialFormComponent', () => {
     expect(title.textContent).toContain('Nova Filial');
   });
 
-  it('should not enter edit mode when id is "new"', () => {
+  it('não deve enter edit mode when id is "new"', () => {
     activatedRoute.snapshot.paramMap.get.mockReturnValue('new');
     const newFixture = TestBed.createComponent(FilialFormComponent);
     const newComponent = newFixture.componentInstance;

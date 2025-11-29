@@ -31,7 +31,7 @@ describe('authInterceptor', () => {
     httpMock.verify();
   });
 
-  it('should add Authorization header when token exists', () => {
+  it('deve add Authorization header when token exists', () => {
     const token = 'test-token-123';
     authService.getToken.mockReturnValue(token);
 
@@ -43,7 +43,7 @@ describe('authInterceptor', () => {
     req.flush({});
   });
 
-  it('should not add Authorization header when token does not exist', () => {
+  it('não deve add Authorization header when token does not exist', () => {
     authService.getToken.mockReturnValue(null);
 
     httpClient.get('/api/test').subscribe();
@@ -53,7 +53,7 @@ describe('authInterceptor', () => {
     req.flush({});
   });
 
-  it('should not modify existing headers', () => {
+  it('não deve modify existing headers', () => {
     const token = 'test-token-123';
     authService.getToken.mockReturnValue(token);
 

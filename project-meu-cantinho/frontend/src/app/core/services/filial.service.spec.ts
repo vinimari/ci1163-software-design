@@ -40,12 +40,12 @@ describe('FilialService', () => {
     httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('deve ser created', () => {
     expect(service).toBeTruthy();
   });
 
   describe('getAll()', () => {
-    it('should retrieve all filiais', (done) => {
+    it('deve retrieve all filiais', (done) => {
       const mockFiliais = [mockFilialResponse];
 
       service.getAll().subscribe(filiais => {
@@ -59,7 +59,7 @@ describe('FilialService', () => {
       req.flush(mockFiliais);
     });
 
-    it('should handle empty list', (done) => {
+    it('deve handle empty list', (done) => {
       service.getAll().subscribe(filiais => {
         expect(filiais).toEqual([]);
         done();
@@ -71,7 +71,7 @@ describe('FilialService', () => {
   });
 
   describe('getById()', () => {
-    it('should retrieve a single filial by id', (done) => {
+    it('deve retrieve a single filial by id', (done) => {
       const filialId = 1;
 
       service.getById(filialId).subscribe(filial => {
@@ -85,7 +85,7 @@ describe('FilialService', () => {
       req.flush(mockFilialResponse);
     });
 
-    it('should handle not found error', (done) => {
+    it('deve handle not found error', (done) => {
       const filialId = 999;
 
       service.getById(filialId).subscribe({
@@ -102,7 +102,7 @@ describe('FilialService', () => {
   });
 
   describe('create()', () => {
-    it('should create a new filial', (done) => {
+    it('deve criar a new filial', (done) => {
       service.create(mockFilialRequest).subscribe(filial => {
         expect(filial).toEqual(mockFilialResponse);
         expect(filial.nome).toBe(mockFilialRequest.nome);
@@ -115,7 +115,7 @@ describe('FilialService', () => {
       req.flush(mockFilialResponse);
     });
 
-    it('should handle validation error', (done) => {
+    it('deve handle validation error', (done) => {
       const invalidRequest = { ...mockFilialRequest, nome: '' };
 
       service.create(invalidRequest).subscribe({
@@ -132,7 +132,7 @@ describe('FilialService', () => {
   });
 
   describe('update()', () => {
-    it('should update an existing filial', (done) => {
+    it('deve atualizar an existing filial', (done) => {
       const filialId = 1;
       const updatedFilial = { ...mockFilialResponse, nome: 'Nome Atualizado' };
 
@@ -149,7 +149,7 @@ describe('FilialService', () => {
   });
 
   describe('delete()', () => {
-    it('should delete a filial', (done) => {
+    it('deve delete a filial', (done) => {
       const filialId = 1;
 
       service.delete(filialId).subscribe(response => {
@@ -162,7 +162,7 @@ describe('FilialService', () => {
       req.flush(null);
     });
 
-    it('should handle conflict when deleting filial with espacos', (done) => {
+    it('deve handle conflict when deleting filial with espacos', (done) => {
       const filialId = 1;
 
       service.delete(filialId).subscribe({

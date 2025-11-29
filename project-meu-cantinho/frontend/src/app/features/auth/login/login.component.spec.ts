@@ -39,59 +39,59 @@ describe('LoginComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize form with empty values', () => {
+    it('deve inicializar form with empty values', () => {
       expect(component.loginForm.get('email')?.value).toBe('');
       expect(component.loginForm.get('senha')?.value).toBe('');
     });
 
-    it('should initialize loading as false', () => {
+    it('deve inicializar loading as false', () => {
       expect(component.loading).toBe(false);
     });
 
-    it('should initialize errorMessage as empty string', () => {
+    it('deve inicializar errorMessage as empty string', () => {
       expect(component.errorMessage).toBe('');
     });
   });
 
   describe('Form Validation', () => {
-    it('should mark form as invalid when empty', () => {
+    it('deve mark form as invalid when empty', () => {
       expect(component.loginForm.valid).toBe(false);
     });
 
-    it('should require email field', () => {
+    it('deve require email field', () => {
       const emailControl = component.loginForm.get('email');
       expect(emailControl?.hasError('required')).toBe(true);
     });
 
-    it('should require valid email format', () => {
+    it('deve require valid email format', () => {
       const emailControl = component.loginForm.get('email');
       emailControl?.setValue('invalid-email');
       expect(emailControl?.hasError('email')).toBe(true);
     });
 
-    it('should accept valid email', () => {
+    it('deve accept valid email', () => {
       const emailControl = component.loginForm.get('email');
       emailControl?.setValue('test@example.com');
       expect(emailControl?.hasError('email')).toBe(false);
       expect(emailControl?.valid).toBe(true);
     });
 
-    it('should require senha field', () => {
+    it('deve require senha field', () => {
       const senhaControl = component.loginForm.get('senha');
       expect(senhaControl?.hasError('required')).toBe(true);
     });
 
-    it('should accept any senha value', () => {
+    it('deve accept any senha value', () => {
       const senhaControl = component.loginForm.get('senha');
       senhaControl?.setValue('123');
       expect(senhaControl?.valid).toBe(true);
     });
 
-    it('should mark form as valid when all fields are filled correctly', () => {
+    it('deve mark form as valid when all fields are filled correctly', () => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
@@ -101,7 +101,7 @@ describe('LoginComponent', () => {
   });
 
   describe('onSubmit()', () => {
-    it('should not submit when form is invalid', () => {
+    it('não deve submit when form is invalid', () => {
       component.loginForm.patchValue({
         email: '',
         senha: ''
@@ -112,7 +112,7 @@ describe('LoginComponent', () => {
       expect(authService.login).not.toHaveBeenCalled();
     });
 
-    it('should not submit when email is invalid', () => {
+    it('não deve submit when email is invalid', () => {
       component.loginForm.patchValue({
         email: 'invalid-email',
         senha: 'password123'
@@ -123,7 +123,7 @@ describe('LoginComponent', () => {
       expect(authService.login).not.toHaveBeenCalled();
     });
 
-    it('should not submit when senha is empty', () => {
+    it('não deve submit when senha is empty', () => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: ''
@@ -134,17 +134,15 @@ describe('LoginComponent', () => {
       expect(authService.login).not.toHaveBeenCalled();
     });
 
-    it('should set loading to true when submitting', fakeAsync(() => {
+    it('deve definir loading to true when submitting', fakeAsync(() => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
       });
 
-      // Mock the role check methods
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
 
-      // Use delay to make observable async
       authService.login.mockReturnValue(of({
         id: 1,
         nome: 'Test User',
@@ -161,7 +159,7 @@ describe('LoginComponent', () => {
       expect(component.loading).toBe(false);
     }));
 
-    it('should clear errorMessage when submitting', () => {
+    it('deve clear errorMessage when submitting', () => {
       component.errorMessage = 'Previous error';
       component.loginForm.patchValue({
         email: 'test@example.com',
@@ -181,7 +179,7 @@ describe('LoginComponent', () => {
       expect(component.errorMessage).toBe('');
     });
 
-    it('should call authService.login with correct credentials', () => {
+    it('deve call authService.login with correct credentials', () => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
@@ -203,13 +201,12 @@ describe('LoginComponent', () => {
       });
     });
 
-    it('should navigate to /home on successful login', fakeAsync(() => {
+    it('deve navegar to /home on successful login', fakeAsync(() => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
       });
 
-      // Mock the role check methods - admin user
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
 
@@ -229,13 +226,12 @@ describe('LoginComponent', () => {
       expect(component.loading).toBe(false);
     }));
 
-    it('should set loading to false after successful login', fakeAsync(() => {
+    it('deve definir loading to false after successful login', fakeAsync(() => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
       });
 
-      // Mock the role check methods
       authService.isAdmin.mockReturnValue(true);
       authService.isFuncionario.mockReturnValue(false);
 
@@ -253,7 +249,7 @@ describe('LoginComponent', () => {
       expect(component.loading).toBe(false);
     }));
 
-    it('should handle login error', fakeAsync(() => {
+    it('deve handle login error', fakeAsync(() => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'wrongpassword'
@@ -277,7 +273,7 @@ describe('LoginComponent', () => {
       consoleError.mockRestore();
     }));
 
-    it('should set loading to false after login error', fakeAsync(() => {
+    it('deve definir loading to false after login error', fakeAsync(() => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'wrongpassword'
@@ -291,7 +287,7 @@ describe('LoginComponent', () => {
       expect(component.loading).toBe(false);
     }));
 
-    it('should display error message on login failure', fakeAsync(() => {
+    it('deve display error message on login failure', fakeAsync(() => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'wrongpassword'
@@ -307,19 +303,19 @@ describe('LoginComponent', () => {
   });
 
   describe('Form Controls', () => {
-    it('should update email value when changed', () => {
+    it('deve atualizar email value when changed', () => {
       const emailControl = component.loginForm.get('email');
       emailControl?.setValue('newemail@example.com');
       expect(emailControl?.value).toBe('newemail@example.com');
     });
 
-    it('should update senha value when changed', () => {
+    it('deve atualizar senha value when changed', () => {
       const senhaControl = component.loginForm.get('senha');
       senhaControl?.setValue('newpassword');
       expect(senhaControl?.value).toBe('newpassword');
     });
 
-    it('should allow form reset', () => {
+    it('deve allow form reset', () => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
@@ -333,7 +329,7 @@ describe('LoginComponent', () => {
   });
 
   describe('Edge Cases', () => {
-    it('should handle multiple rapid submit attempts', () => {
+    it('deve handle multiple rapid submit attempts', () => {
       component.loginForm.patchValue({
         email: 'test@example.com',
         senha: 'password123'
@@ -351,11 +347,10 @@ describe('LoginComponent', () => {
       component.onSubmit();
       component.onSubmit();
 
-      // Should still only call once per submit
       expect(authService.login).toHaveBeenCalledTimes(3);
     });
 
-    it('should handle email with special characters', () => {
+    it('deve handle email with special characters', () => {
       component.loginForm.patchValue({
         email: 'test+special@example.co.uk',
         senha: 'password123'
@@ -364,7 +359,7 @@ describe('LoginComponent', () => {
       expect(component.loginForm.get('email')?.valid).toBe(true);
     });
 
-    it('should handle long senha', () => {
+    it('deve handle long senha', () => {
       const longPassword = 'a'.repeat(100);
       component.loginForm.patchValue({
         email: 'test@example.com',

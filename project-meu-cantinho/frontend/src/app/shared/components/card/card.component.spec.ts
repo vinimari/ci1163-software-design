@@ -16,40 +16,40 @@ describe('CardComponent', () => {
   });
 
   describe('Component Initialization', () => {
-    it('should create', () => {
+    it('deve criar', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should initialize with undefined title', () => {
+    it('deve inicializar with undefined title', () => {
       expect(component.title).toBeUndefined();
     });
 
-    it('should initialize hover as false', () => {
+    it('deve inicializar hover as false', () => {
       expect(component.hover).toBe(false);
     });
 
-    it('should initialize hasFooter as false', () => {
+    it('deve inicializar hasFooter as false', () => {
       expect(component.hasFooter).toBe(false);
     });
   });
 
   describe('Input Properties', () => {
-    it('should accept title input', () => {
+    it('deve accept title input', () => {
       component.title = 'Test Title';
       expect(component.title).toBe('Test Title');
     });
 
-    it('should accept hover input', () => {
+    it('deve accept hover input', () => {
       component.hover = true;
       expect(component.hover).toBe(true);
     });
 
-    it('should accept hasFooter input', () => {
+    it('deve accept hasFooter input', () => {
       component.hasFooter = true;
       expect(component.hasFooter).toBe(true);
     });
 
-    it('should handle empty title', () => {
+    it('deve handle empty title', () => {
       component.title = '';
       expect(component.title).toBe('');
     });

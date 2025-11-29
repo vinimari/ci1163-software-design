@@ -28,7 +28,7 @@ describe('authGuard', () => {
     router = TestBed.inject(Router) as jest.Mocked<Router>;
   });
 
-  it('should allow access when user is authenticated', () => {
+  it('deve allow access when user is authenticated', () => {
     authService.isAuthenticated.mockReturnValue(true);
 
     const result = TestBed.runInInjectionContext(() =>
@@ -39,7 +39,7 @@ describe('authGuard', () => {
     expect(authService.isAuthenticated).toHaveBeenCalled();
   });
 
-  it('should redirect to login when user is not authenticated', () => {
+  it('deve redirect to login when user is not authenticated', () => {
     authService.isAuthenticated.mockReturnValue(false);
     router.navigate.mockReturnValue(Promise.resolve(true));
 

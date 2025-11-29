@@ -221,9 +221,9 @@ describe('ReservaService', () => {
         expect(reserva.status).toBe(newStatus);
       });
 
-      const req = httpMock.expectOne(`${apiUrl}/${id}/status`);
+      const req = httpMock.expectOne(`${apiUrl}/${id}/status?status=${newStatus}`);
       expect(req.request.method).toBe('PATCH');
-      expect(req.request.body).toEqual({ status: newStatus });
+      expect(req.request.body).toBeNull();
       req.flush(updatedReserva);
     });
 
@@ -238,7 +238,7 @@ describe('ReservaService', () => {
         }
       );
 
-      const req = httpMock.expectOne(`${apiUrl}/${id}/status`);
+      const req = httpMock.expectOne(`${apiUrl}/${id}/status?status=${newStatus}`);
       req.flush('Not found', { status: 404, statusText: 'Not Found' });
     });
   });

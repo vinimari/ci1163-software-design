@@ -139,12 +139,12 @@ describe('App Routes', () => {
       expect(reservasRoute?.loadComponent).toBeDefined();
     });
 
-    it('should have pagamentos as child of funcionario route', () => {
+    it('should have reservas as child of funcionario route', () => {
       const layoutRoute = routes.find(r => r.path === '' && r.component);
       const funcRoute = layoutRoute?.children?.find(r => r.path === 'funcionario');
-      const pagamentosRoute = funcRoute?.children?.find(r => r.path === 'pagamentos');
-      expect(pagamentosRoute).toBeDefined();
-      expect(pagamentosRoute?.loadComponent).toBeDefined();
+      const reservasRoute = funcRoute?.children?.find(r => r.path === 'reservas');
+      expect(reservasRoute).toBeDefined();
+      expect(reservasRoute?.loadComponent).toBeDefined();
     });
   });
 

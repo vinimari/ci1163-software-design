@@ -34,7 +34,11 @@ describe('ReservasListComponent', () => {
       espacoId: 1,
       espacoNome: 'Sala de Reunião',
       totalPago: 150.00,
-      saldo: 0
+      saldo: 0,
+      espaco: {
+        id: 1,
+        nome: 'Sala de Reunião'
+      }
     },
     {
       id: 2,
@@ -47,7 +51,11 @@ describe('ReservasListComponent', () => {
       espacoId: 2,
       espacoNome: 'Auditório',
       totalPago: 0,
-      saldo: 300.00
+      saldo: 300.00,
+      espaco: {
+        id: 2,
+        nome: 'Auditório'
+      }
     }
   ];
 

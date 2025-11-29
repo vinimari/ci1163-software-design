@@ -35,7 +35,11 @@ describe('ClienteDetailComponent', () => {
       status: StatusReserva.CONFIRMADA,
       valorTotal: 1500.00,
       totalPago: 1500.00,
-      saldo: 0
+      saldo: 0,
+      espaco: {
+        id: 1,
+        nome: 'Salão de Festas'
+      }
     },
     {
       id: 2,
@@ -47,7 +51,11 @@ describe('ClienteDetailComponent', () => {
       status: StatusReserva.AGUARDANDO_SINAL,
       valorTotal: 800.00,
       totalPago: 400.00,
-      saldo: 400.00
+      saldo: 400.00,
+      espaco: {
+        id: 2,
+        nome: 'Quadra Poliesportiva'
+      }
     }
   ];
 
@@ -212,7 +220,7 @@ describe('ClienteDetailComponent', () => {
 
   it('should not load cliente or reservas when id is null', () => {
     activatedRoute.snapshot.paramMap.get = jest.fn().mockReturnValue(null);
-    
+
     component.ngOnInit();
 
     expect(clienteService.getById).not.toHaveBeenCalled();
@@ -221,24 +229,24 @@ describe('ClienteDetailComponent', () => {
 
   it('should set loading to true when loading cliente', () => {
     let loadingDuringCall = false;
-    
+
     clienteService.getById.mockImplementation(() => {
       loadingDuringCall = component.loading;
       return of(mockCliente);
     });
-    
+
     component.loadCliente(1);
     expect(loadingDuringCall).toBe(true);
   });
 
   it('should set loadingReservas to true when loading reservas', () => {
     let loadingDuringCall = false;
-    
+
     reservaService.getByUsuarioId.mockImplementation(() => {
       loadingDuringCall = component.loadingReservas;
       return of(mockReservas);
     });
-    
+
     component.loadReservas(1);
     expect(loadingDuringCall).toBe(true);
   });
@@ -246,7 +254,7 @@ describe('ClienteDetailComponent', () => {
   it('should handle cliente without CPF', () => {
     const clienteSemCpf = { ...mockCliente, cpf: undefined };
     clienteService.getById.mockReturnValue(of(clienteSemCpf));
-    
+
     component.loadCliente(1);
 
     expect(component.cliente?.cpf).toBeUndefined();
@@ -255,7 +263,7 @@ describe('ClienteDetailComponent', () => {
   it('should handle cliente without telefone', () => {
     const clienteSemTelefone = { ...mockCliente, telefone: undefined };
     clienteService.getById.mockReturnValue(of(clienteSemTelefone));
-    
+
     component.loadCliente(1);
 
     expect(component.cliente?.telefone).toBeUndefined();
@@ -276,7 +284,7 @@ describe('ClienteDetailComponent', () => {
     };
 
     component.reservas = [reservaSemSaldo];
-    
+
     expect(component.getValorTotalReservas()).toBe(500.00);
   });
 });

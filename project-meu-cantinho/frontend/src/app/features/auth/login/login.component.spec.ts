@@ -14,7 +14,9 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     const authServiceMock = {
-      login: jest.fn()
+      login: jest.fn(),
+      isAdmin: jest.fn(),
+      isFuncionario: jest.fn()
     };
 
     const routerMock = {
@@ -138,6 +140,10 @@ describe('LoginComponent', () => {
         senha: 'password123'
       });
 
+      // Mock the role check methods
+      authService.isAdmin.mockReturnValue(true);
+      authService.isFuncionario.mockReturnValue(false);
+
       // Use delay to make observable async
       authService.login.mockReturnValue(of({
         id: 1,
@@ -203,6 +209,10 @@ describe('LoginComponent', () => {
         senha: 'password123'
       });
 
+      // Mock the role check methods - admin user
+      authService.isAdmin.mockReturnValue(true);
+      authService.isFuncionario.mockReturnValue(false);
+
       authService.login.mockReturnValue(of({
         id: 1,
         nome: 'Test User',
@@ -215,7 +225,7 @@ describe('LoginComponent', () => {
       component.onSubmit();
       tick();
 
-      expect(router.navigate).toHaveBeenCalledWith(['/home']);
+      expect(router.navigate).toHaveBeenCalledWith(['/admin/reservas']);
       expect(component.loading).toBe(false);
     }));
 
@@ -224,6 +234,10 @@ describe('LoginComponent', () => {
         email: 'test@example.com',
         senha: 'password123'
       });
+
+      // Mock the role check methods
+      authService.isAdmin.mockReturnValue(true);
+      authService.isFuncionario.mockReturnValue(false);
 
       authService.login.mockReturnValue(of({
         id: 1,

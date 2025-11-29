@@ -17,7 +17,6 @@ export class ClientesListComponent implements OnInit {
   clientes: ClienteResponse[] = [];
   clientesFiltrados: ClienteResponse[] = [];
   loading = false;
-  error: string | null = null;
   searchTerm = '';
 
   constructor(
@@ -31,7 +30,6 @@ export class ClientesListComponent implements OnInit {
 
   loadClientes(): void {
     this.loading = true;
-    this.error = null;
 
     this.clienteService.getAll().subscribe({
       next: (clientes) => {
@@ -40,8 +38,8 @@ export class ClientesListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar clientes';
         this.loading = false;
+        alert('Erro ao carregar clientes');
         console.error('Erro ao carregar clientes:', err);
       }
     });
@@ -77,8 +75,8 @@ export class ClientesListComponent implements OnInit {
           this.loadClientes();
         },
         error: (err) => {
-          this.error = 'Erro ao atualizar cliente';
           this.loading = false;
+          alert('Erro ao atualizar cliente');
           console.error('Erro ao atualizar cliente:', err);
         }
       });

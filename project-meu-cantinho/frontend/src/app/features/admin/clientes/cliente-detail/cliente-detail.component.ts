@@ -18,7 +18,6 @@ export class ClienteDetailComponent implements OnInit {
   reservas: ReservaResponse[] = [];
   loading = false;
   loadingReservas = false;
-  error: string | null = null;
 
   constructor(
     private clienteService: ClienteService,
@@ -43,8 +42,8 @@ export class ClienteDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Erro ao carregar cliente';
         this.loading = false;
+        alert('Erro ao carregar cliente');
         console.error('Erro ao carregar cliente:', err);
       }
     });

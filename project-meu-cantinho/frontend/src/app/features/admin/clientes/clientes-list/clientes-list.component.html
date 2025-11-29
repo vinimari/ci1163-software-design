@@ -23,11 +23,7 @@
     <p>Carregando clientes...</p>
   </div>
 
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
-
-  <div class="clientes-grid" *ngIf="!loading && !error && clientesFiltrados.length > 0">
+  <div class="clientes-grid" *ngIf="!loading && clientesFiltrados.length > 0">
     <div *ngFor="let cliente of clientesFiltrados" class="cliente-card" [class.inactive]="!cliente.ativo">
       <div class="card-header">
         <div class="cliente-info">
@@ -82,7 +78,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && !error && clientesFiltrados.length === 0" class="empty-state">
+  <div *ngIf="!loading && clientesFiltrados.length === 0" class="empty-state">
     <span class="empty-icon">👥</span>
     <h3>{{ searchTerm ? 'Nenhum cliente encontrado' : 'Nenhum cliente cadastrado' }}</h3>
     <p>{{ searchTerm ? 'Tente ajustar os filtros de busca' : 'Os clientes se cadastram através do sistema' }}</p>

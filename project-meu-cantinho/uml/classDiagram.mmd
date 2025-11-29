@@ -1,85 +1,246 @@
-classDiagram
+ classDiagram
     direction TB
 
-    %% --- PACOTE 1: GESTÃO DE IDENTIDADE (Auth & Users) ---
-    namespace Identidade {
-        class Usuario {
-            <<abstract>>
-            +Integer id
-            +String nome
-            +String email
-            +autenticar()
-        }
+    %% ============================================================
+    %% DOMAIN LAYER - Entidades, Value Objects e Domain Services
+    %% ============================================================
 
-        class Administrador {
-            +gerenciarRede()
-            +verRelatoriosGlobais()
-        }
-
-        class Cliente {
-            +fazerReserva()
-            +cancelarReserva()
-        }
-
-        class Funcionario {
-            +validarCheckIn()
-            +gerenciarReservasLocais()
-        }
+    %% --- IDENTIDADE E ACESSO (Identity & Access) ---
+    class Usuario {
+        <<abstract>>
+        -Integer id
+        -String nome
+        -String email
+        -String senhaHash
+        -PerfilUsuarioEnum perfil
+        -String cpf
+        -String telefone
+        -Boolean ativo
+        -LocalDateTime dataCadastro
+        +validarEmail() void
+        +validarCpf() void
+        +validar() void
+        +getPerfil()* PerfilUsuarioEnum
     }
 
-    %% --- PACOTE 2: ESTRUTURA ORGANIZACIONAL (Catalog) ---
-    namespace Estrutura {
-        class Filial {
-            +Integer id
-            +String nome
-            +String cidade
-        }
-
-        class Espaco {
-            +Integer id
-            +String nome
-            +Double precoBase
-            +Boolean ativo
-            +verificarDisponibilidade()
-        }
+    class Administrador {
+        +getPerfil() PerfilUsuarioEnum
     }
 
-    %% --- PACOTE 3: OPERAÇÃO (Core Domain) ---
-    namespace Operacao {
-        class Reserva {
-            +Integer id
-            +Date dataEvento
-            +Status status
-            +calcularTotal()
-        }
-
-        class Pagamento {
-            +Double valor
-            +Date data
-            +Tipo tipo
-        }
+    class Cliente {
+        -List~Reserva~ reservas
+        +getPerfil() PerfilUsuarioEnum
     }
 
-    %% --- RELACIONAMENTOS ESTRUTURAIS ---
+    class Funcionario {
+        -String matricula
+        -Filial filial
+        +getPerfil() PerfilUsuarioEnum
+    }
 
-    %% Hierarquia (Herança)
+    class PerfilUsuarioEnum {
+        <<enumeration>>
+        ADMIN
+        FUNCIONARIO
+        CLIENTE
+    }
+
+    %% --- ESTRUTURA ORGANIZACIONAL (Catalog) ---
+    class Filial {
+        -Integer id
+        -String nome
+        -String cidade
+        -String estado
+        -String endereco
+        -String telefone
+        -LocalDateTime dataCadastro
+        -List~Espaco~ espacos
+        -List~Funcionario~ funcionarios
+    }
+
+    class Espaco {
+        -Integer id
+        -String nome
+        -String descricao
+        -Capacidade capacidade
+        -ValorMonetario precoDiaria
+        -Boolean ativo
+        -String urlFotoPrincipal
+        -Filial filial
+        -List~Reserva~ reservas
+        +validar() void
+        +podeSerReservadoPara(LocalDate) boolean
+    }
+
+    class Capacidade {
+        <<value object>>
+        -Integer quantidade
+        -CAPACIDADE_MINIMA int
+        -CAPACIDADE_MAXIMA int
+        +of(Integer)$ Capacidade
+        +toString() String
+    }
+
+    %% --- OPERAÇÃO (Core Domain) ---
+    class Reserva {
+        <<aggregate root>>
+        -Integer id
+        -LocalDateTime dataCriacao
+        -DataEvento dataEvento
+        -ValorMonetario valorTotal
+        -String observacoes
+        -StatusReservaEnum status
+        -Usuario usuario
+        -Espaco espaco
+        -List~Pagamento~ pagamentos
+        +calcularTotalPago() ValorMonetario
+        +calcularSaldo() ValorMonetario
+        +isQuitada() boolean
+        +isAtiva() boolean
+        +validar() void
+        +validarDisponibilidade(boolean) void
+    }
+
+    class Pagamento {
+        -Integer id
+        -LocalDateTime dataPagamento
+        -ValorMonetario valor
+        -TipoPagamentoEnum tipo
+        -String formaPagamento
+        -String codigoTransacaoGateway
+        -Reserva reserva
+        +validar() void
+    }
+
+    class StatusReservaEnum {
+        <<enumeration>>
+        AGUARDANDO_SINAL
+        CONFIRMADA
+        QUITADA
+        CANCELADA
+        FINALIZADA
+    }
+
+    class TipoPagamentoEnum {
+        <<enumeration>>
+        SINAL
+        QUITACAO
+        TOTAL
+    }
+
+    class DataEvento {
+        <<value object>>
+        -LocalDate data
+        -DIAS_MINIMOS_ANTECEDENCIA int
+        -DIAS_MAXIMOS_ANTECEDENCIA int
+        +of(LocalDate)$ DataEvento
+        +getDataFormatada() String
+    }
+
+    %% --- VALUE OBJECTS COMPARTILHADOS (Shared Kernel) ---
+    class ValorMonetario {
+        <<value object>>
+        -BigDecimal valor
+        +of(BigDecimal)$ ValorMonetario
+        +of(String)$ ValorMonetario
+        +of(double)$ ValorMonetario
+        +zero()$ ValorMonetario
+        +somar(ValorMonetario) ValorMonetario
+        +subtrair(ValorMonetario) ValorMonetario
+        +calcularMetade() ValorMonetario
+        +isMaiorQue(ValorMonetario) boolean
+        +isMenorQue(ValorMonetario) boolean
+        +isIgualA(ValorMonetario) boolean
+        +isZero() boolean
+        +isPositivo() boolean
+        +getValorFormatado() String
+    }
+
+    %% --- DOMAIN SERVICES ---
+    class ReservaAvailabilityService {
+        <<service>>
+        -ReservaRepositoryPort repositoryPort
+        +validarDisponibilidade(Integer espacoId, LocalDate data, Integer reservaId) void
+    }
+
+    class ClienteUniquenessService {
+        <<service>>
+        -ClienteRepositoryPort repositoryPort
+        +validarUnicidade(String email, String cpf, Integer id) void
+    }
+
+    class ReservaStatusService {
+        <<service>>
+        -Map strategies
+        +determineNewStatus(Pagamento) StatusReservaEnum
+    }
+
+    %% --- STRATEGY PATTERN (Domain) ---
+    class StatusTransitionStrategy {
+        <<interface>>
+        +determineNewStatus(Pagamento) StatusReservaEnum
+        +canHandle(Pagamento) boolean
+    }
+
+    class SinalStatusTransitionStrategy {
+        +determineNewStatus(Pagamento) StatusReservaEnum
+        +canHandle(Pagamento) boolean
+    }
+
+    class QuitacaoStatusTransitionStrategy {
+        +determineNewStatus(Pagamento) StatusReservaEnum
+        +canHandle(Pagamento) boolean
+    }
+
+    class TotalStatusTransitionStrategy {
+        +determineNewStatus(Pagamento) StatusReservaEnum
+        +canHandle(Pagamento) boolean
+    }
+
+    %% ============================================================
+    %% RELACIONAMENTOS
+    %% ============================================================
+
+    %% --- Herança de Usuário (Single Table Inheritance) ---
     Usuario <|-- Administrador
     Usuario <|-- Funcionario
     Usuario <|-- Cliente
+    Usuario --> PerfilUsuarioEnum
 
-    %% Vínculo Empregatício (Restrição de Acesso)
-    Filial "1" *-- "0..*" Funcionario : emprega
+    %% --- Estrutura Organizacional ---
+    Filial "1" *-- "0..*" Espaco
+    Filial "1" o-- "0..*" Funcionario
+    Funcionario --> Filial
 
-    %% Estrutura Física
-    Filial "1" *-- "0..*" Espaco : possui
+    %% --- Value Objects em Espaco ---
+    Espaco *-- Capacidade
+    Espaco *-- ValorMonetario
 
-    %% --- FLUXO DE NEGÓCIO ---
+    %% --- Agregado Reserva (Aggregate Root) ---
+    Reserva "0..*" --> "1" Usuario
+    Reserva "0..*" --> "1" Espaco
+    Reserva "1" *-- "0..*" Pagamento
+    Reserva --> StatusReservaEnum
+    Reserva *-- DataEvento
+    Reserva *-- ValorMonetario
 
-    %% O Cliente cria a reserva
-    Cliente "1" --> "0..*" Reserva : solicita
+    Cliente "1" --> "0..*" Reserva
 
-    %% A reserva ocupa um espaço
-    Espaco "1" -- "0..*" Reserva : reservado em
+    %% --- Pagamento ---
+    Pagamento --> TipoPagamentoEnum
+    Pagamento *-- ValorMonetario
+    Pagamento --> Reserva
 
-    %% A reserva contém pagamentos
-    Reserva "1" *-- "0..*" Pagamento : contem
+    %% --- Domain Services ---
+    ReservaAvailabilityService ..> Reserva
+    ClienteUniquenessService ..> Cliente
+    ReservaStatusService ..> Reserva
+    ReservaStatusService --> StatusTransitionStrategy
+
+    %% --- Strategy Pattern ---
+    StatusTransitionStrategy <|.. SinalStatusTransitionStrategy
+    StatusTransitionStrategy <|.. QuitacaoStatusTransitionStrategy
+    StatusTransitionStrategy <|.. TotalStatusTransitionStrategy
+    StatusTransitionStrategy ..> Pagamento
+
+```

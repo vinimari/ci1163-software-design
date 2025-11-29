@@ -1,138 +1,184 @@
 graph TB
-    subgraph External[" "]
-        BROWSER[["🌐 Cliente HTTP/Browser"]]
-        UI[["💻 Interface Web"]]
+    subgraph External["🌐 CAMADA EXTERNA"]
+        Browser[Browser/Cliente HTTP]
+        AngularApp[Angular SPA]
+        NginxProxy[NGINX]
     end
 
-    NGINX{{"⚙️ NGINX<br/><infrastructure>"}}
+    subgraph Infrastructure["🔧 INFRAESTRUTURA"]
+        direction LR
+        SpringSecurity[Spring Security + JWT]
+        SwaggerUI[Swagger/OpenAPI]
+        ExceptionHandler[Exception Handler]
+    end
 
-    subgraph Backend["📦 Backend Application<<component>>"]
+    subgraph Auth["🔐 AUTENTICAÇÃO"]
         direction TB
+        AuthController["🔌 Adapter IN<br/>AuthController<br/>/api/auth"]
+        AuthWebPort["📥 Port IN<br/>AuthWebPort"]
+        AuthService["📥 Port IN<br/>AuthService<br/>AuthServicePort"]
+        AuthDomain["🎯 Domain<br/>Usuario Entity<br/>id, email, senha, perfil"]
+        AuthRepoPort["📤 Port OUT<br/>UsuarioRepositoryPort"]
+        AuthPassPort["📤 Port OUT<br/>PasswordEncoderPort"]
+        AuthRepoAdapter["🔧 Adapter OUT<br/>UsuarioRepositoryAdapter"]
+        AuthPassAdapter["🔧 Adapter OUT<br/>PasswordEncoderAdapter"]
+        AuthJPA["💾 JPA Repository<br/>UsuarioRepository"]
 
-        subgraph Presentation["Presentation Layer<<layer>>"]
-            direction TB
-            RESTAPI(("REST API<br/><interface>"))
-
-            subgraph Controllers["<<subsystem>>"]
-                ADMINCTRL["AdministradorController<br/>"]
-                CLIENTECTRL["ClienteController<br/>"]
-                FUNCCTRL["FuncionarioController<br/>"]
-                FILIALCTRL["FilialController<br/>"]
-                ESPACOCTRL["EspacoController<br/>"]
-                RESERVACTRL["ReservaController<br/>"]
-                PAGCTRL["PagamentoController<br/>"]
-            end
-
-            SWAGGER["📄 Swagger/OpenAPI<br/>"]
-            ISERVICE(("IService<br/>"))
-        end
-
-        subgraph Business["Business Layer"]
-            direction TB
-            IBUSINESS(("IBusinessLogic<br/>"))
-
-            subgraph Services["<<subsystem>>"]
-                ADMINSERV["AdministradorService<br/>"]
-                CLIENTESERV["ClienteService<br/>"]
-                FUNCSERV["FuncionarioService<br/>"]
-                FILIALSERV["FilialService<br/>"]
-                ESPACOSERV["EspacoService<br/>"]
-                RESERVASERV["ReservaService<br/>"]
-                PAGSERV["PagamentoService<br/>"]
-            end
-
-            IREPO(("IRepository<br/>"))
-        end
-
-        subgraph Data["Data Access Layer<<layer>>"]
-            direction TB
-            IDATAACCESS(("IDataAccess<br/>"))
-
-            subgraph Repositories["<<subsystem>>"]
-                ADMINREPO["AdministradorRepository<br/>"]
-                CLIENTEREPO["ClienteRepository<br/"]
-                FUNCREPO["FuncionarioRepository<br/"]
-                FILIALREPO["FilialRepository<br/"]
-                ESPACOREPO["EspacoRepository<br/"]
-                RESERVAREPO["ReservaRepository<br/"]
-                PAGREPO["PagamentoRepository<br/"]
-            end
-
-            IENTITY(("IEntity<br/>"))
-        end
-
-        subgraph Domain["Domain Layer"]
-            direction TB
-            JPA(("JPA<br/>"))
-
-            subgraph Entities["Entities"]
-                IDENTIDADE["Usuario, Administrador<br/>Cliente, Funcionario<br/>"]
-                ESTRUTURA["Filial, Espaco<br/>"]
-                OPERACAO["Reserva, Pagamento<br/>"]
-            end
-        end
+        AuthController -.->|implements| AuthWebPort
+        AuthController -->|calls| AuthService
+        AuthService -->|uses| AuthDomain
+        AuthService -->|depends on| AuthRepoPort
+        AuthService -->|depends on| AuthPassPort
+        AuthRepoPort <-.->|implemented by| AuthRepoAdapter
+        AuthPassPort <-.->|implemented by| AuthPassAdapter
+        AuthRepoAdapter -->|uses| AuthJPA
     end
 
-    DB[("🗄️ PostgreSQL<br/>")]
+    subgraph Cliente["👤 CLIENTE"]
+        direction TB
+        ClienteController["🔌 Adapter IN<br/>ClienteController<br/>/api/clientes"]
+        ClienteWebPort["📥 Port IN<br/>ClienteWebPort"]
+        ClienteService["📥 Port IN<br/>ClienteService<br/>ClienteServicePort"]
+        ClienteDomain["🎯 Domain<br/>Cliente Entity<br/>extends Usuario"]
+        ClienteRepoPort["📤 Port OUT<br/>ClienteRepositoryPort"]
+        ClienteRepoAdapter["🔧 Adapter OUT<br/>ClienteRepositoryAdapter<br/>ClienteMapper"]
+        ClienteJPA["💾 JPA Repository<br/>ClienteRepository"]
 
-    %% Conexões externas
-    BROWSER -->|HTTPS| NGINX
-    UI -->|HTTPS| NGINX
-    NGINX -->|HTTP| RESTAPI
+        ClienteController -.->|implements| ClienteWebPort
+        ClienteController -->|calls| ClienteService
+        ClienteService -->|uses| ClienteDomain
+        ClienteService -->|depends on| ClienteRepoPort
+        ClienteRepoPort <-.->|implemented by| ClienteRepoAdapter
+        ClienteRepoAdapter -->|uses| ClienteJPA
+    end
 
-    %% Interface Documentation
-    RESTAPI -.->|provides| SWAGGER
+    subgraph Funcionario["👔 FUNCIONÁRIO"]
+        direction TB
+        FuncController["🔌 Adapter IN<br/>FuncionarioController<br/>/api/funcionarios"]
+        FuncService["📥 Port IN<br/>FuncionarioService"]
+        FuncDomain["🎯 Domain<br/>Funcionario Entity<br/>extends Usuario"]
+        FuncRepoPort["📤 Port OUT<br/>UsuarioRepositoryPort"]
+        FuncRepoAdapter["🔧 Adapter OUT<br/>UsuarioRepositoryAdapter"]
+        FuncJPA["💾 JPA Repository<br/>UsuarioRepository"]
 
-    %% Presentation para Business
-    RESTAPI ==>|delegates| Controllers
-    ADMINCTRL -->|uses| ISERVICE
-    CLIENTECTRL -->|uses| ISERVICE
-    FUNCCTRL -->|uses| ISERVICE
-    FILIALCTRL -->|uses| ISERVICE
-    ESPACOCTRL -->|uses| ISERVICE
-    RESERVACTRL -->|uses| ISERVICE
-    PAGCTRL -->|uses| ISERVICE
+        FuncController -->|calls| FuncService
+        FuncService -->|uses| FuncDomain
+        FuncService -->|depends on| FuncRepoPort
+        FuncRepoPort <-.->|implemented by| FuncRepoAdapter
+        FuncRepoAdapter -->|uses| FuncJPA
+    end
 
-    ISERVICE -.->|realizes| IBUSINESS
-    IBUSINESS ==>|delegates| Services
+    subgraph Admin["⚙️ ADMINISTRADOR"]
+        direction TB
+        AdminController["🔌 Adapter IN<br/>AdministradorController<br/>/api/administradores"]
+        AdminService["📥 Port IN<br/>AdministradorService"]
+        AdminDomain["🎯 Domain<br/>Administrador Entity<br/>extends Usuario"]
+        AdminRepoPort["📤 Port OUT<br/>UsuarioRepositoryPort"]
+        AdminRepoAdapter["🔧 Adapter OUT<br/>UsuarioRepositoryAdapter"]
+        AdminJPA["💾 JPA Repository<br/>UsuarioRepository"]
 
-    %% Business para Data
-    ADMINSERV -->|uses| IREPO
-    CLIENTESERV -->|uses| IREPO
-    FUNCSERV -->|uses| IREPO
-    FILIALSERV -->|uses| IREPO
-    ESPACOSERV -->|uses| IREPO
-    RESERVASERV -->|uses| IREPO
-    PAGSERV -->|uses| IREPO
+        AdminController -->|calls| AdminService
+        AdminService -->|uses| AdminDomain
+        AdminService -->|depends on| AdminRepoPort
+        AdminRepoPort <-.->|implemented by| AdminRepoAdapter
+        AdminRepoAdapter -->|uses| AdminJPA
+    end
 
-    IREPO -.->|realizes| IDATAACCESS
-    IDATAACCESS ==>|delegates| Repositories
+    subgraph Filial["🏢 FILIAL"]
+        direction TB
+        FilialController["🔌 Adapter IN<br/>FilialController<br/>/api/filiais"]
+        FilialWebPort["📥 Port IN<br/>FilialWebPort"]
+        FilialService["📥 Port IN<br/>FilialService<br/>FilialServicePort"]
+        FilialDomain["🎯 Domain<br/>Filial Entity<br/>id, nome, endereco"]
+        FilialRepoPort["📤 Port OUT<br/>FilialRepositoryPort"]
+        FilialRepoAdapter["🔧 Adapter OUT<br/>FilialRepositoryAdapter<br/>FilialMapper"]
+        FilialJPA["💾 JPA Repository<br/>FilialRepository"]
 
-    %% Data para Domain
-    ADMINREPO -->|uses| IENTITY
-    CLIENTEREPO -->|uses| IENTITY
-    FUNCREPO -->|uses| IENTITY
-    FILIALREPO -->|uses| IENTITY
-    ESPACOREPO -->|uses| IENTITY
-    RESERVAREPO -->|uses| IENTITY
-    PAGREPO -->|uses| IENTITY
+        FilialController -.->|implements| FilialWebPort
+        FilialController -->|calls| FilialService
+        FilialService -->|uses| FilialDomain
+        FilialService -->|depends on| FilialRepoPort
+        FilialRepoPort <-.->|implemented by| FilialRepoAdapter
+        FilialRepoAdapter -->|uses| FilialJPA
+    end
 
-    IENTITY -.->|realizes| JPA
-    JPA ==>|maps| Entities
+    subgraph Espaco["🏠 ESPAÇO"]
+        direction TB
+        EspacoController["🔌 Adapter IN<br/>EspacoController<br/>/api/espacos"]
+        EspacoWebPort["📥 Port IN<br/>EspacoWebPort"]
+        EspacoService["📥 Port IN<br/>EspacoService<br/>EspacoServicePort"]
+        EspacoDomain["🎯 Domain<br/>Espaco Entity<br/>Capacidade VO<br/>ValorMonetario VO"]
+        EspacoRepoPort["📤 Port OUT<br/>EspacoRepositoryPort"]
+        EspacoRepoAdapter["🔧 Adapter OUT<br/>EspacoRepositoryAdapter<br/>EspacoMapper"]
+        EspacoJPA["💾 JPA Repository<br/>EspacoRepository"]
 
-    %% Domain para Database
-    IDENTIDADE -->|persists| DB
-    ESTRUTURA -->|persists| DB
-    OPERACAO -->|persists| DB
+        EspacoController -.->|implements| EspacoWebPort
+        EspacoController -->|calls| EspacoService
+        EspacoService -->|uses| EspacoDomain
+        EspacoService -->|depends on| EspacoRepoPort
+        EspacoRepoPort <-.->|implemented by| EspacoRepoAdapter
+        EspacoRepoAdapter -->|uses| EspacoJPA
+    end
 
+    subgraph Reserva["📅 RESERVA"]
+        direction TB
+        ReservaController["🔌 Adapter IN<br/>ReservaController<br/>/api/reservas"]
+        ReservaWebPort["📥 Port IN<br/>ReservaWebPort"]
+        ReservaService["📥 Port IN<br/>ReservaService<br/>ReservaServicePort"]
+        ReservaDomain["🎯 Domain<br/>Reserva (Aggregate)<br/>DataEvento VO<br/>Domain Services"]
+        ReservaRepoPort["📤 Port OUT<br/>ReservaRepositoryPort"]
+        ReservaRepoAdapter["🔧 Adapter OUT<br/>ReservaRepositoryAdapter<br/>ReservaMapper"]
+        ReservaJPA["💾 JPA Repository<br/>ReservaRepository"]
 
-    class BROWSER,UI externalStyle
-    class NGINX infrastructureStyle
-    class RESTAPI,ISERVICE,IBUSINESS,IREPO,IDATAACCESS,IENTITY,JPA interfaceStyle
-    class ADMINCTRL,CLIENTECTRL,FUNCCTRL,FILIALCTRL,ESPACOCTRL,RESERVACTRL,PAGCTRL controllerStyle
-    class ADMINSERV,CLIENTESERV,FUNCSERV,FILIALSERV,ESPACOSERV,RESERVASERV,PAGSERV serviceStyle
-    class ADMINREPO,CLIENTEREPO,FUNCREPO,FILIALREPO,ESPACOREPO,RESERVAREPO,PAGREPO repositoryStyle
-    class IDENTIDADE,ESTRUTURA,OPERACAO entityStyle
-    class DB databaseStyle
-    class Presentation,Business,Data,Domain,Controllers,Services,Repositories,Entities layerStyle
-    class SWAGGER interfaceStyle
+        ReservaController -.->|implements| ReservaWebPort
+        ReservaController -->|calls| ReservaService
+        ReservaService -->|uses| ReservaDomain
+        ReservaService -->|depends on| ReservaRepoPort
+        ReservaRepoPort <-.->|implemented by| ReservaRepoAdapter
+        ReservaRepoAdapter -->|uses| ReservaJPA
+    end
+
+    subgraph Pagamento["💳 PAGAMENTO"]
+        direction TB
+        PagamentoController["🔌 Adapter IN<br/>PagamentoController<br/>/api/pagamentos"]
+        PagamentoWebPort["📥 Port IN<br/>PagamentoWebPort"]
+        PagamentoService["📥 Port IN<br/>PagamentoService<br/>PagamentoServicePort"]
+        PagamentoDomain["🎯 Domain<br/>Pagamento Entity<br/>ValorMonetario VO<br/>Strategy Pattern"]
+        PagamentoRepoPort["📤 Port OUT<br/>PagamentoRepositoryPort"]
+        PagamentoRepoAdapter["🔧 Adapter OUT<br/>PagamentoRepositoryAdapter<br/>PagamentoMapper"]
+        PagamentoJPA["💾 JPA Repository<br/>PagamentoRepository"]
+
+        PagamentoController -.->|implements| PagamentoWebPort
+        PagamentoController -->|calls| PagamentoService
+        PagamentoService -->|uses| PagamentoDomain
+        PagamentoService -->|depends on| PagamentoRepoPort
+        PagamentoRepoPort <-.->|implemented by| PagamentoRepoAdapter
+        PagamentoRepoAdapter -->|uses| PagamentoJPA
+    end
+
+    PostgreSQL[(🗄️ PostgreSQL<br/>Port 5433)]
+
+    %% Conexões Externas
+    Browser -->|HTTPS| NginxProxy
+    AngularApp -->|HTTP| NginxProxy
+    NginxProxy -->|forwards to| Infrastructure
+
+    %% Infraestrutura para Features
+    Infrastructure -->|routes to| AuthController
+    Infrastructure -->|routes to| ClienteController
+    Infrastructure -->|routes to| FuncController
+    Infrastructure -->|routes to| AdminController
+    Infrastructure -->|routes to| FilialController
+    Infrastructure -->|routes to| EspacoController
+    Infrastructure -->|routes to| ReservaController
+    Infrastructure -->|routes to| PagamentoController
+
+    %% Persistência
+    AuthJPA -->|persists to| PostgreSQL
+    ClienteJPA -->|persists to| PostgreSQL
+    FuncJPA -->|persists to| PostgreSQL
+    AdminJPA -->|persists to| PostgreSQL
+    FilialJPA -->|persists to| PostgreSQL
+    EspacoJPA -->|persists to| PostgreSQL
+    ReservaJPA -->|persists to| PostgreSQL
+    PagamentoJPA -->|persists to| PostgreSQL

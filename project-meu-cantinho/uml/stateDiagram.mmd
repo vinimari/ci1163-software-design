@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> AGUARDANDO_SINAL
+
+    AGUARDANDO_SINAL --> CONFIRMADA: Pagamento SINAL (50%)
+    AGUARDANDO_SINAL --> CANCELADA: Cancelar sem pagamento
+    
+    CONFIRMADA --> QUITADA: Pagamento QUITACAO (50% restante)
+    CONFIRMADA --> CANCELADA: Cancelar com estorno
+    
+    AGUARDANDO_SINAL --> QUITADA: Pagamento TOTAL (100%)
+    
+    QUITADA --> FINALIZADA: Evento concluído
+    QUITADA --> CANCELADA: Cancelar com estorno total
+
+    CANCELADA --> [*]
+    FINALIZADA --> [*]

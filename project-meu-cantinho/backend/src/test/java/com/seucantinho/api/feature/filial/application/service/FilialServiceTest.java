@@ -5,6 +5,9 @@ import com.seucantinho.api.feature.filial.application.dto.FilialResponseDTO;
 import com.seucantinho.api.feature.filial.domain.Filial;
 import com.seucantinho.api.feature.filial.domain.port.out.FilialRepositoryPort;
 import com.seucantinho.api.feature.filial.infrastructure.mapper.FilialMapper;
+import com.seucantinho.api.feature.funcionario.domain.Funcionario;
+import com.seucantinho.api.feature.funcionario.infrastructure.persistence.FuncionarioRepository;
+import com.seucantinho.api.shared.domain.exception.BusinessException;
 import com.seucantinho.api.shared.domain.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +35,9 @@ class FilialServiceTest {
 
     @Mock
     private FilialMapper filialMapper;
+
+    @Mock
+    private FuncionarioRepository funcionarioRepository;
 
     @InjectMocks
     private FilialService filialService;
@@ -158,6 +165,7 @@ class FilialServiceTest {
         // Arrange
         Integer id = 1;
         when(filialRepositoryPort.findById(id)).thenReturn(Optional.of(filial));
+        when(funcionarioRepository.findByFilialId(id)).thenReturn(Collections.emptyList());
         doNothing().when(filialRepositoryPort).deleteById(id);
 
         // Act
@@ -165,6 +173,7 @@ class FilialServiceTest {
 
         // Assert
         verify(filialRepositoryPort).findById(id);
+        verify(funcionarioRepository).findByFilialId(id);
         verify(filialRepositoryPort).deleteById(id);
     }
 
@@ -180,6 +189,28 @@ class FilialServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Filial não encontrada com ID: " + id);
         verify(filialRepositoryPort).findById(id);
+        verify(filialRepositoryPort, never()).deleteById(any());
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao deletar filial com funcionários associados")
+    void deveLancarExcecaoAoDeletarFilialComFuncionarios() {
+        // Arrange
+        Integer id = 1;
+        Funcionario funcionario = new Funcionario();
+        funcionario.setId(1);
+        funcionario.setNome("João Silva");
+        funcionario.setFilial(filial);
+
+        when(filialRepositoryPort.findById(id)).thenReturn(Optional.of(filial));
+        when(funcionarioRepository.findByFilialId(id)).thenReturn(Arrays.asList(funcionario));
+
+        // Act & Assert
+        assertThatThrownBy(() -> filialService.delete(id))
+                .isInstanceOf(BusinessException.class)
+                .hasMessageContaining("Não é possível excluir a filial pois existem funcionários associados");
+        verify(filialRepositoryPort).findById(id);
+        verify(funcionarioRepository).findByFilialId(id);
         verify(filialRepositoryPort, never()).deleteById(any());
     }
 

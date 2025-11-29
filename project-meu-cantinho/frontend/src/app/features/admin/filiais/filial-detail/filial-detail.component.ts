@@ -55,13 +55,23 @@ export class FilialDetailComponent implements OnInit {
   deleteFilial(): void {
     if (this.filial && confirm('Tem certeza que deseja excluir esta filial?')) {
       this.loading = true;
+      this.error = null;
       this.filialService.delete(this.filial.id).subscribe({
         next: () => {
           this.router.navigate(['/admin/filiais']);
         },
         error: (err) => {
-          this.error = 'Erro ao excluir filial';
           this.loading = false;
+
+          if (err.error?.message) {
+            this.error = err.error.message;
+          } else if (err.status === 400) {
+            this.error = 'Não foi possível excluir a filial. Verifique se há funcionários associados.';
+          } else if (err.status === 404) {
+            this.error = 'Filial não encontrada.';
+          } else {
+            this.error = 'Erro ao excluir filial. Tente novamente.';
+          }
           console.error('Erro ao excluir filial:', err);
         }
       });

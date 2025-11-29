@@ -3,6 +3,8 @@ package com.seucantinho.api.feature.filial.application.service;
 import com.seucantinho.api.feature.filial.domain.Filial;
 import com.seucantinho.api.feature.filial.application.dto.FilialRequestDTO;
 import com.seucantinho.api.feature.filial.application.dto.FilialResponseDTO;
+import com.seucantinho.api.feature.funcionario.infrastructure.persistence.FuncionarioRepository;
+import com.seucantinho.api.shared.domain.exception.BusinessException;
 import com.seucantinho.api.shared.domain.exception.ResourceNotFoundException;
 import com.seucantinho.api.feature.filial.infrastructure.mapper.FilialMapper;
 import com.seucantinho.api.feature.filial.domain.port.out.FilialRepositoryPort;
@@ -20,6 +22,7 @@ public class FilialService implements FilialServicePort {
 
     private final FilialRepositoryPort filialRepositoryPort;
     private final FilialMapper filialMapper;
+    private final FuncionarioRepository funcionarioRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -59,6 +62,12 @@ public class FilialService implements FilialServicePort {
         if (filialRepositoryPort.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("Filial não encontrada com ID: " + id);
         }
+
+        if (!funcionarioRepository.findByFilialId(id).isEmpty()) {
+            throw new BusinessException("Não é possível excluir a filial pois existem funcionários associados a ela. " +
+                    "Remova ou transfira os funcionários antes de excluir a filial.");
+        }
+
         filialRepositoryPort.deleteById(id);
     }
 

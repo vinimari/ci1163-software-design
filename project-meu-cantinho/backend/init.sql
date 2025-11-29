@@ -78,9 +78,9 @@ CREATE INDEX idx_reserva_data ON tb_reserva(data_evento);
 -- ==============================================================
 
 INSERT INTO tb_filial (nome, cidade, estado, endereco, telefone) VALUES
-('Seu Cantinho - Matriz', 'Curitiba', 'PR', 'Av. Batel, 1000', '41999999999'),
-('Seu Cantinho - Ilha', 'Florianopolis', 'SC', 'Av. Beira Mar, 500', '48988888888'),
-('Seu Cantinho - Serra', 'Gramado', 'RS', 'Rua Coberta, 10', '54977777777');
+('Seu Cantinho - Matriz', 'Curitiba', 'PR', 'Av. Batel, 1000', '(41) 9999-9999'),
+('Seu Cantinho - Ilha', 'Florianopolis', 'SC', 'Av. Beira Mar, 500', '(48) 98888-8888'),
+('Seu Cantinho - Serra', 'Gramado', 'RS', 'Rua Coberta, 10', '(54) 97777-7777');
 
 -- Senha: password123
 -- Hash BCrypt: $2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W

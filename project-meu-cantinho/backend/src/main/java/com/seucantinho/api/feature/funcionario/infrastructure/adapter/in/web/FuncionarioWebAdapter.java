@@ -1,5 +1,7 @@
 package com.seucantinho.api.feature.funcionario.infrastructure.adapter.in.web;
 
+import com.seucantinho.api.core.validation.OnCreate;
+import com.seucantinho.api.core.validation.OnUpdate;
 import com.seucantinho.api.feature.funcionario.application.dto.FuncionarioRequestDTO;
 import com.seucantinho.api.feature.funcionario.application.dto.FuncionarioResponseDTO;
 import com.seucantinho.api.feature.funcionario.domain.port.in.FuncionarioServicePort;
@@ -11,11 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -92,7 +94,7 @@ public class FuncionarioWebAdapter {
                 required = true,
                 content = @Content(schema = @Schema(implementation = FuncionarioRequestDTO.class))
             )
-            @Valid @RequestBody FuncionarioRequestDTO requestDTO) {
+            @Validated(OnCreate.class) @RequestBody FuncionarioRequestDTO requestDTO) {
         FuncionarioResponseDTO funcionario = funcionarioService.create(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(funcionario);
     }
@@ -124,7 +126,7 @@ public class FuncionarioWebAdapter {
                 required = true,
                 content = @Content(schema = @Schema(implementation = FuncionarioRequestDTO.class))
             )
-            @Valid @RequestBody FuncionarioRequestDTO requestDTO) {
+            @Validated(OnUpdate.class) @RequestBody FuncionarioRequestDTO requestDTO) {
         FuncionarioResponseDTO funcionario = funcionarioService.update(id, requestDTO);
         return ResponseEntity.ok(funcionario);
     }

@@ -1,5 +1,7 @@
 package com.seucantinho.api.feature.cliente.infrastructure.adapter.in.web;
 
+import com.seucantinho.api.core.validation.OnCreate;
+import com.seucantinho.api.core.validation.OnUpdate;
 import com.seucantinho.api.feature.cliente.application.dto.ClienteRequestDTO;
 import com.seucantinho.api.feature.cliente.application.dto.ClienteResponseDTO;
 import com.seucantinho.api.feature.cliente.domain.port.in.ClienteServicePort;
@@ -15,9 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -86,7 +87,7 @@ public class ClienteWebAdapter implements ClienteWebPort {
                 required = true,
                 content = @Content(schema = @Schema(implementation = ClienteRequestDTO.class))
             )
-            @Valid @RequestBody ClienteRequestDTO requestDTO) {
+            @Validated(OnCreate.class) @RequestBody ClienteRequestDTO requestDTO) {
         ClienteResponseDTO cliente = clienteService.create(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
     }
@@ -118,7 +119,7 @@ public class ClienteWebAdapter implements ClienteWebPort {
                 required = true,
                 content = @Content(schema = @Schema(implementation = ClienteRequestDTO.class))
             )
-            @Valid @RequestBody ClienteRequestDTO requestDTO) {
+            @Validated(OnUpdate.class) @RequestBody ClienteRequestDTO requestDTO) {
         ClienteResponseDTO cliente = clienteService.update(id, requestDTO);
         return ResponseEntity.ok(cliente);
     }

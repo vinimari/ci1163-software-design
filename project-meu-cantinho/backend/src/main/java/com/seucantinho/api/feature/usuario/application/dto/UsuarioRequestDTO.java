@@ -1,5 +1,6 @@
 package com.seucantinho.api.feature.usuario.application.dto;
 
+import com.seucantinho.api.core.validation.OnCreate;
 import com.seucantinho.api.feature.usuario.domain.enums.PerfilUsuarioEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ public abstract class UsuarioRequestDTO {
     @Size(max = 150, message = "Email deve ter no máximo 150 caracteres")
     private String email;
 
-    @NotBlank(message = "Senha é obrigatória")
+    @NotBlank(message = "Senha é obrigatória", groups = OnCreate.class)
     @Size(min = 6, message = "Senha deve ter no mínimo 6 caracteres")
     private String senha;
 

@@ -38,15 +38,16 @@ class ReservaStateTest {
     }
 
     @Test
-    @DisplayName("Deve bloquear transição de AGUARDANDO_SINAL para QUITADA")
-    void deveBloquearTransicaoDeAguardandoSinalParaQuitada() {
+    @DisplayName("Deve permitir transição de AGUARDANDO_SINAL para QUITADA")
+    void devePermitirTransicaoDeAguardandoSinalParaQuitada() {
         // Arrange
         Reserva reserva = criarReserva(StatusReservaEnum.AGUARDANDO_SINAL);
 
-        // Act & Assert
-        assertThatThrownBy(() -> reserva.transitionToStatus(StatusReservaEnum.QUITADA))
-            .isInstanceOf(BusinessException.class)
-            .hasMessageContaining("Transição inválida");
+        // Act
+        reserva.transitionToStatus(StatusReservaEnum.QUITADA);
+
+        // Assert
+        assertThat(reserva.getStatus()).isEqualTo(StatusReservaEnum.QUITADA);
     }
 
     @Test
@@ -158,7 +159,7 @@ class ReservaStateTest {
         // Act & Assert
         assertThat(reserva.canTransitionTo(StatusReservaEnum.CONFIRMADA)).isTrue();
         assertThat(reserva.canTransitionTo(StatusReservaEnum.CANCELADA)).isTrue();
-        assertThat(reserva.canTransitionTo(StatusReservaEnum.QUITADA)).isFalse();
+        assertThat(reserva.canTransitionTo(StatusReservaEnum.QUITADA)).isTrue();
         assertThat(reserva.canTransitionTo(StatusReservaEnum.FINALIZADA)).isFalse();
     }
 

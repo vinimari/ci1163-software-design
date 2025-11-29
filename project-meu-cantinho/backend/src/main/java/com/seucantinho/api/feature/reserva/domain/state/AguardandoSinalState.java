@@ -16,6 +16,7 @@ public class AguardandoSinalState extends AbstractReservaState {
     protected Set<StatusReservaEnum> getAllowedTransitions() {
         return EnumSet.of(
             StatusReservaEnum.CONFIRMADA,
+            StatusReservaEnum.QUITADA,
             StatusReservaEnum.CANCELADA
         );
     }

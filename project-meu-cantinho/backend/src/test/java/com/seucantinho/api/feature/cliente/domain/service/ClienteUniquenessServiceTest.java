@@ -2,6 +2,7 @@ package com.seucantinho.api.feature.cliente.domain.service;
 
 import com.seucantinho.api.feature.cliente.domain.Cliente;
 import com.seucantinho.api.feature.cliente.domain.port.out.ClienteRepositoryPort;
+import com.seucantinho.api.feature.usuario.domain.port.out.UsuarioRepositoryPort;
 import com.seucantinho.api.shared.domain.exception.DuplicateResourceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +25,9 @@ class ClienteUniquenessServiceTest {
     @Mock
     private ClienteRepositoryPort clienteRepositoryPort;
 
+    @Mock
+    private UsuarioRepositoryPort usuarioRepositoryPort;
+
     @InjectMocks
     private ClienteUniquenessService clienteUniquenessService;
 
@@ -45,12 +49,12 @@ class ClienteUniquenessServiceTest {
     void deveValidarEmailUnicoComSucesso() {
         // Arrange
         String email = "novo@email.com";
-        when(clienteRepositoryPort.findByEmail(email)).thenReturn(Optional.empty());
+        when(usuarioRepositoryPort.findByEmail(email)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThatCode(() -> clienteUniquenessService.validarEmailUnico(email))
                 .doesNotThrowAnyException();
-        verify(clienteRepositoryPort).findByEmail(email);
+        verify(usuarioRepositoryPort).findByEmail(email);
     }
 
     @Test
@@ -58,13 +62,13 @@ class ClienteUniquenessServiceTest {
     void deveLancarExcecaoQuandoEmailJaExiste() {
         // Arrange
         String email = "joao@email.com";
-        when(clienteRepositoryPort.findByEmail(email)).thenReturn(Optional.of(cliente));
+        when(usuarioRepositoryPort.findByEmail(email)).thenReturn(Optional.of(cliente));
 
         // Act & Assert
         assertThatThrownBy(() -> clienteUniquenessService.validarEmailUnico(email))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("Email já cadastrado: " + email);
-        verify(clienteRepositoryPort).findByEmail(email);
+                .hasMessage("Email já cadastrado no sistema");
+        verify(usuarioRepositoryPort).findByEmail(email);
     }
 
     @Test
@@ -73,12 +77,12 @@ class ClienteUniquenessServiceTest {
         // Arrange
         String email = "joao@email.com";
         Integer clienteId = 1;
-        when(clienteRepositoryPort.findByEmail(email)).thenReturn(Optional.of(cliente));
+        when(usuarioRepositoryPort.findByEmail(email)).thenReturn(Optional.of(cliente));
 
         // Act & Assert
         assertThatCode(() -> clienteUniquenessService.validarEmailUnicoParaAtualizacao(email, clienteId))
                 .doesNotThrowAnyException();
-        verify(clienteRepositoryPort).findByEmail(email);
+        verify(usuarioRepositoryPort).findByEmail(email);
     }
 
     @Test
@@ -87,13 +91,13 @@ class ClienteUniquenessServiceTest {
         // Arrange
         String email = "joao@email.com";
         Integer clienteId = 2; // ID diferente do cliente existente
-        when(clienteRepositoryPort.findByEmail(email)).thenReturn(Optional.of(cliente));
+        when(usuarioRepositoryPort.findByEmail(email)).thenReturn(Optional.of(cliente));
 
         // Act & Assert
         assertThatThrownBy(() -> clienteUniquenessService.validarEmailUnicoParaAtualizacao(email, clienteId))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("Email já cadastrado: " + email);
-        verify(clienteRepositoryPort).findByEmail(email);
+                .hasMessage("Email já cadastrado no sistema");
+        verify(usuarioRepositoryPort).findByEmail(email);
     }
 
     @Test
@@ -102,12 +106,12 @@ class ClienteUniquenessServiceTest {
         // Arrange
         String email = "novo@email.com";
         Integer clienteId = 1;
-        when(clienteRepositoryPort.findByEmail(email)).thenReturn(Optional.empty());
+        when(usuarioRepositoryPort.findByEmail(email)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThatCode(() -> clienteUniquenessService.validarEmailUnicoParaAtualizacao(email, clienteId))
                 .doesNotThrowAnyException();
-        verify(clienteRepositoryPort).findByEmail(email);
+        verify(usuarioRepositoryPort).findByEmail(email);
     }
 
     @Test
@@ -133,7 +137,7 @@ class ClienteUniquenessServiceTest {
         // Act & Assert
         assertThatThrownBy(() -> clienteUniquenessService.validarCpfUnico(cpf))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("CPF já cadastrado: " + cpf);
+                .hasMessage("CPF já cadastrado");
         verify(clienteRepositoryPort).findByCpf(cpf);
     }
 
@@ -155,30 +159,29 @@ class ClienteUniquenessServiceTest {
         // Arrange
         String email1 = "email1@test.com";
         String email2 = "email2@test.com";
-        when(clienteRepositoryPort.findByEmail(email1)).thenReturn(Optional.empty());
-        when(clienteRepositoryPort.findByEmail(email2)).thenReturn(Optional.empty());
+        when(usuarioRepositoryPort.findByEmail(email1)).thenReturn(Optional.empty());
+        when(usuarioRepositoryPort.findByEmail(email2)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThatCode(() -> {
             clienteUniquenessService.validarEmailUnico(email1);
             clienteUniquenessService.validarEmailUnico(email2);
         }).doesNotThrowAnyException();
-        
-        verify(clienteRepositoryPort).findByEmail(email1);
-        verify(clienteRepositoryPort).findByEmail(email2);
+
+        verify(usuarioRepositoryPort).findByEmail(email1);
+        verify(usuarioRepositoryPort).findByEmail(email2);
     }
 
     @Test
     @DisplayName("Deve validar email case sensitive")
     void deveValidarEmailCaseSensitive() {
         // Arrange
-        String emailLower = "joao@email.com";
         String emailUpper = "JOAO@EMAIL.COM";
-        when(clienteRepositoryPort.findByEmail(emailUpper)).thenReturn(Optional.empty());
+        when(usuarioRepositoryPort.findByEmail(emailUpper)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThatCode(() -> clienteUniquenessService.validarEmailUnico(emailUpper))
                 .doesNotThrowAnyException();
-        verify(clienteRepositoryPort).findByEmail(emailUpper);
+        verify(usuarioRepositoryPort).findByEmail(emailUpper);
     }
 }

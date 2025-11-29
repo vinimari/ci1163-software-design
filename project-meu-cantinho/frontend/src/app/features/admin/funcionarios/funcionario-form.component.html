@@ -1,0 +1,153 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>{{ isEditMode ? 'Editar Funcionário' : 'Novo Funcionário' }}</h1>
+  </div>
+
+  <app-loading *ngIf="loading"></app-loading>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="funcionarioForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-sections">
+      <!-- Informações Pessoais -->
+      <div class="form-section">
+        <h2>Informações Pessoais</h2>
+
+        <div class="form-group">
+          <label for="nome">Nome Completo *</label>
+          <input
+            type="text"
+            id="nome"
+            formControlName="nome"
+            [class.invalid]="isFieldInvalid('nome')"
+            placeholder="Digite o nome completo"
+          />
+          <span *ngIf="isFieldInvalid('nome')" class="error-text">
+            {{ getErrorMessage('nome') }}
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cpf">CPF</label>
+            <input
+              type="text"
+              id="cpf"
+              formControlName="cpf"
+              (blur)="formatCpf()"
+              placeholder="000.000.000-00"
+              maxlength="14"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone</label>
+            <input
+              type="text"
+              id="telefone"
+              formControlName="telefone"
+              (blur)="formatTelefone()"
+              placeholder="(00) 00000-0000"
+              maxlength="15"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Dados Profissionais -->
+      <div class="form-section">
+        <h2>Dados Profissionais</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="matricula">Matrícula *</label>
+            <input
+              type="text"
+              id="matricula"
+              formControlName="matricula"
+              [class.invalid]="isFieldInvalid('matricula')"
+              placeholder="Digite a matrícula"
+              maxlength="50"
+            />
+            <span *ngIf="isFieldInvalid('matricula')" class="error-text">
+              {{ getErrorMessage('matricula') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="filialId">Filial *</label>
+            <select
+              id="filialId"
+              formControlName="filialId"
+              [class.invalid]="isFieldInvalid('filialId')"
+            >
+              <option [ngValue]="null">Selecione uma filial</option>
+              <option *ngFor="let filial of filiais" [ngValue]="filial.id">
+                {{ filial.nome }}
+              </option>
+            </select>
+            <span *ngIf="isFieldInvalid('filialId')" class="error-text">
+              {{ getErrorMessage('filialId') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="ativo" />
+            Funcionário ativo
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados de Acesso -->
+      <div class="form-section">
+        <h2>Dados de Acesso</h2>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            [class.invalid]="isFieldInvalid('email')"
+            placeholder="email@exemplo.com"
+          />
+          <span *ngIf="isFieldInvalid('email')" class="error-text">
+            {{ getErrorMessage('email') }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="senha">
+            Senha {{ isEditMode ? '(deixe em branco para manter a atual)' : '*' }}
+          </label>
+          <input
+            type="password"
+            id="senha"
+            formControlName="senha"
+            [class.invalid]="isFieldInvalid('senha')"
+            placeholder="Digite a senha"
+          />
+          <span *ngIf="isFieldInvalid('senha')" class="error-text">
+            {{ getErrorMessage('senha') }}
+          </span>
+          <small *ngIf="!isEditMode" class="hint-text">
+            Mínimo de 6 caracteres
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancel()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ isEditMode ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+    </div>
+  </form>
+</div>

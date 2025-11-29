@@ -40,6 +40,24 @@ export const ADMIN_ROUTES: Routes = [
     ]
   },
   {
+    path: 'funcionarios',
+    canActivate: [roleGuard([PerfilUsuario.ADMIN])],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./funcionarios/funcionarios-list.component').then(m => m.FuncionariosListComponent)
+      },
+      {
+        path: 'new',
+        loadComponent: () => import('./funcionarios/funcionario-form.component').then(m => m.FuncionarioFormComponent)
+      },
+      {
+        path: ':id/edit',
+        loadComponent: () => import('./funcionarios/funcionario-form.component').then(m => m.FuncionarioFormComponent)
+      }
+    ]
+  },
+  {
     path: 'espacos',
     canActivate: [roleGuard([PerfilUsuario.ADMIN, PerfilUsuario.FUNCIONARIO])],
     loadComponent: () => import('./espacos/espacos-admin/espacos-admin.component').then(m => m.EspacosAdminComponent)

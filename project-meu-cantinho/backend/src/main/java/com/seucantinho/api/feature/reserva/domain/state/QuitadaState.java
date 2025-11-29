@@ -14,7 +14,10 @@ public class QuitadaState extends AbstractReservaState {
 
     @Override
     protected Set<StatusReservaEnum> getAllowedTransitions() {
-        return EnumSet.of(StatusReservaEnum.FINALIZADA);
+        return EnumSet.of(
+            StatusReservaEnum.FINALIZADA,
+            StatusReservaEnum.CANCELADA
+        );
     }
 
     @Override

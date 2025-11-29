@@ -64,16 +64,15 @@ class ReservaStateTest {
     }
 
     @Test
-    @DisplayName("Deve permitir transição de CONFIRMADA para FINALIZADA")
-    void devePermitirTransicaoDeConfirmadaParaFinalizada() {
+    @DisplayName("Deve bloquear transição direta de CONFIRMADA para FINALIZADA")
+    void deveBloquearTransicaoDeConfirmadaParaFinalizada() {
         // Arrange
         Reserva reserva = criarReserva(StatusReservaEnum.CONFIRMADA);
 
-        // Act
-        reserva.transitionToStatus(StatusReservaEnum.FINALIZADA);
-
-        // Assert
-        assertThat(reserva.getStatus()).isEqualTo(StatusReservaEnum.FINALIZADA);
+        // Act & Assert
+        assertThatThrownBy(() -> reserva.transitionToStatus(StatusReservaEnum.FINALIZADA))
+            .isInstanceOf(BusinessException.class)
+            .hasMessageContaining("Transição inválida");
     }
 
     @Test
@@ -99,6 +98,19 @@ class ReservaStateTest {
 
         // Assert
         assertThat(reserva.getStatus()).isEqualTo(StatusReservaEnum.FINALIZADA);
+    }
+
+    @Test
+    @DisplayName("Deve permitir transição de QUITADA para CANCELADA")
+    void devePermitirTransicaoDeQuitadaParaCancelada() {
+        // Arrange
+        Reserva reserva = criarReserva(StatusReservaEnum.QUITADA);
+
+        // Act
+        reserva.transitionToStatus(StatusReservaEnum.CANCELADA);
+
+        // Assert
+        assertThat(reserva.getStatus()).isEqualTo(StatusReservaEnum.CANCELADA);
     }
 
     @Test

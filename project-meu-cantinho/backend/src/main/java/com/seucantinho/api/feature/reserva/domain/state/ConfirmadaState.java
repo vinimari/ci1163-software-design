@@ -16,8 +16,7 @@ public class ConfirmadaState extends AbstractReservaState {
     protected Set<StatusReservaEnum> getAllowedTransitions() {
         return EnumSet.of(
             StatusReservaEnum.QUITADA,
-            StatusReservaEnum.CANCELADA,
-            StatusReservaEnum.FINALIZADA
+            StatusReservaEnum.CANCELADA
         );
     }
 

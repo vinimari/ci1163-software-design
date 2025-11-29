@@ -15,7 +15,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,6 +144,22 @@ public class Reserva {
     public void validarDisponibilidade(boolean espacoDisponivel) {
         if (!espacoDisponivel) {
             throw new BusinessException("Espaço já possui reserva ativa para esta data");
+        }
+    }
+
+    public void validarPrazoCancelamento() {
+        if (dataEvento == null) {
+            return;
+        }
+
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataDoEvento = dataEvento.getData();
+        long diasAteEvento = ChronoUnit.DAYS.between(hoje, dataDoEvento);
+
+        if (diasAteEvento <= 1) {
+            throw new BusinessException(
+                "Não é possível cancelar reservas faltando 1 dia para o evento"
+            );
         }
     }
 

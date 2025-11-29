@@ -31,6 +31,10 @@ public abstract class AbstractReservaState implements ReservaState {
             );
         }
 
+        if (targetStatus == StatusReservaEnum.CANCELADA) {
+            reserva.validarPrazoCancelamento();
+        }
+
         ReservaState newState = ReservaStateFactory.createState(targetStatus);
         reserva.setState(newState);
     }

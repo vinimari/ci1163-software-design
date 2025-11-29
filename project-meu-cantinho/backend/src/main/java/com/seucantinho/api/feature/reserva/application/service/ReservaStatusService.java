@@ -24,6 +24,7 @@ public class ReservaStatusService {
     }
 
     public void cancelReservation(Reserva reserva) {
+        // A validação de prazo está no State Pattern
         reserva.transitionToStatus(StatusReservaEnum.CANCELADA);
         reserva.getPagamentos().clear();
     }

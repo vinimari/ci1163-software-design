@@ -18,10 +18,7 @@ Sistema completo para gerenciamento de reservas de espaços para eventos, desenv
 
 ### Execução com Docker (Recomendado)
 
-1. Clone o repositório e navegue até a pasta do projeto:
-```bash
-cd project-meu-cantinho
-```
+1. Clone o repositório
 
 2. Execute o projeto com Docker Compose:
 ```bash

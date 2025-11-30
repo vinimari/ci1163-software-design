@@ -10,8 +10,6 @@
 
 Sistema completo para gerenciamento de reservas de espaços para eventos, desenvolvido com Spring Boot (backend) e Angular (frontend).
 
-Sistema completo para gerenciamento de reservas de espaços para eventos, desenvolvido com Spring Boot (backend) e Angular (frontend).
-
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos

@@ -85,7 +85,7 @@ INSERT INTO tb_filial (nome, cidade, estado, endereco, telefone) VALUES
 -- Senha: password123
 -- Hash BCrypt: $2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W
 INSERT INTO tb_usuario (nome, email, senha_hash, perfil, ativo, filial_id) VALUES
-('Maria Proprietaria', 'admin@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'ADMIN', true, NULL),
+('Maria Proprietaria', 'admin@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'ADMIN', true, NULL);
 
 INSERT INTO tb_usuario (nome, email, senha_hash, perfil, ativo, filial_id, matricula) VALUES
 ('Joao Curitiba', 'joao.pr@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'FUNCIONARIO', true, 1, 'FUNC-1'),

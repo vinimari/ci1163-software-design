@@ -1,5 +1,15 @@
 # Seu Cantinho - Sistema de Reserva de Espaços
 
+![Java](https://img.shields.io/badge/Java-17-orange?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green?logo=springboot&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-19-red?logo=angular&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql&logoColor=white)
+
+![Backend Coverage](https://img.shields.io/badge/Backend_Coverage-86%25-brightgreen?style=for-the-badge&logo=jacoco)
+![Frontend Coverage](https://img.shields.io/badge/Frontend_Coverage-90%25-brightgreen?style=for-the-badge&logo=jest)
+
+Sistema completo para gerenciamento de reservas de espaços para eventos, desenvolvido com Spring Boot (backend) e Angular (frontend).
+
 Sistema completo para gerenciamento de reservas de espaços para eventos, desenvolvido com Spring Boot (backend) e Angular (frontend).
 
 ## 🚀 Como Executar o Projeto

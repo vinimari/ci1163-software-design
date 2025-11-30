@@ -86,8 +86,10 @@ INSERT INTO tb_filial (nome, cidade, estado, endereco, telefone) VALUES
 -- Hash BCrypt: $2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W
 INSERT INTO tb_usuario (nome, email, senha_hash, perfil, ativo, filial_id) VALUES
 ('Maria Proprietaria', 'admin@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'ADMIN', true, NULL),
-('Joao Curitiba', 'joao.pr@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'FUNCIONARIO', true, 1),
-('Ana Floripa', 'ana.sc@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'FUNCIONARIO', true, 2);
+
+INSERT INTO tb_usuario (nome, email, senha_hash, perfil, ativo, filial_id, matricula) VALUES
+('Joao Curitiba', 'joao.pr@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'FUNCIONARIO', true, 1, 'FUNC-1'),
+('Ana Floripa', 'ana.sc@seucantinho.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'FUNCIONARIO', true, 2, 'FUNC-2');
 
 INSERT INTO tb_usuario (nome, email, senha_hash, perfil, cpf, telefone, ativo) VALUES
 ('Cliente 1', 'cliente1@gmail.com', '$2b$10$4iflYqefCoyloMJcdnm6huvSV4gg/Njkgrtp8QSTO6P4.Buwn/P.W', 'CLIENTE', '12345678900', '11900000000', true),
